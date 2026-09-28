@@ -1,11 +1,46 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KaziNexus | Job Seeker</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KaziNexus | Employer Login</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>body{font-family:Arial,sans-serif;margin:0;background:#f5f7fa;color:#172033}.head{padding:16px 6%;background:#fff;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items:center}.logo{font-size:26px;font-weight:800;color:#126b48}.logo span{color:#f2a900}.head a{color:#126b48;text-decoration:none;font-weight:700}.wrap{max-width:680px;margin:35px auto;padding:20px}.card{background:#fff;padding:28px;border-radius:14px;box-shadow:0 4px 18px #0001}.tabs{display:flex;gap:5px;background:#eee;padding:4px;border-radius:8px}.tabs button{flex:1;padding:12px;border:0;border-radius:7px;cursor:pointer}.tabs .on{background:#fff;font-weight:bold;color:#126b48}.field{margin:15px 0}label{display:block;font-weight:bold;margin-bottom:6px}input,textarea{width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd3dc;border-radius:8px;font-size:15px}textarea{min-height:90px}.primary{width:100%;padding:13px;background:#126b48;color:#fff;border:0;border-radius:8px;font-weight:bold;font-size:15px}.msg{margin-top:15px;padding:12px;border-radius:8px;display:none}.ok{background:#e9f7ef;color:#126b48}.err{background:#fff0f0;color:#a12b2b}.hidden{display:none}.small{font-size:13px;color:#667085}</style></head>
-<body><header class="head"><div class="logo">Kazi<span>Nexus</span></div><a href="/jobs/">Find Jobs</a></header>
-<main class="wrap"><div class="card"><h1 id="title">Create Job Seeker Account</h1><p>Create your profile once and apply for genuine opportunities on KaziNexus.</p>
-<div class="tabs"><button id="signupTab" class="on" type="button" onclick="mode('signup')">Sign Up</button><button id="loginTab" type="button" onclick="mode('login')">Login</button></div>
-<form id="form"><div id="profileFields"><div class="field"><label>Full Name *</label><input id="name" required></div><div class="field"><label>Phone</label><input id="phone"></div><div class="field"><label>Location</label><input id="location" placeholder="e.g. Kisumu, Nairobi"></div><div class="field"><label>Professional Headline</label><input id="headline" placeholder="e.g. Project Assistant | Community Development"></div><div class="field"><label>Skills</label><textarea id="skills" placeholder="List your key skills"></textarea></div><div class="field"><label>Short Bio</label><textarea id="bio" placeholder="Briefly describe your experience and career interests"></textarea></div><div class="field"><label>CV Link (optional)</label><input id="cv_url" type="url" placeholder="https://...your CV link"></div></div>
-<div class="field"><label>Email *</label><input id="email" type="email" required></div><div class="field"><label>Password *</label><input id="password" type="password" minlength="6" required></div><button class="primary" id="submit">Create Account</button></form>
-<p class="small">Use accurate information. KaziNexus is designed for genuine employment opportunities.</p><div id="msg" class="msg"></div></div></main>
-<script>const SUPABASE_URL='https://vljehlfeglstpgphzebj.supabase.co',SUPABASE_KEY='sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3',db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);let m='signup';const $=id=>document.getElementById(id);function mode(x){m=x;$('profileFields').classList.toggle('hidden',x!=='signup');$('name').required=x==='signup';$('submit').textContent=x==='signup'?'Create Account':'Login';$('signupTab').classList.toggle('on',x==='signup');$('loginTab').classList.toggle('on',x==='login');$('title').textContent=x==='signup'?'Create Job Seeker Account':'Job Seeker Login';$('msg').style.display='none'}function show(t,c){let e=$('msg');e.textContent=t;e.className='msg '+c;e.style.display='block'}(async()=>{const {data:{session}}=await db.auth.getSession();if(session)location.href='/jobseekers/dashboard.html'})();$('form').onsubmit=async e=>{e.preventDefault();$('submit').disabled=true;try{const email=$('email').value.trim(),password=$('password').value;if(m==='signup'){const {data,error}=await db.auth.signUp({email,password,options:{data:{role:'job_seeker',full_name:$('name').value.trim(),phone:$('phone').value.trim(),location:$('location').value.trim(),headline:$('headline').value.trim(),skills:$('skills').value.trim(),bio:$('bio').value.trim(),cv_url:$('cv_url').value.trim()}}});if(error)throw error;if(data.session){const p={id:data.user.id,full_name:$('name').value.trim(),phone:$('phone').value.trim()||null,location:$('location').value.trim()||null,headline:$('headline').value.trim()||null,bio:$('bio').value.trim()||null,skills:$('skills').value.trim()||null,cv_url:$('cv_url').value.trim()||null};const r=await db.from('job_seekers').upsert(p);if(r.error)throw r.error;location.href='/jobseekers/dashboard.html'}else{show('Account created. Email confirmation is required only if it is enabled in Supabase.','ok');mode('login')}}else{const {data,error}=await db.auth.signInWithPassword({email,password});if(error)throw error;location.href='/jobseekers/dashboard.html'}}catch(err){show(err.message||'Unable to complete the request.','err')}finally{$('submit').disabled=false}};</script></body></html>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7fa;color:#172033}.header{background:#fff;border-bottom:1px solid #e5e7eb;padding:16px 6%;display:flex;justify-content:space-between;align-items:center}.logo{font-size:26px;font-weight:800;color:#126b48}.logo span{color:#f2a900}.header a{color:#126b48;text-decoration:none;font-weight:700}.wrap{max-width:520px;margin:40px auto;padding:0 18px}.card{background:#fff;border-radius:14px;padding:30px;box-shadow:0 5px 20px rgba(0,0,0,.08)}h1{margin:0 0 8px}.intro{color:#667085;line-height:1.5}.tabs{display:grid;grid-template-columns:1fr 1fr;background:#f2f4f7;padding:4px;border-radius:9px;margin:24px 0}.tabs button{border:0;background:transparent;padding:11px;border-radius:7px;font-weight:700}.tabs .active{background:#fff;color:#126b48;box-shadow:0 1px 5px rgba(0,0,0,.08)}.field{margin-bottom:16px}label{display:block;font-weight:700;margin-bottom:7px}input{width:100%;padding:13px;border:1px solid #d5dbe3;border-radius:8px;font-size:15px}.submit{width:100%;border:0;background:#126b48;color:#fff;padding:14px;border-radius:8px;font-weight:800;font-size:16px}.message{display:none;margin-top:16px;padding:13px;border-radius:8px;line-height:1.5}.success{display:block;background:#e9f7ef;color:#126b48}.error{display:block;background:#fff0f0;color:#a12b2b}.hidden{display:none}.note{font-size:13px;color:#667085;margin-top:18px;line-height:1.5}
+</style>
+</head>
+<body>
+<header class="header"><div class="logo">Kazi<span>Nexus</span></div><a href="/">Back to KaziNexus</a></header>
+<div class="wrap"><div class="card">
+<h1 id="heading">Create Employer Account</h1>
+<p class="intro">Create a free employer account to post vacancies and manage applications on KaziNexus.</p>
+<div class="tabs"><button id="signupTab" class="active" type="button">Sign Up</button><button id="loginTab" type="button">Login</button></div>
+<form id="authForm">
+<div id="signupFields">
+<div class="field"><label for="organization">Company / Organization *</label><input id="organization" required placeholder="e.g. ABC Kenya Ltd"></div>
+<div class="field"><label for="contact">Contact Person *</label><input id="contact" required placeholder="Full name"></div>
+</div>
+<div class="field"><label for="email">Email Address *</label><input id="email" type="email" required placeholder="you@company.com"></div>
+<div class="field"><label for="password">Password *</label><input id="password" type="password" minlength="6" required placeholder="At least 6 characters"></div>
+<button class="submit" id="submitBtn" type="submit">Create Employer Account</button>
+</form>
+<div id="message" class="message"></div>
+<p class="note">Basic job posting remains free for employers.</p>
+</div></div>
+<script>
+const SUPABASE_URL='https://vljehlfeglstpgphzebj.supabase.co';
+const SUPABASE_KEY='sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let mode='signup';
+const $=id=>document.getElementById(id);
+function setMode(m){mode=m;const signup=m==='signup';$('signupFields').classList.toggle('hidden',!signup);$('organization').required=signup;$('contact').required=signup;$('heading').textContent=signup?'Create Employer Account':'Employer Login';$('submitBtn').textContent=signup?'Create Employer Account':'Login';$('signupTab').classList.toggle('active',signup);$('loginTab').classList.toggle('active',!signup);$('message').className='message';$('message').textContent='';}
+$('signupTab').onclick=()=>setMode('signup');$('loginTab').onclick=()=>setMode('login');
+function msg(t,type){$('message').className='message '+type;$('message').textContent=t;}
+$('authForm').addEventListener('submit',async e=>{e.preventDefault();$('submitBtn').disabled=true;$('submitBtn').textContent='Please wait...';
+try{const email=$('email').value.trim(),password=$('password').value;if(mode==='signup'){const organization=$('organization').value.trim(),contact=$('contact').value.trim();const {data,error}=await db.auth.signUp({email,password,options:{data:{role:'employer',organization_name:organization,contact_person:contact}}});if(error)throw error;if(data.session){window.location.href='/employers/dashboard.html';}else{msg('Account created. You can now use Login to access your account.','success');$('authForm').reset();}}else{const {data,error}=await db.auth.signInWithPassword({email,password});if(error)throw error;if(data.session)window.location.href='/employers/dashboard.html';}}
+catch(err){msg(err.message||'Something went wrong.','error');}
+finally{$('submitBtn').disabled=false;$('submitBtn').textContent=mode==='signup'?'Create Employer Account':'Login';}});
+(async()=>{const {data}=await db.auth.getSession();if(data.session){} })();
+</script>
+</body>
+</html>
