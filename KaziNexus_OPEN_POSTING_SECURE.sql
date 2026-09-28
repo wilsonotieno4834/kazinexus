@@ -1,0 +1,204 @@
+-- KaziNexus secure open opportunity posting
+-- Posting remains FREE. Client-selected poster_type is never trusted.
+-- Privilege is derived server-side:
+-- Admin -> direct
+-- Verified Employer -> direct
+-- Approved HR / Recruiter -> direct
+-- Approved Organization / Partner -> direct
+-- Everyone else (including anonymous/new users) -> admin approval
+
+alter table public.jobs alter column employer_id drop not null;
+
+-- The base KaziNexus package does not create the public-sharing queue, so create it here
+-- before applying its RLS policies and RPC workflow.
+create table if not exists public.job_submissions (
+  id uuid primary key default gen_random_uuid(),
+  submitted_by uuid references auth.users(id) on delete set null,
+  poster_name text not null,
+  poster_email text not null,
+  poster_phone text,
+  poster_type text not null default 'regular'
+    check (poster_type in ('regular','new','hr_recruiter','employer','partner','admin')),
+  company text not null,
+  title text not null,
+  location text not null,
+  job_type text not null,
+  salary text,
+  deadline date not null,
+  description text not null,
+  responsibilities text,
+  qualifications text,
+  application_email text,
+  application_link text,
+  contact_person text,
+  status text not null default 'pending'
+    check (status in ('pending','approved','rejected')),
+  admin_note text,
+  reviewed_by uuid references auth.users(id) on delete set null,
+  reviewed_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists job_submissions_status_idx
+  on public.job_submissions(status, created_at desc);
+create index if not exists job_submissions_submitter_idx
+  on public.job_submissions(submitted_by);
+
+alter table public.job_submissions enable row level security;
+
+create table if not exists public.posting_permissions (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  permission_type text not null check (permission_type in ('hr_recruiter','partner')),
+  approved boolean not null default false,
+  approved_by uuid references auth.users(id) on delete set null,
+  approved_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+alter table public.posting_permissions enable row level security;
+drop policy if exists "Users view own posting permission" on public.posting_permissions;
+create policy "Users view own posting permission"
+on public.posting_permissions for select to authenticated
+using (user_id = auth.uid());
+drop policy if exists "Admins manage posting permissions" on public.posting_permissions;
+create policy "Admins manage posting permissions"
+on public.posting_permissions for all to authenticated
+using (exists (select 1 from public.admin_users a where a.user_id=auth.uid() and a.active=true))
+with check (exists (select 1 from public.admin_users a where a.user_id=auth.uid() and a.active=true));
+
+-- Make the existing submission workflow safe: poster_type is informational only.
+drop policy if exists "Anyone can submit opportunities" on public.job_submissions;
+create policy "Anyone can submit opportunities"
+on public.job_submissions for insert to anon, authenticated
+with check (submitted_by is null or submitted_by = auth.uid());
+
+create or replace function public.get_my_posting_role()
+returns text
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare r text;
+begin
+  if auth.uid() is null then return 'new'; end if;
+  if exists (select 1 from public.admin_users a where a.user_id=auth.uid() and a.active=true) then return 'admin'; end if;
+  if exists (select 1 from public.employers e where e.id=auth.uid() and coalesce(e.verified,false)=true and coalesce(e.verification_status,'verified')='verified') then return 'employer'; end if;
+  select permission_type into r from public.posting_permissions p
+    where p.user_id=auth.uid() and p.approved=true limit 1;
+  return coalesce(r,'regular');
+end;
+$$;
+
+grant execute on function public.get_my_posting_role() to anon, authenticated;
+
+create or replace function public.submit_job_opportunity(payload jsonb)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  role_name text := public.get_my_posting_role();
+  uid uuid := auth.uid();
+  new_job_id uuid;
+  new_submission_id uuid;
+  deadline_value date;
+  company_value text := nullif(trim(payload->>'company'),'');
+  title_value text := nullif(trim(payload->>'title'),'');
+  location_value text := nullif(trim(payload->>'location'),'');
+  job_type_value text := nullif(trim(payload->>'job_type'),'');
+  description_value text := nullif(trim(payload->>'description'),'');
+  poster_name_value text := nullif(trim(payload->>'poster_name'),'');
+  poster_email_value text := nullif(trim(payload->>'poster_email'),'');
+  poster_phone_value text := nullif(trim(payload->>'poster_phone'),'');
+  poster_type_value text;
+begin
+  if company_value is null or title_value is null or location_value is null or job_type_value is null or description_value is null then
+    raise exception 'Company, job title, location, job type and description are required';
+  end if;
+  if poster_name_value is null then raise exception 'Your name is required'; end if;
+  if poster_email_value is null then raise exception 'Your email is required'; end if;
+  if nullif(trim(payload->>'deadline'),'') is null then raise exception 'Application deadline is required'; end if;
+  begin deadline_value := (payload->>'deadline')::date; exception when others then raise exception 'Invalid application deadline'; end;
+  if deadline_value < current_date then raise exception 'Application deadline cannot be in the past'; end if;
+
+  poster_type_value := case role_name
+    when 'admin' then 'admin'
+    when 'employer' then 'employer'
+    when 'hr_recruiter' then 'hr_recruiter'
+    when 'partner' then 'partner'
+    when 'new' then 'new'
+    else 'regular' end;
+
+  if role_name in ('admin','employer','hr_recruiter','partner') then
+    insert into public.jobs (
+      employer_id,title,company,location,job_type,salary,description,responsibilities,
+      qualifications,application_email,application_link,contact_person,deadline,status
+    ) values (
+      case when role_name='employer' then uid else null end,
+      title_value,company_value,location_value,job_type_value,
+      nullif(trim(payload->>'salary'),''),description_value,
+      nullif(trim(payload->>'responsibilities'),''),nullif(trim(payload->>'qualifications'),''),
+      nullif(trim(payload->>'application_email'),''),nullif(trim(payload->>'application_link'),''),
+      nullif(trim(payload->>'contact_person'),''),deadline_value,'active'
+    ) returning id into new_job_id;
+
+    return jsonb_build_object('mode','direct','role',role_name,'job_id',new_job_id,'status','active');
+  end if;
+
+  insert into public.job_submissions (
+    submitted_by,poster_name,poster_email,poster_phone,poster_type,company,title,location,
+    job_type,salary,deadline,description,responsibilities,qualifications,application_email,
+    application_link,contact_person,status
+  ) values (
+    uid,coalesce(poster_name_value,'Opportunity Sharer'),poster_email_value,poster_phone_value,
+    poster_type_value,company_value,title_value,location_value,job_type_value,
+    nullif(trim(payload->>'salary'),''),deadline_value,description_value,
+    nullif(trim(payload->>'responsibilities'),''),nullif(trim(payload->>'qualifications'),''),
+    nullif(trim(payload->>'application_email'),''),nullif(trim(payload->>'application_link'),''),
+    nullif(trim(payload->>'contact_person'),''),'pending'
+  ) returning id into new_submission_id;
+
+  return jsonb_build_object('mode','approval','role',role_name,'submission_id',new_submission_id,'status','pending');
+end;
+$$;
+
+grant execute on function public.submit_job_opportunity(jsonb) to anon, authenticated;
+
+create or replace function public.review_job_submission(
+  submission_id uuid,
+  decision text,
+  admin_note_value text default null
+)
+returns jsonb
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare s public.job_submissions%rowtype; jid uuid;
+begin
+  if not exists (select 1 from public.admin_users a where a.user_id=auth.uid() and a.active=true) then
+    raise exception 'Administrator access required';
+  end if;
+  if decision not in ('approved','rejected') then raise exception 'Decision must be approved or rejected'; end if;
+  select * into s from public.job_submissions where id=submission_id for update;
+  if not found then raise exception 'Submission not found'; end if;
+  if s.status <> 'pending' then raise exception 'Submission has already been reviewed'; end if;
+
+  if decision='approved' then
+    insert into public.jobs (
+      employer_id,title,company,location,job_type,salary,description,responsibilities,
+      qualifications,application_email,application_link,contact_person,deadline,status
+    ) values (
+      null,s.title,s.company,s.location,s.job_type,s.salary,s.description,s.responsibilities,
+      s.qualifications,s.application_email,s.application_link,s.contact_person,s.deadline,'active'
+    ) returning id into jid;
+  end if;
+
+  update public.job_submissions set status=decision,admin_note=admin_note_value,reviewed_by=auth.uid(),reviewed_at=now()
+    where id=submission_id;
+  return jsonb_build_object('status',decision,'job_id',jid,'submission_id',submission_id);
+end;
+$$;
+
+grant execute on function public.review_job_submission(uuid,text,text) to authenticated;
