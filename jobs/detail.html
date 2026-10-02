@@ -20,7 +20,7 @@ body{
   font-family:Arial,sans-serif;
   margin:0;
   background:#f6f8fb;
-  color:#172033
+  color:#172033;
 }
 
 .head{
@@ -28,28 +28,63 @@ body{
   color:#fff;
   padding:18px 6%;
   display:flex;
-  justify-content:space-between
+  justify-content:space-between;
+  align-items:center;
 }
 
 .head a{
-  color:#fff
+  color:#fff;
+  text-decoration:none;
 }
 
 .wrap{
   max-width:900px;
   margin:30px auto;
-  padding:0 18px
+  padding:0 18px;
 }
 
 .card{
   background:#fff;
   padding:28px;
   border-radius:16px;
-  box-shadow:0 4px 18px #0001
+  box-shadow:0 4px 18px #0001;
+}
+
+h1{
+  margin:0 0 8px;
+  font-size:30px;
+  color:#172033;
+}
+
+.company{
+  font-size:18px;
+  font-weight:700;
+  color:#126b48;
+  margin-bottom:20px;
 }
 
 .meta{
-  color:#667085
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+  margin:20px 0;
+}
+
+.meta-box{
+  background:#f6f8fb;
+  padding:14px;
+  border-radius:10px;
+}
+
+.meta-label{
+  display:block;
+  font-size:12px;
+  color:#667085;
+  margin-bottom:5px;
+}
+
+.meta-value{
+  font-weight:700;
 }
 
 .badge{
@@ -59,14 +94,29 @@ body{
   background:#e8f6ef;
   color:#126b48;
   font-weight:700;
-  font-size:12px
+  font-size:12px;
+}
+
+section{
+  margin-top:28px;
+}
+
+section h2{
+  font-size:20px;
+  margin-bottom:10px;
+  color:#172033;
+}
+
+.description{
+  white-space:pre-line;
+  line-height:1.7;
 }
 
 .actions{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  margin-top:22px
+  margin-top:28px;
 }
 
 .btn{
@@ -78,34 +128,58 @@ body{
   font-weight:800;
   cursor:pointer;
   background:#126b48;
-  color:#fff
+  color:#fff;
 }
 
 .wa{
-  background:#25d366
+  background:#25d366;
 }
 
 .copy{
   background:#eef2f6;
-  color:#172033
+  color:#172033;
+}
+
+.email{
+  background:#0b5ed7;
 }
 
 .error{
-  color:#a12b2b
+  color:#a12b2b;
+  background:#fff0f0;
+  padding:15px;
+  border-radius:8px;
 }
 
-.description{
-  white-space:pre-line;
-  line-height:1.7
+.loading{
+  text-align:center;
+  padding:40px 20px;
+}
+
+.hidden{
+  display:none;
 }
 
 @media(max-width:600px){
+
   .card{
-    padding:20px
+    padding:20px;
   }
 
   .head{
-    padding:15px
+    padding:15px;
+  }
+
+  h1{
+    font-size:24px;
+  }
+
+  .actions{
+    flex-direction:column;
+  }
+
+  .btn{
+    text-align:center;
   }
 }
 </style>
@@ -120,7 +194,7 @@ body{
 
 <main class="wrap">
 
-<article id="job" class="card">
+<article id="job" class="card loading">
   Loading job...
 </article>
 
@@ -128,12 +202,542 @@ body{
 
 <script>
 
-const db=supabase.createClient(
+const db = supabase.createClient(
   'https://vljehlfeglstpgphzebj.supabase.co',
   'sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3'
 );
 
-const id=new URLSearchParams(location.search).get('id');
+const id = new URLSearchParams(location.search).get('id');
 
-function event(n,j=null){
-  db
+
+function showError(message){
+
+  const job = document.getElementById('job');
+
+  job.className = 'card error';
+
+  job.innerHTML = '';
+
+  const title = document.createElement('h2');
+  title.textContent = 'Unable to load job';
+
+  const text = document.createElement('p');
+  text.textContent = message;
+
+  job.appendChild(title);
+  job.appendChild(text);
+}
+
+
+function getValue(job,names,fallback=''){
+
+  for(const name of names){
+
+    if(
+      Object.prototype.hasOwnProperty.call(job,name) &&
+      job[name] !== null &&
+      job[name] !== undefined &&
+      String(job[name]).trim() !== ''
+    ){
+
+      return job[name];
+    }
+  }
+
+  return fallback;
+}
+
+
+function createSection(title,value){
+
+  if(!value){
+    return null;
+  }
+
+  const section = document.createElement('section');
+
+  const heading = document.createElement('h2');
+  heading.textContent = title;
+
+  const content = document.createElement('div');
+  content.className = 'description';
+  content.textContent = value;
+
+  section.appendChild(heading);
+  section.appendChild(content);
+
+  return section;
+}
+
+
+function renderJob(job){
+
+  const container = document.getElementById('job');
+
+  container.className = 'card';
+
+  container.innerHTML = '';
+
+
+  const title = getValue(
+    job,
+    ['title','job_title'],
+    'Job Opportunity'
+  );
+
+
+  const company = getValue(
+    job,
+    [
+      'company',
+      'organization_name',
+      'organization',
+      'employer_name'
+    ],
+    'KaziNexus'
+  );
+
+
+  const location = getValue(
+    job,
+    ['location','job_location'],
+    'Not specified'
+  );
+
+
+  const jobType = getValue(
+    job,
+    ['job_type','jobtype','jobType'],
+    'Not specified'
+  );
+
+
+  const salary = getValue(
+    job,
+    ['salary','salary_range','pay'],
+    'Not specified'
+  );
+
+
+  const deadline = getValue(
+    job,
+    ['deadline','application_deadline'],
+    'Not specified'
+  );
+
+
+  const description = getValue(
+    job,
+    ['description','job_description'],
+    'No job description provided.'
+  );
+
+
+  const responsibilities = getValue(
+    job,
+    ['responsibilities','respnsibilities'],
+    ''
+  );
+
+
+  const qualifications = getValue(
+    job,
+    ['qualification','qualifications'],
+    ''
+  );
+
+
+  const contact = getValue(
+    job,
+    ['contact_person','contactPerson','contact'],
+    ''
+  );
+
+
+  const email = getValue(
+    job,
+    [
+      'appl_email',
+      'application_email',
+      'applicationEmail'
+    ],
+    ''
+  );
+
+
+  const appLink = getValue(
+    job,
+    [
+      'app_link',
+      'application_link',
+      'applicationLink'
+    ],
+    ''
+  );
+
+
+  document.title = title + ' - KaziNexus';
+
+
+  const h1 = document.createElement('h1');
+  h1.textContent = title;
+
+  container.appendChild(h1);
+
+
+  const companyDiv = document.createElement('div');
+  companyDiv.className = 'company';
+  companyDiv.textContent = company;
+
+  container.appendChild(companyDiv);
+
+
+  const meta = document.createElement('div');
+  meta.className = 'meta';
+
+
+  function addMeta(label,value){
+
+    const box = document.createElement('div');
+    box.className = 'meta-box';
+
+    const labelEl = document.createElement('span');
+    labelEl.className = 'meta-label';
+    labelEl.textContent = label;
+
+    const valueEl = document.createElement('span');
+    valueEl.className = 'meta-value';
+    valueEl.textContent = value;
+
+    box.appendChild(labelEl);
+    box.appendChild(valueEl);
+
+    meta.appendChild(box);
+  }
+
+
+  addMeta('Location',location);
+  addMeta('Job Type',jobType);
+  addMeta('Salary',salary);
+  addMeta('Deadline',deadline);
+
+  container.appendChild(meta);
+
+
+  const descriptionSection =
+    createSection(
+      'Job Description',
+      description
+    );
+
+  if(descriptionSection){
+    container.appendChild(descriptionSection);
+  }
+
+
+  const responsibilitySection =
+    createSection(
+      'Responsibilities',
+      responsibilities
+    );
+
+  if(responsibilitySection){
+    container.appendChild(responsibilitySection);
+  }
+
+
+  const qualificationSection =
+    createSection(
+      'Qualifications',
+      qualifications
+    );
+
+  if(qualificationSection){
+    container.appendChild(qualificationSection);
+  }
+
+
+  if(contact || email){
+
+    const contactSection =
+      document.createElement('section');
+
+    const contactHeading =
+      document.createElement('h2');
+
+    contactHeading.textContent = 'Contact';
+
+    contactSection.appendChild(contactHeading);
+
+
+    const contactContent =
+      document.createElement('div');
+
+    contactContent.className =
+      'description';
+
+
+    if(contact){
+
+      const contactLine =
+        document.createElement('div');
+
+      contactLine.textContent =
+        'Contact Person: ' + contact;
+
+      contactContent.appendChild(contactLine);
+    }
+
+
+    if(email){
+
+      const emailLine =
+        document.createElement('div');
+
+      emailLine.textContent =
+        'Email: ' + email;
+
+      contactContent.appendChild(emailLine);
+    }
+
+
+    contactSection.appendChild(contactContent);
+
+    container.appendChild(contactSection);
+  }
+
+
+  if(email || appLink){
+
+    const applySection =
+      document.createElement('section');
+
+    const applyHeading =
+      document.createElement('h2');
+
+    applyHeading.textContent = 'How to Apply';
+
+    applySection.appendChild(applyHeading);
+
+
+    const applyText =
+      document.createElement('div');
+
+    applyText.className = 'description';
+
+
+    if(email){
+
+      applyText.textContent =
+        'Applications can be sent to: ' + email;
+    }
+
+
+    if(appLink){
+
+      if(email){
+        applyText.textContent +=
+          '\nUse the Apply Now button below to open the application page.';
+      }else{
+        applyText.textContent =
+          'Use the Apply Now button below to apply.';
+      }
+    }
+
+
+    applySection.appendChild(applyText);
+
+    container.appendChild(applySection);
+  }
+
+
+  const actions =
+    document.createElement('div');
+
+  actions.className = 'actions';
+
+
+  if(appLink){
+
+    const apply =
+      document.createElement('a');
+
+    apply.className = 'btn';
+    apply.textContent = 'Apply Now';
+    apply.href = appLink;
+    apply.target = '_blank';
+    apply.rel = 'noopener';
+
+    actions.appendChild(apply);
+  }
+
+
+  if(email){
+
+    const emailButton =
+      document.createElement('a');
+
+    emailButton.className =
+      'btn email';
+
+    emailButton.textContent =
+      'Apply by Email';
+
+    emailButton.href =
+      'mailto:' +
+      email +
+      '?subject=' +
+      encodeURIComponent(
+        'Application for ' + title
+      );
+
+    actions.appendChild(emailButton);
+  }
+
+
+  const whatsapp =
+    document.createElement('button');
+
+  whatsapp.className =
+    'btn wa';
+
+  whatsapp.textContent =
+    'Share on WhatsApp';
+
+  whatsapp.onclick =
+    function(){
+
+      const message =
+        'Job Opportunity: ' +
+        title +
+        '\nCompany: ' +
+        company +
+        '\n\nView and apply here:\n' +
+        window.location.href;
+
+      const url =
+        'https://wa.me/?text=' +
+        encodeURIComponent(message);
+
+      window.open(
+        url,
+        '_blank',
+        'noopener'
+      );
+    };
+
+  actions.appendChild(whatsapp);
+
+
+  const copy =
+    document.createElement('button');
+
+  copy.className =
+    'btn copy';
+
+  copy.textContent =
+    'Copy Job Link';
+
+  copy.onclick =
+    async function(){
+
+      const url =
+        window.location.href;
+
+      try{
+
+        await navigator.clipboard.writeText(url);
+
+        alert('Job link copied.');
+
+      }catch(error){
+
+        prompt(
+          'Copy this job link:',
+          url
+        );
+      }
+    };
+
+  actions.appendChild(copy);
+
+
+  container.appendChild(actions);
+}
+
+
+async function loadJob(){
+
+  if(!id){
+
+    showError(
+      'No job ID was provided.'
+    );
+
+    return;
+  }
+
+
+  try{
+
+    const result =
+      await db
+        .from('jobs')
+        .select('*')
+        .eq('id',id)
+        .maybeSingle();
+
+
+    const data = result.data;
+    const error = result.error;
+
+
+    if(error){
+
+      console.error(
+        'Supabase error:',
+        error
+      );
+
+      showError(
+        'Unable to load this job: ' +
+        error.message
+      );
+
+      return;
+    }
+
+
+    if(!data){
+
+      showError(
+        'Job not found.'
+      );
+
+      return;
+    }
+
+
+    renderJob(data);
+
+
+  }catch(error){
+
+    console.error(
+      'Unexpected error:',
+      error
+    );
+
+    showError(
+      'An unexpected error occurred while loading this job.'
+    );
+  }
+}
+
+
+loadJob();
+
+</script>
+
+</body>
+</html>
