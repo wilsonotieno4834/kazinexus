@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Find Jobs in Kenya | KaziNexus</title>
+
+<meta name="description"
+content="Find verified job opportunities across Kenya on KaziNexus. Search jobs by keyword, county, category and job type.">
+
+<link rel="canonical" href="https://kazinexus.pages.dev/jobs/">
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f7fb;
+  color:#172033;
+}
+
+header{
+  background:#0b5d3b;
+  color:#fff;
+  padding:18px 20px;
+}
+
+header .wrap{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+
+header a{
+  color:#fff;
+  text-decoration:none;
+  font-weight:700;
+}
+
+.brand{
+  font-size:22px;
+}
+
+.wrap{
+  max-width:1100px;
+  margin:auto;
+}
+
+.hero{
+  padding:30px 20px 20px;
+}
+
+.hero h1{
+  margin:0 0 8px;
+  font-size:32px;
+}
+
+.hero p{
+  margin:0;
+  color:#5d6675;
+}
+
+.filters{
+  background:#fff;
+  padding:18px;
+  margin:0 20px 22px;
+  border-radius:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
+
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr auto;
+  gap:10px;
+}
+
+.filters input,
+.filters select,
+.filters button{
+  width:100%;
+  padding:12px;
+  border:1px solid #d8dee8;
+  border-radius:8px;
+  font-size:15px;
+}
+
+.filters button{
+  background:#0b5d3b;
+  color:#fff;
+  border:0;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.status{
+  margin:0 20px 15px;
+  color:#596273;
+}
+
+.jobs{
+  padding:0 20px 40px;
+}
+
+.card{
+  background:#fff;
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+
+.card h2{
+  margin:0 0 7px;
+  font-size:20px;
+}
+
+.company{
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:10px 0;
+}
+
+.pill{
+  background:#eef3f0;
+  border-radius:20px;
+  padding:6px 10px;
+  font-size:13px;
+}
+
+.verified{
+  background:#e7f5ed;
+  color:#0b5d3b;
+}
+
+.excerpt{
+  color:#596273;
+  line-height:1.5;
+}
+
+.actions{
+  margin-top:15px;
+}
+
+.actions a{
+  display:inline-block;
+  background:#0b5d3b;
+  color:#fff;
+  text-decoration:none;
+  padding:10px 15px;
+  border-radius:7px;
+  font-weight:700;
+}
+
+.empty,
+.error{
+  background:#fff;
+  padding:25px;
+  border-radius:12px;
+  text-align:center;
+}
+
+.error{
+  color:#a33;
+}
+
+@media(max-width:800px){
+  .filters{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .filters input,
+  .filters button{
+    grid-column:1/-1;
+  }
+}
+
+@media(max-width:520px){
+  .filters{
+    grid-template-columns:1fr;
+  }
+
+  .hero h1{
+    font-size:27px;
+  }
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="brand" href="/">KaziNexus</a>
+    <a href="/">Home</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="hero">
+  <h1>Find Jobs in Kenya</h1>
+  <p>Search current opportunities by keyword, county, category or job type.</p>
+</section>
+
+<section class="filters">
+
+<input
+  id="q"
+  type="search"
+  placeholder="Search jobs, company or location">
+
+<select id="county">
+  <option value="">All counties</option>
+</select>
+
+<select id="category">
+  <option value="">All categories</option>
+</select>
+
+<select id="type">
+  <option value="">All job types</option>
+  <option>Full-time</option>
+  <option>Part-time</option>
+  <option>Contract</option>
+  <option>Temporary</option>
+  <option>Internship</option>
+  <option>Volunteer</option>
+  <option>Remote</option>
+</select>
+
+<button id="searchBtn">Search</button>
+
+</section>
+
+<div id="status" class="status">
+  Loading jobs...
+</div>
+
+<section id="jobs" class="jobs"></section>
+
+</main>
+
+<script>
+
+const SUPABASE_URL =
+'https://vljehlfeglstpgphzebd.supabase.co';
+
+const SUPABASE_KEY =
+'sb_publishable_JXl3v8y4m8bq6p2z9n7k5r3t1s0f';
+
+const sb =
+supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const counties = [
+'Baringo',
+'Bomet',
+'Bungoma',
+'Busia',
+'Elgeyo-Marakwet',
+'Embu',
+'Garissa',
+'Homa Bay',
+'Isiolo',
+'Kajiado',
+'Kakamega',
+'Kericho',
+'Kiambu',
+'Kilifi',
+'Kirinyaga',
+'Kisii',
+'Kisumu',
+'Kitui',
+'Kwale',
+'Laikipia',
+'Lamu',
+'Machakos',
+'Makueni',
+'Mandera',
+'Marsabit',
+'Meru',
+'Migori',
+'Mombasa',
+'Murang’a',
+'Nairobi',
+'Nakuru',
+'Nandi',
+'Narok',
+'Nyamira',
+'Nyandarua',
+'Nyeri',
+'Samburu',
+'Siaya',
+'Taita-Taveta',
+'Tana River',
+'Tharaka-Nithi',
+'Trans Nzoia',
+'Turkana',
+'Uasin Gishu',
+'Vihiga',
+'Wajir',
+'West Pokot'
+];
+
+counties.forEach(c=>{
+  const o=document.createElement('option');
+  o.value=c;
+  o.textContent=c;
+  document.getElementById('county').appendChild(o);
+});
+
+const esc = s =>
+String(s ?? '').replace(
+  /[&<>"']/g,
+  m => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  }[m])
+);
+
+const val = (o,...keys)=>{
+  for(const k of keys){
+    if(
+      o?.[k] !== undefined &&
+      o?.[k] !== null &&
+      String(o[k]).trim() !== ''
+    ){
+      return o[k];
+    }
+  }
+
+  return '';
+};
+
+async function loadCategories(){
+
+  const {data,error} =
+    await sb
+      .from('categories')
+      .select('id,name')
+      .order('name');
+
+  if(!error && data){
+
+    data.forEach(c=>{
+
+      const o=document.createElement('option');
+
+      o.value=c.id;
+      o.textContent=c.name;
+
+      document
+        .getElementById('category')
+        .appendChild(o);
+
+    });
+
+  }
+}
+
+function excerpt(s){
+
+  s=String(s||'')
+    .replace(/<[^>]*>/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+
+  return s.length>190
+    ? s.slice(0,187)+'...'
+    : s;
+}
+
+async function loadJobs(){
+
+  const status =
+    document.getElementById('status');
+
+  const box =
+    document.getElementById('jobs');
+
+  status.textContent='Loading jobs...';
+
+  box.innerHTML='';
+
+  let query =
+    sb
+      .from('public_active_jobs')
+      .select('*')
+      .order('featured',{ascending:false})
+      .order('created_at',{ascending:false});
+
+  const county =
+    document.getElementById('county').value;
+
+  const category =
+    document.getElementById('category').value;
+
+  const type =
+    document.getElementById('type').value;
+
+  const q =
+    document
+      .getElementById('q')
+      .value
+      .trim()
+      .toLowerCase();
+
+  if(county){
+
+    query =
+      query.ilike(
+        'location',
+        '%'+county+'%'
+      );
+
+  }
+
+  if(category){
+
+    query =
+      query.eq(
+        'category_id',
+        category
+      );
+
+  }
+
+  if(type){
+
+    query =
+      query.ilike(
+        'job_type',
+        '%'+type+'%'
+      );
+
+  }
+
+  const {data,error} =
+    await query;
+
+  if(error){
+
+    status.textContent='';
+
+    box.innerHTML =
+      '<div class="error">' +
+      'Unable to load jobs right now. ' +
+      'Please try again.' +
+      '</div>';
+
+    return;
+  }
+
+  const jobs =
+    (data || []).filter(j=>{
+
+      if(!q) return true;
+
+      return [
+        j.title,
+        j.company,
+        j.location,
+        j.category_name,
+        j.description
+      ].some(v =>
+        String(v || '')
+          .toLowerCase()
+          .includes(q)
+      );
+
+    });
+
+  status.textContent =
+    jobs.length
+      ? jobs.length +
+        ' job' +
+        (jobs.length===1?'':'s') +
+        ' found'
+      : 'No matching jobs found';
+
+  if(!jobs.length){
+
+    box.innerHTML =
+      '<div class="empty">' +
+      'No jobs match your search. ' +
+      'Try different filters.' +
+      '</div>';
+
+    return;
+  }
+
+  box.innerHTML =
+    jobs.map(j=>{
+
+      const id =
+        encodeURIComponent(j.id);
+
+      const title =
+        esc(j.title || 'Untitled job');
+
+      const company =
+        esc(
+          j.company ||
+          'Employer not specified'
+        );
+
+      const location =
+        esc(
+          j.location ||
+          'Kenya'
+        );
+
+      const jt =
+        esc(
+          val(
+            j,
+            'job_type',
+            'jobtype',
+            'jobType'
+          ) || 'Job'
+        );
+
+      const salary =
+        esc(j.salary || '');
+
+      const cat =
+        esc(j.category_name || '');
+
+      const deadline =
+        j.deadline
+          ? new Date(j.deadline)
+              .toLocaleDateString(
+                'en-KE',
+                {
+                  day:'numeric',
+                  month:'short',
+                  year:'numeric'
+                }
+              )
+          : 'Not specified';
+
+      return `
+      <article class="card">
+
+        <h2>${title}</h2>
+
+        <div class="company">
+          ${company}
+
+          ${
+            j.employer_verified
+            ? '<span class="pill verified">✓ Verified employer</span>'
+            : ''
+          }
+
+        </div>
+
+        <div class="meta">
+
+          <span class="pill">
+            ${location}
+          </span>
+
+          <span class="pill">
+            ${jt}
+          </span>
+
+          ${
+            cat
+            ? `<span class="pill">${cat}</span>`
+            : ''
+          }
+
+          ${
+            salary
+            ? `<span class="pill">${salary}</span>`
+            : ''
+          }
+
+          <span class="pill">
+            Deadline: ${esc(deadline)}
+          </span>
+
+        </div>
+
+        <p class="excerpt">
+          ${esc(excerpt(j.description))}
+        </p>
+
+        <div class="actions">
+
+          <a href="/jobs/detail.html?id=${id}">
+            View Job
+          </a>
+
+        </div>
+
+      </article>
+      `;
+
+    }).join('');
+}
+
+document
+  .getElementById('searchBtn')
+  .addEventListener(
+    'click',
+    loadJobs
+  );
+
+document
+  .getElementById('q')
+  .addEventListener(
+    'keydown',
+    e=>{
+      if(e.key==='Enter'){
+        loadJobs();
+      }
+    }
+  );
+
+(async()=>{
+
+  await loadCategories();
+
+  await loadJobs();
+
+})();
+
+</script>
+
+</body>
+</html>
