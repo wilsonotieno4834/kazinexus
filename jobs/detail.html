@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>KaziNexus Job</title>
+
+<meta name="description" content="View this job opportunity on KaziNexus.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KaziNexus">
+<meta property="og:title" content="KaziNexus Job">
+<meta property="og:description" content="Connect Opportunities With the Right Talent.">
+<meta name="robots" content="index,follow">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  margin:0;
+  background:#f6f8fb;
+  color:#172033
+}
+
+.head{
+  background:#102a43;
+  color:#fff;
+  padding:18px 6%;
+  display:flex;
+  justify-content:space-between
+}
+
+.head a{
+  color:#fff
+}
+
+.wrap{
+  max-width:900px;
+  margin:30px auto;
+  padding:0 18px
+}
+
+.card{
+  background:#fff;
+  padding:28px;
+  border-radius:16px;
+  box-shadow:0 4px 18px #0001
+}
+
+.meta{
+  color:#667085
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  background:#e8f6ef;
+  color:#126b48;
+  font-weight:700;
+  font-size:12px
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:22px
+}
+
+.btn{
+  display:inline-block;
+  padding:12px 16px;
+  border-radius:8px;
+  border:0;
+  text-decoration:none;
+  font-weight:800;
+  cursor:pointer;
+  background:#126b48;
+  color:#fff
+}
+
+.wa{
+  background:#25d366
+}
+
+.copy{
+  background:#eef2f6;
+  color:#172033
+}
+
+.error{
+  color:#a12b2b
+}
+
+.description{
+  white-space:pre-line;
+  line-height:1.7
+}
+
+@media(max-width:600px){
+  .card{
+    padding:20px
+  }
+
+  .head{
+    padding:15px
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="head">
+  <strong>Kazi<span>Nexus</span></strong>
+  <a href="/jobs/">Find Jobs</a>
+</header>
+
+<main class="wrap">
+
+<article id="job" class="card">
+  Loading job...
+</article>
+
+</main>
+
+<script>
+
+const db=supabase.createClient(
+  'https://vljehlfeglstpgphzebj.supabase.co',
+  'sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3'
+);
+
+const id=new URLSearchParams(location.search).get('id');
+
+function event(n,j=null){
+  db
