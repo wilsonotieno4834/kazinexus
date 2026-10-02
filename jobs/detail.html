@@ -87,16 +87,6 @@ h1{
   font-weight:700;
 }
 
-.badge{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:20px;
-  background:#e8f6ef;
-  color:#126b48;
-  font-weight:700;
-  font-size:12px;
-}
-
 section{
   margin-top:28px;
 }
@@ -156,10 +146,6 @@ section h2{
   padding:40px 20px;
 }
 
-.hidden{
-  display:none;
-}
-
 @media(max-width:600px){
 
   .card{
@@ -203,12 +189,11 @@ section h2{
 <script>
 
 const db = supabase.createClient(
-  'https://vljehlfeglstpgphzebj.supabase.co',
-  'sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3'
+  'https://vljehlfeglstpgphzebd.supabase.co',
+  'sb_publishable_JXl3v8y4m8bq6p2z9n7k5r3t1s0f'
 );
 
 const id = new URLSearchParams(location.search).get('id');
-
 
 function showError(message){
 
@@ -228,7 +213,6 @@ function showError(message){
   job.appendChild(text);
 }
 
-
 function getValue(job,names,fallback=''){
 
   for(const name of names){
@@ -246,7 +230,6 @@ function getValue(job,names,fallback=''){
 
   return fallback;
 }
-
 
 function createSection(title,value){
 
@@ -269,22 +252,18 @@ function createSection(title,value){
   return section;
 }
 
-
 function renderJob(job){
 
   const container = document.getElementById('job');
 
   container.className = 'card';
-
   container.innerHTML = '';
-
 
   const title = getValue(
     job,
     ['title','job_title'],
     'Job Opportunity'
   );
-
 
   const company = getValue(
     job,
@@ -297,13 +276,11 @@ function renderJob(job){
     'KaziNexus'
   );
 
-
   const location = getValue(
     job,
     ['location','job_location'],
     'Not specified'
   );
-
 
   const jobType = getValue(
     job,
@@ -311,13 +288,11 @@ function renderJob(job){
     'Not specified'
   );
 
-
   const salary = getValue(
     job,
     ['salary','salary_range','pay'],
     'Not specified'
   );
-
 
   const deadline = getValue(
     job,
@@ -325,13 +300,11 @@ function renderJob(job){
     'Not specified'
   );
 
-
   const description = getValue(
     job,
     ['description','job_description'],
     'No job description provided.'
   );
-
 
   const responsibilities = getValue(
     job,
@@ -339,20 +312,17 @@ function renderJob(job){
     ''
   );
 
-
   const qualifications = getValue(
     job,
     ['qualification','qualifications'],
     ''
   );
 
-
   const contact = getValue(
     job,
     ['contact_person','contactPerson','contact'],
     ''
   );
-
 
   const email = getValue(
     job,
@@ -364,7 +334,6 @@ function renderJob(job){
     ''
   );
 
-
   const appLink = getValue(
     job,
     [
@@ -375,26 +344,19 @@ function renderJob(job){
     ''
   );
 
-
   document.title = title + ' - KaziNexus';
-
 
   const h1 = document.createElement('h1');
   h1.textContent = title;
-
   container.appendChild(h1);
-
 
   const companyDiv = document.createElement('div');
   companyDiv.className = 'company';
   companyDiv.textContent = company;
-
   container.appendChild(companyDiv);
-
 
   const meta = document.createElement('div');
   meta.className = 'meta';
-
 
   function addMeta(label,value){
 
@@ -415,14 +377,12 @@ function renderJob(job){
     meta.appendChild(box);
   }
 
-
   addMeta('Location',location);
   addMeta('Job Type',jobType);
   addMeta('Salary',salary);
   addMeta('Deadline',deadline);
 
   container.appendChild(meta);
-
 
   const descriptionSection =
     createSection(
@@ -434,7 +394,6 @@ function renderJob(job){
     container.appendChild(descriptionSection);
   }
 
-
   const responsibilitySection =
     createSection(
       'Responsibilities',
@@ -445,7 +404,6 @@ function renderJob(job){
     container.appendChild(responsibilitySection);
   }
 
-
   const qualificationSection =
     createSection(
       'Qualifications',
@@ -455,7 +413,6 @@ function renderJob(job){
   if(qualificationSection){
     container.appendChild(qualificationSection);
   }
-
 
   if(contact || email){
 
@@ -469,13 +426,10 @@ function renderJob(job){
 
     contactSection.appendChild(contactHeading);
 
-
     const contactContent =
       document.createElement('div');
 
-    contactContent.className =
-      'description';
-
+    contactContent.className = 'description';
 
     if(contact){
 
@@ -488,7 +442,6 @@ function renderJob(job){
       contactContent.appendChild(contactLine);
     }
 
-
     if(email){
 
       const emailLine =
@@ -500,12 +453,10 @@ function renderJob(job){
       contactContent.appendChild(emailLine);
     }
 
-
     contactSection.appendChild(contactContent);
 
     container.appendChild(contactSection);
   }
-
 
   if(email || appLink){
 
@@ -519,19 +470,16 @@ function renderJob(job){
 
     applySection.appendChild(applyHeading);
 
-
     const applyText =
       document.createElement('div');
 
     applyText.className = 'description';
-
 
     if(email){
 
       applyText.textContent =
         'Applications can be sent to: ' + email;
     }
-
 
     if(appLink){
 
@@ -544,18 +492,15 @@ function renderJob(job){
       }
     }
 
-
     applySection.appendChild(applyText);
 
     container.appendChild(applySection);
   }
 
-
   const actions =
     document.createElement('div');
 
   actions.className = 'actions';
-
 
   if(appLink){
 
@@ -570,7 +515,6 @@ function renderJob(job){
 
     actions.appendChild(apply);
   }
-
 
   if(email){
 
@@ -593,7 +537,6 @@ function renderJob(job){
 
     actions.appendChild(emailButton);
   }
-
 
   const whatsapp =
     document.createElement('button');
@@ -628,7 +571,6 @@ function renderJob(job){
 
   actions.appendChild(whatsapp);
 
-
   const copy =
     document.createElement('button');
 
@@ -661,10 +603,8 @@ function renderJob(job){
 
   actions.appendChild(copy);
 
-
   container.appendChild(actions);
 }
-
 
 async function loadJob(){
 
@@ -677,20 +617,17 @@ async function loadJob(){
     return;
   }
 
-
   try{
 
     const result =
       await db
-        .from('jobs')
+        .from('public_active_jobs')
         .select('*')
         .eq('id',id)
         .maybeSingle();
 
-
     const data = result.data;
     const error = result.error;
-
 
     if(error){
 
@@ -707,19 +644,16 @@ async function loadJob(){
       return;
     }
 
-
     if(!data){
 
       showError(
-        'Job not found.'
+        'Job not found or the job is no longer active.'
       );
 
       return;
     }
 
-
     renderJob(data);
-
 
   }catch(error){
 
@@ -733,7 +667,6 @@ async function loadJob(){
     );
   }
 }
-
 
 loadJob();
 
