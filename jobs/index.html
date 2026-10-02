@@ -9,14 +9,18 @@
 <meta name="description"
 content="Find verified job opportunities across Kenya on KaziNexus. Search jobs by keyword, county, category and job type.">
 
+<meta name="robots" content="index, follow">
+
 <link rel="canonical" href="https://kazinexus.pages.dev/jobs/">
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
-  font-family:Arial,sans-serif;
+  font-family:Arial,Helvetica,sans-serif;
   background:#f5f7fb;
   color:#172033;
 }
@@ -44,6 +48,7 @@ header a{
 
 .brand{
   font-size:22px;
+  font-weight:900;
 }
 
 .wrap{
@@ -63,6 +68,7 @@ header a{
 .hero p{
   margin:0;
   color:#5d6675;
+  line-height:1.5;
 }
 
 .filters{
@@ -87,6 +93,12 @@ header a{
   font-size:15px;
 }
 
+.filters input:focus,
+.filters select:focus{
+  outline:2px solid #bfe5d2;
+  border-color:#0b5d3b;
+}
+
 .filters button{
   background:#0b5d3b;
   color:#fff;
@@ -95,9 +107,14 @@ header a{
   cursor:pointer;
 }
 
+.filters button:hover{
+  background:#084a30;
+}
+
 .status{
   margin:0 20px 15px;
   color:#596273;
+  font-weight:600;
 }
 
 .jobs{
@@ -110,16 +127,22 @@ header a{
   padding:20px;
   margin-bottom:14px;
   box-shadow:0 2px 10px rgba(0,0,0,.06);
+  border:1px solid #edf0f4;
 }
 
 .card h2{
   margin:0 0 7px;
   font-size:20px;
+  color:#172033;
 }
 
 .company{
   font-weight:700;
   margin-bottom:8px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
 }
 
 .meta{
@@ -134,16 +157,19 @@ header a{
   border-radius:20px;
   padding:6px 10px;
   font-size:13px;
+  display:inline-block;
 }
 
 .verified{
   background:#e7f5ed;
   color:#0b5d3b;
+  font-weight:700;
 }
 
 .excerpt{
   color:#596273;
   line-height:1.5;
+  margin-bottom:0;
 }
 
 .actions{
@@ -160,19 +186,32 @@ header a{
   font-weight:700;
 }
 
+.actions a:hover{
+  background:#084a30;
+}
+
 .empty,
 .error{
   background:#fff;
   padding:25px;
   border-radius:12px;
   text-align:center;
+  border:1px solid #edf0f4;
 }
 
 .error{
   color:#a33;
 }
 
+.loading{
+  background:#fff;
+  padding:25px;
+  border-radius:12px;
+  text-align:center;
+}
+
 @media(max-width:800px){
+
   .filters{
     grid-template-columns:1fr 1fr;
   }
@@ -184,12 +223,22 @@ header a{
 }
 
 @media(max-width:520px){
+
   .filters{
     grid-template-columns:1fr;
   }
 
+  .filters input,
+  .filters button{
+    grid-column:auto;
+  }
+
   .hero h1{
     font-size:27px;
+  }
+
+  .card{
+    padding:17px;
   }
 }
 </style>
@@ -200,191 +249,325 @@ header a{
 <body>
 
 <header>
+
   <div class="wrap">
-    <a class="brand" href="/">KaziNexus</a>
-    <a href="/">Home</a>
+
+    <a class="brand" href="/">
+      KaziNexus
+    </a>
+
+    <a href="/">
+      Home
+    </a>
+
   </div>
+
 </header>
+
 
 <main class="wrap">
 
 <section class="hero">
-  <h1>Find Jobs in Kenya</h1>
-  <p>Search current opportunities by keyword, county, category or job type.</p>
+
+  <h1>
+    Find Jobs in Kenya
+  </h1>
+
+  <p>
+    Search current opportunities by keyword, county, category or job type.
+  </p>
+
 </section>
+
 
 <section class="filters">
 
-<input
-  id="q"
-  type="search"
-  placeholder="Search jobs, company or location">
+  <input
+    id="q"
+    type="search"
+    placeholder="Search jobs, company or location"
+    autocomplete="off"
+  >
 
-<select id="county">
-  <option value="">All counties</option>
-</select>
+  <select id="county">
+    <option value="">All counties</option>
+  </select>
 
-<select id="category">
-  <option value="">All categories</option>
-</select>
+  <select id="category">
+    <option value="">All categories</option>
+  </select>
 
-<select id="type">
-  <option value="">All job types</option>
-  <option>Full-time</option>
-  <option>Part-time</option>
-  <option>Contract</option>
-  <option>Temporary</option>
-  <option>Internship</option>
-  <option>Volunteer</option>
-  <option>Remote</option>
-</select>
+  <select id="type">
 
-<button id="searchBtn">Search</button>
+    <option value="">
+      All job types
+    </option>
+
+    <option value="Full-time">
+      Full-time
+    </option>
+
+    <option value="Part-time">
+      Part-time
+    </option>
+
+    <option value="Contract">
+      Contract
+    </option>
+
+    <option value="Temporary">
+      Temporary
+    </option>
+
+    <option value="Internship">
+      Internship
+    </option>
+
+    <option value="Volunteer">
+      Volunteer
+    </option>
+
+    <option value="Remote">
+      Remote
+    </option>
+
+  </select>
+
+  <button id="searchBtn">
+    Search
+  </button>
 
 </section>
+
 
 <div id="status" class="status">
   Loading jobs...
 </div>
 
+
 <section id="jobs" class="jobs"></section>
 
 </main>
 
+
 <script>
 
 const SUPABASE_URL =
-'https://vljehlfeglstpgphzebd.supabase.co';
+  'https://vljehlfeglstpgphzebd.supabase.co';
 
 const SUPABASE_KEY =
-'sb_publishable_JXl3v8y4m8bq6p2z9n7k5r3t1s0f';
+  'sb_publishable_JXl3v8y4m8bq6p2z9n7k5r3t1s0f';
 
 const sb =
-supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+/* =========================
+   KENYA COUNTIES
+========================= */
 
 const counties = [
-'Baringo',
-'Bomet',
-'Bungoma',
-'Busia',
-'Elgeyo-Marakwet',
-'Embu',
-'Garissa',
-'Homa Bay',
-'Isiolo',
-'Kajiado',
-'Kakamega',
-'Kericho',
-'Kiambu',
-'Kilifi',
-'Kirinyaga',
-'Kisii',
-'Kisumu',
-'Kitui',
-'Kwale',
-'Laikipia',
-'Lamu',
-'Machakos',
-'Makueni',
-'Mandera',
-'Marsabit',
-'Meru',
-'Migori',
-'Mombasa',
-'Murang’a',
-'Nairobi',
-'Nakuru',
-'Nandi',
-'Narok',
-'Nyamira',
-'Nyandarua',
-'Nyeri',
-'Samburu',
-'Siaya',
-'Taita-Taveta',
-'Tana River',
-'Tharaka-Nithi',
-'Trans Nzoia',
-'Turkana',
-'Uasin Gishu',
-'Vihiga',
-'Wajir',
-'West Pokot'
+
+  'Baringo',
+  'Bomet',
+  'Bungoma',
+  'Busia',
+  'Elgeyo-Marakwet',
+  'Embu',
+  'Garissa',
+  'Homa Bay',
+  'Isiolo',
+  'Kajiado',
+  'Kakamega',
+  'Kericho',
+  'Kiambu',
+  'Kilifi',
+  'Kirinyaga',
+  'Kisii',
+  'Kisumu',
+  'Kitui',
+  'Kwale',
+  'Laikipia',
+  'Lamu',
+  'Machakos',
+  'Makueni',
+  'Mandera',
+  'Marsabit',
+  'Meru',
+  'Migori',
+  'Mombasa',
+  'Murang’a',
+  'Nairobi',
+  'Nakuru',
+  'Nandi',
+  'Narok',
+  'Nyamira',
+  'Nyandarua',
+  'Nyeri',
+  'Samburu',
+  'Siaya',
+  'Taita-Taveta',
+  'Tana River',
+  'Tharaka-Nithi',
+  'Trans Nzoia',
+  'Turkana',
+  'Uasin Gishu',
+  'Vihiga',
+  'Wajir',
+  'West Pokot'
+
 ];
 
-counties.forEach(c=>{
-  const o=document.createElement('option');
-  o.value=c;
-  o.textContent=c;
-  document.getElementById('county').appendChild(o);
+
+counties.forEach(county => {
+
+  const option =
+    document.createElement('option');
+
+  option.value = county;
+
+  option.textContent = county;
+
+  document
+    .getElementById('county')
+    .appendChild(option);
+
 });
 
-const esc = s =>
-String(s ?? '').replace(
-  /[&<>"']/g,
-  m => ({
-    '&':'&amp;',
-    '<':'&lt;',
-    '>':'&gt;',
-    '"':'&quot;',
-    "'":'&#39;'
-  }[m])
-);
 
-const val = (o,...keys)=>{
-  for(const k of keys){
+/* =========================
+   HTML ESCAPE
+========================= */
+
+function esc(value){
+
+  return String(value ?? '')
+    .replace(
+      /[&<>"']/g,
+      character => ({
+
+        '&':'&amp;',
+        '<':'&lt;',
+        '>':'&gt;',
+        '"':'&quot;',
+        "'":'&#39;'
+
+      }[character])
+    );
+
+}
+
+
+/* =========================
+   VALUE HELPER
+========================= */
+
+function val(object,...keys){
+
+  for(const key of keys){
+
     if(
-      o?.[k] !== undefined &&
-      o?.[k] !== null &&
-      String(o[k]).trim() !== ''
+      object?.[key] !== undefined &&
+      object?.[key] !== null &&
+      String(object[key]).trim() !== ''
     ){
-      return o[k];
+
+      return object[key];
+
     }
+
   }
 
   return '';
-};
+
+}
+
+
+/* =========================
+   TEXT EXCERPT
+========================= */
+
+function excerpt(value){
+
+  let text =
+    String(value || '')
+      .replace(/<[^>]*>/g,' ')
+      .replace(/\s+/g,' ')
+      .trim();
+
+  if(text.length > 190){
+
+    return text.slice(0,187) + '...';
+
+  }
+
+  return text;
+
+}
+
+
+/* =========================
+   LOAD CATEGORIES
+========================= */
 
 async function loadCategories(){
 
-  const {data,error} =
+  const categorySelect =
+    document.getElementById('category');
+
+  const {
+    data,
+    error
+  } =
     await sb
       .from('categories')
       .select('id,name')
       .order('name');
 
-  if(!error && data){
 
-    data.forEach(c=>{
+  if(error){
 
-      const o=document.createElement('option');
+    console.warn(
+      'Categories could not be loaded:',
+      error
+    );
 
-      o.value=c.id;
-      o.textContent=c.name;
-
-      document
-        .getElementById('category')
-        .appendChild(o);
-
-    });
+    return;
 
   }
+
+
+  if(!data){
+
+    return;
+
+  }
+
+
+  data.forEach(category => {
+
+    const option =
+      document.createElement('option');
+
+    option.value =
+      category.id;
+
+    option.textContent =
+      category.name;
+
+    categorySelect.appendChild(option);
+
+  });
+
 }
 
-function excerpt(s){
 
-  s=String(s||'')
-    .replace(/<[^>]*>/g,' ')
-    .replace(/\s+/g,' ')
-    .trim();
-
-  return s.length>190
-    ? s.slice(0,187)+'...'
-    : s;
-}
+/* =========================
+   LOAD JOBS
+========================= */
 
 async function loadJobs(){
 
@@ -394,42 +577,75 @@ async function loadJobs(){
   const box =
     document.getElementById('jobs');
 
-  status.textContent='Loading jobs...';
 
-  box.innerHTML='';
+  status.textContent =
+    'Loading jobs...';
+
+  box.innerHTML =
+    '<div class="loading">Loading current opportunities...</div>';
+
+
+  /*
+   * IMPORTANT:
+   * Use the public_active_jobs VIEW.
+   *
+   * Do NOT order by "featured".
+   * The current view does not contain
+   * a featured column.
+   */
 
   let query =
     sb
       .from('public_active_jobs')
       .select('*')
-      .order('featured',{ascending:false})
-      .order('created_at',{ascending:false});
+      .order(
+        'created_at',
+        {
+          ascending:false
+        }
+      );
+
 
   const county =
-    document.getElementById('county').value;
+    document
+      .getElementById('county')
+      .value;
+
 
   const category =
-    document.getElementById('category').value;
+    document
+      .getElementById('category')
+      .value;
+
 
   const type =
-    document.getElementById('type').value;
+    document
+      .getElementById('type')
+      .value;
 
-  const q =
+
+  const search =
     document
       .getElementById('q')
       .value
       .trim()
       .toLowerCase();
 
+
+  /* COUNTY FILTER */
+
   if(county){
 
     query =
       query.ilike(
         'location',
-        '%'+county+'%'
+        '%' + county + '%'
       );
 
   }
+
+
+  /* CATEGORY FILTER */
 
   if(category){
 
@@ -441,135 +657,242 @@ async function loadJobs(){
 
   }
 
+
+  /* JOB TYPE FILTER */
+
   if(type){
 
     query =
       query.ilike(
         'job_type',
-        '%'+type+'%'
+        '%' + type + '%'
       );
 
   }
 
-  const {data,error} =
+
+  const {
+    data,
+    error
+  } =
     await query;
+
+
+  /* DATABASE ERROR */
 
   if(error){
 
-    status.textContent='';
+    console.error(
+      'KaziNexus jobs error:',
+      error
+    );
+
+    status.textContent =
+      '';
 
     box.innerHTML =
-      '<div class="error">' +
-      'Unable to load jobs right now. ' +
-      'Please try again.' +
-      '</div>';
+      `
+      <div class="error">
+
+        <strong>
+          Unable to load jobs right now.
+        </strong>
+
+        <p>
+          Please refresh the page and try again.
+        </p>
+
+      </div>
+      `;
 
     return;
+
   }
 
-  const jobs =
-    (data || []).filter(j=>{
 
-      if(!q) return true;
+  /* SEARCH FILTER */
+
+  const jobs =
+    (data || []).filter(job => {
+
+      if(!search){
+
+        return true;
+
+      }
+
 
       return [
-        j.title,
-        j.company,
-        j.location,
-        j.category_name,
-        j.description
-      ].some(v =>
-        String(v || '')
+
+        job.title,
+        job.company,
+        job.location,
+        job.category_name,
+        job.description,
+        job.job_type
+
+      ].some(value =>
+
+        String(value || '')
           .toLowerCase()
-          .includes(q)
+          .includes(search)
+
       );
 
     });
+
+
+  /* RESULT COUNT */
 
   status.textContent =
     jobs.length
       ? jobs.length +
         ' job' +
-        (jobs.length===1?'':'s') +
+        (jobs.length === 1 ? '' : 's') +
         ' found'
       : 'No matching jobs found';
+
+
+  /* NO RESULTS */
 
   if(!jobs.length){
 
     box.innerHTML =
-      '<div class="empty">' +
-      'No jobs match your search. ' +
-      'Try different filters.' +
-      '</div>';
+      `
+      <div class="empty">
+
+        <strong>
+          No jobs match your search.
+        </strong>
+
+        <p>
+          Try different keywords or filters.
+        </p>
+
+      </div>
+      `;
 
     return;
+
   }
 
+
+  /* =========================
+     DISPLAY JOB CARDS
+  ========================= */
+
   box.innerHTML =
-    jobs.map(j=>{
+    jobs.map(job => {
 
       const id =
-        encodeURIComponent(j.id);
+        encodeURIComponent(
+          job.id
+        );
+
 
       const title =
-        esc(j.title || 'Untitled job');
+        esc(
+          job.title ||
+          'Untitled job'
+        );
+
 
       const company =
         esc(
-          j.company ||
+          job.company ||
           'Employer not specified'
         );
 
+
       const location =
         esc(
-          j.location ||
+          job.location ||
           'Kenya'
         );
 
-      const jt =
+
+      const jobType =
         esc(
           val(
-            j,
+            job,
             'job_type',
             'jobtype',
             'jobType'
-          ) || 'Job'
+          ) ||
+          'Job'
         );
 
+
       const salary =
-        esc(j.salary || '');
+        esc(
+          job.salary || ''
+        );
 
-      const cat =
-        esc(j.category_name || '');
 
-      const deadline =
-        j.deadline
-          ? new Date(j.deadline)
-              .toLocaleDateString(
-                'en-KE',
-                {
-                  day:'numeric',
-                  month:'short',
-                  year:'numeric'
-                }
-              )
-          : 'Not specified';
+      const category =
+        esc(
+          job.category_name || ''
+        );
+
+
+      let deadline =
+        'Not specified';
+
+
+      if(job.deadline){
+
+        const date =
+          new Date(
+            job.deadline
+          );
+
+
+        if(!Number.isNaN(date.getTime())){
+
+          deadline =
+            date.toLocaleDateString(
+              'en-KE',
+              {
+                day:'numeric',
+                month:'short',
+                year:'numeric'
+              }
+            );
+
+        }
+
+      }
+
+
+      const verifiedBadge =
+        job.employer_verified
+          ? `
+            <span class="pill verified">
+              ✓ Verified employer
+            </span>
+          `
+          : '';
+
 
       return `
+
       <article class="card">
 
-        <h2>${title}</h2>
+        <h2>
+          ${title}
+        </h2>
+
 
         <div class="company">
-          ${company}
 
-          ${
-            j.employer_verified
-            ? '<span class="pill verified">✓ Verified employer</span>'
-            : ''
-          }
+          <span>
+            ${company}
+          </span>
+
+          ${verifiedBadge}
 
         </div>
+
 
         <div class="meta">
 
@@ -577,21 +900,33 @@ async function loadJobs(){
             ${location}
           </span>
 
+
           <span class="pill">
-            ${jt}
+            ${jobType}
           </span>
 
+
           ${
-            cat
-            ? `<span class="pill">${cat}</span>`
-            : ''
+            category
+              ? `
+                <span class="pill">
+                  ${category}
+                </span>
+              `
+              : ''
           }
+
 
           ${
             salary
-            ? `<span class="pill">${salary}</span>`
-            : ''
+              ? `
+                <span class="pill">
+                  ${salary}
+                </span>
+              `
+              : ''
           }
+
 
           <span class="pill">
             Deadline: ${esc(deadline)}
@@ -599,23 +934,40 @@ async function loadJobs(){
 
         </div>
 
+
         <p class="excerpt">
-          ${esc(excerpt(j.description))}
+
+          ${esc(
+            excerpt(
+              job.description
+            )
+          )}
+
         </p>
+
 
         <div class="actions">
 
-          <a href="/jobs/detail.html?id=${id}">
+          <a
+            href="/jobs/detail.html?id=${id}"
+          >
             View Job
           </a>
 
         </div>
 
       </article>
+
       `;
 
     }).join('');
+
 }
+
+
+/* =========================
+   SEARCH BUTTON
+========================= */
 
 document
   .getElementById('searchBtn')
@@ -624,18 +976,61 @@ document
     loadJobs
   );
 
+
+/* =========================
+   ENTER KEY SEARCH
+========================= */
+
 document
   .getElementById('q')
   .addEventListener(
     'keydown',
-    e=>{
-      if(e.key==='Enter'){
+    event => {
+
+      if(event.key === 'Enter'){
+
         loadJobs();
+
       }
+
     }
   );
 
-(async()=>{
+
+/* =========================
+   AUTO-REFRESH WHEN FILTERS
+   CHANGE
+========================= */
+
+document
+  .getElementById('county')
+  .addEventListener(
+    'change',
+    loadJobs
+  );
+
+
+document
+  .getElementById('category')
+  .addEventListener(
+    'change',
+    loadJobs
+  );
+
+
+document
+  .getElementById('type')
+  .addEventListener(
+    'change',
+    loadJobs
+  );
+
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+(async function(){
 
   await loadCategories();
 
