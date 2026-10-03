@@ -1,1 +1,835 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Share a Job Opportunity | KaziNexus</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>body{margin:0;font-family:Arial,sans-serif;background:#f5f7fa;color:#172033}.header{background:#fff;border-bottom:1px solid #ddd;padding:16px 6%;display:flex;justify-content:space-between;align-items:center}.logo{font-size:27px;font-weight:800;color:#126b48}.logo span{color:#f2a900}.header a{color:#126b48;text-decoration:none;font-weight:700}.container{max-width:900px;margin:35px auto;padding:0 18px}.card{background:#fff;padding:30px;border-radius:14px;box-shadow:0 5px 20px #00000010}.intro{color:#667085}.note{background:#eef8f3;padding:14px;border-radius:9px;color:#126b48;margin:18px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.full{grid-column:1/-1}.field{margin-bottom:4px}label{display:block;font-weight:700;margin-bottom:7px}input,select,textarea{width:100%;padding:12px;border:1px solid #d5dbe3;border-radius:8px;box-sizing:border-box;font-size:15px}textarea{min-height:120px;resize:vertical}button{background:#126b48;color:#fff;border:0;padding:14px 22px;border-radius:8px;font-weight:800;font-size:16px;cursor:pointer}.msg{display:none;margin-top:18px;padding:14px;border-radius:9px}.success{display:block;background:#e9f7ef;color:#126b48}.error{display:block;background:#fff0f0;color:#a12b2b}.small{font-size:13px;color:#667085}.permission{font-weight:700;color:#126b48;margin:10px 0 18px}@media(max-width:650px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.card{padding:20px}}</style></head><body><header class="header"><div class="logo">Kazi<span>Nexus</span></div><a href="/">Home</a></header><main class="container"><div class="card"><h1>Share a Job Opportunity</h1><p class="intro">Anyone can share a legitimate job opportunity on KaziNexus. Posting is free.</p><div class="note"><strong>How it works:</strong> Admins, verified employers, approved HR/recruiters and approved partners can publish directly. Regular, new and unverified posters are sent for KaziNexus admin approval first.</div><div id="permission" class="permission">Checking posting access…</div><form id="form"><div class="grid"><div class="field"><label>Your Name *</label><input id="poster_name" required></div><div class="field"><label>Your Email *</label><input id="poster_email" type="email" required></div><div class="field"><label>Your Phone</label><input id="poster_phone" type="tel"></div><div class="field"><label>Company / Organization *</label><input id="company" required></div><div class="field"><label>Job Title *</label><input id="title" required></div><div class="field"><label>Location *</label><input id="location" placeholder="Kisumu, Nairobi, Remote..." required></div><div class="field"><label>Job Type *</label><select id="job_type" required><option value="">Select type</option><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Internship</option><option>Volunteer</option><option>Remote</option></select></div><div class="field"><label>Salary / Compensation</label><input id="salary"></div><div class="field"><label>Application Deadline *</label><input id="deadline" type="date" required></div><div class="field"><label>Application Email</label><input id="application_email" type="email"></div><div class="field"><label>Application Link</label><input id="application_link" type="url" placeholder="https://..."></div><div class="field"><label>Contact Person</label><input id="contact_person"></div><div class="field full"><label>Job Description *</label><textarea id="description" required></textarea></div><div class="field full"><label>Key Responsibilities</label><textarea id="responsibilities"></textarea></div><div class="field full"><label>Qualifications & Requirements</label><textarea id="qualifications"></textarea></div></div><p class="small">By submitting, you confirm that the opportunity is genuine and that the information provided is accurate.</p><button id="submit" type="submit">Submit Opportunity</button></form><div id="msg" class="msg"></div></div></main><script>const db=supabase.createClient('https://vljehlfeglstpgphzebj.supabase.co','sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3');const $=id=>document.getElementById(id),v=id=>$(id).value.trim();const msg=(t,c)=>{$('msg').textContent=t;$('msg').className='msg '+c};(async()=>{const {data:{session}}=await db.auth.getSession();if(session){const m=session.user.user_metadata||{};$('poster_name').value=m.full_name||m.name||'';$('poster_email').value=session.user.email||'';}const {data:role,error}=await db.rpc('get_my_posting_role');if(error){$('permission').textContent='Posting is available; approval rules are enforced securely.';}else{$('permission').textContent=role==='admin'||role==='employer'||role==='hr_recruiter'||role==='partner'?'Your account has direct-posting access.':'Your opportunity will be reviewed by KaziNexus admin before publication.';}})();$('form').addEventListener('submit',async e=>{e.preventDefault();$('submit').disabled=true;$('submit').textContent='Submitting...';const payload={poster_name:v('poster_name'),poster_email:v('poster_email'),poster_phone:v('poster_phone')||null,company:v('company'),title:v('title'),location:v('location'),job_type:v('job_type'),salary:v('salary')||null,deadline:v('deadline'),description:v('description'),responsibilities:v('responsibilities')||null,qualifications:v('qualifications')||null,application_email:v('application_email')||null,application_link:v('application_link')||null,contact_person:v('contact_person')||null};const {data,error}=await db.rpc('submit_job_opportunity',{payload});if(error){msg(error.message,'error');$('submit').disabled=false;$('submit').textContent='Submit Opportunity';return}msg(data.mode==='direct'?'Opportunity published successfully. It is now visible to job seekers.':'Opportunity submitted successfully. It is waiting for KaziNexus admin approval.','success');$('form').reset();$('submit').disabled=false;$('submit').textContent='Submit Opportunity'});</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Find Jobs in Kenya | KaziNexus</title>
+
+  <meta name="description" content="Find verified job opportunities across all 47 counties in Kenya on KaziNexus. Search jobs by location, category and job type.">
+  <meta name="robots" content="index,follow">
+
+  <link rel="canonical" href="https://kazinexus.pages.dev/jobs/">
+
+  <meta property="og:title" content="Find Jobs in Kenya | KaziNexus">
+  <meta property="og:description" content="Search job opportunities across Kenya on KaziNexus.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="KaziNexus">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f7fa;
+      color: #172033;
+    }
+
+    header {
+      background: #0b5d3b;
+      color: white;
+      padding: 16px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    }
+
+    .header-inner {
+      max-width: 1150px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 9px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      background: rgba(255,255,255,.15);
+    }
+
+    .hero {
+      background: white;
+      padding: 45px 20px 35px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .hero-inner {
+      max-width: 1150px;
+      margin: auto;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 38px;
+      line-height: 1.15;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #5b6472;
+      font-size: 17px;
+    }
+
+    .filters {
+      max-width: 1150px;
+      margin: 25px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #d5d9df;
+      border-radius: 8px;
+      background: white;
+      color: #172033;
+      font-size: 15px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #0b5d3b;
+      box-shadow: 0 0 0 2px rgba(11,93,59,.1);
+    }
+
+    .filter-actions {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 7px;
+      padding: 11px 17px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .clear-btn {
+      background: #e8edf1;
+      color: #263238;
+    }
+
+    .post-btn {
+      background: #0b5d3b;
+      color: white;
+    }
+
+    .results-info {
+      max-width: 1150px;
+      margin: 0 auto 15px;
+      padding: 0 5px;
+      color: #586273;
+      font-size: 14px;
+    }
+
+    .jobs {
+      max-width: 1150px;
+      margin: auto;
+      padding: 0 0 50px;
+    }
+
+    .job-card {
+      background: white;
+      margin-bottom: 15px;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #e4e8ec;
+      box-shadow: 0 2px 8px rgba(0,0,0,.04);
+      transition: transform .15s, box-shadow .15s;
+    }
+
+    .job-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 18px rgba(0,0,0,.08);
+    }
+
+    .job-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    .job-title {
+      margin: 0 0 7px;
+      color: #0b5d3b;
+      font-size: 21px;
+    }
+
+    .company {
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .tag {
+      background: #eef5f1;
+      color: #245c43;
+      padding: 6px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .salary {
+      font-weight: 700;
+      color: #333;
+    }
+
+    .deadline {
+      color: #8a3b12;
+      font-size: 13px;
+      margin-top: 9px;
+    }
+
+    .featured {
+      background: #f4b400;
+      color: #222;
+      padding: 6px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .description {
+      color: #596273;
+      line-height: 1.55;
+      margin: 13px 0;
+    }
+
+    .view-btn {
+      display: inline-block;
+      background: #0b5d3b;
+      color: white;
+      text-decoration: none;
+      padding: 10px 15px;
+      border-radius: 7px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .view-btn:hover {
+      background: #08482e;
+    }
+
+    .state {
+      background: white;
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      color: #657080;
+      border: 1px solid #e4e8ec;
+    }
+
+    .error {
+      color: #a12622;
+      background: #fff4f3;
+      border-color: #f0c8c5;
+    }
+
+    footer {
+      background: #10231b;
+      color: #dfe9e4;
+      padding: 30px 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      margin: 0 7px;
+    }
+
+    @media (max-width: 850px) {
+      .search-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav {
+        width: 100%;
+      }
+
+      nav a {
+        padding: 7px 9px;
+      }
+
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      .search-row {
+        grid-template-columns: 1fr;
+      }
+
+      .job-top {
+        flex-direction: column;
+      }
+
+      .jobs,
+      .results-info {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="/">KaziNexus</a>
+
+    <nav>
+      <a href="/">Home</a>
+      <a href="/jobs/">Find Jobs</a>
+      <a href="/post-opportunity.html">Post Opportunity</a>
+      <a href="/jobseekers/auth.html">Jobseekers</a>
+      <a href="/employers/auth.html">Employers</a>
+      <a href="/admin.html">Admin</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Find Jobs in Kenya</h1>
+    <p>Search opportunities across all 47 counties and connect with the right opportunity.</p>
+  </div>
+</section>
+
+<section class="filters">
+
+  <div class="search-row">
+
+    <input
+      type="search"
+      id="search"
+      placeholder="Search job title, company or keyword..."
+      autocomplete="off"
+    >
+
+    <select id="county">
+      <option value="">All counties</option>
+      <option>Baringo</option>
+      <option>Bomet</option>
+      <option>Bungoma</option>
+      <option>Busia</option>
+      <option>Elgeyo-Marakwet</option>
+      <option>Embu</option>
+      <option>Garissa</option>
+      <option>Homa Bay</option>
+      <option>Isiolo</option>
+      <option>Kajiado</option>
+      <option>Kakamega</option>
+      <option>Kericho</option>
+      <option>Kiambu</option>
+      <option>Kilifi</option>
+      <option>Kirinyaga</option>
+      <option>Kisii</option>
+      <option>Kisumu</option>
+      <option>Kitui</option>
+      <option>Kwale</option>
+      <option>Laikipia</option>
+      <option>Lamu</option>
+      <option>Machakos</option>
+      <option>Makueni</option>
+      <option>Mandera</option>
+      <option>Marsabit</option>
+      <option>Meru</option>
+      <option>Migori</option>
+      <option>Mombasa</option>
+      <option>Murang'a</option>
+      <option>Nairobi</option>
+      <option>Nakuru</option>
+      <option>Nandi</option>
+      <option>Narok</option>
+      <option>Nyamira</option>
+      <option>Nyandarua</option>
+      <option>Nyeri</option>
+      <option>Samburu</option>
+      <option>Siaya</option>
+      <option>Taita-Taveta</option>
+      <option>Tana River</option>
+      <option>Tharaka-Nithi</option>
+      <option>Trans Nzoia</option>
+      <option>Turkana</option>
+      <option>Uasin Gishu</option>
+      <option>Vihiga</option>
+      <option>Wajir</option>
+      <option>West Pokot</option>
+    </select>
+
+    <select id="category">
+      <option value="">All categories</option>
+    </select>
+
+    <select id="jobtype">
+      <option value="">All job types</option>
+      <option value="Full-time">Full-time</option>
+      <option value="Part-time">Part-time</option>
+      <option value="Contract">Contract</option>
+      <option value="Temporary">Temporary</option>
+      <option value="Internship">Internship</option>
+      <option value="Volunteer">Volunteer</option>
+      <option value="Remote">Remote</option>
+    </select>
+
+  </div>
+
+  <div class="filter-actions">
+    <button class="clear-btn" id="clearBtn">Clear Filters</button>
+
+    <a href="/post-opportunity.html">
+      <button class="post-btn" type="button">Post an Opportunity</button>
+    </a>
+  </div>
+
+</section>
+
+<div class="results-info" id="resultsInfo">
+  Loading jobs...
+</div>
+
+<main class="jobs">
+
+  <div class="state" id="loading">
+    Loading available jobs...
+  </div>
+
+  <div id="jobsList"></div>
+
+  <div class="state" id="empty" style="display:none;">
+    <h3>No jobs found</h3>
+    <p>Try changing your search or filters.</p>
+  </div>
+
+  <div class="state error" id="error" style="display:none;">
+    <h3>Unable to load jobs</h3>
+    <p id="errorMessage">
+      Please refresh the page and try again.
+    </p>
+  </div>
+
+</main>
+
+<footer>
+  <p><strong>KaziNexus</strong> — Connect Opportunities With the Right Talent</p>
+
+  <p>
+    <a href="/">Home</a> |
+    <a href="/about.html">About</a> |
+    <a href="/contact.html">Contact</a> |
+    <a href="/trust-safety.html">Trust &amp; Safety</a> |
+    <a href="/report.html">Report</a>
+  </p>
+
+  <p>
+    Need help? WhatsApp/Call
+    <a href="https://wa.me/254706174379">0706174379</a>
+  </p>
+</footer>
+
+<script>
+  const SUPABASE_URL =
+    "https://vljehlfeglstpgphzebj.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3";
+
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
+
+  const searchInput = document.getElementById("search");
+  const countySelect = document.getElementById("county");
+  const categorySelect = document.getElementById("category");
+  const jobTypeSelect = document.getElementById("jobtype");
+
+  const jobsList = document.getElementById("jobsList");
+  const loading = document.getElementById("loading");
+  const empty = document.getElementById("empty");
+  const errorBox = document.getElementById("error");
+  const errorMessage = document.getElementById("errorMessage");
+  const resultsInfo = document.getElementById("resultsInfo");
+
+  let allJobs = [];
+
+  function escapeHTML(value) {
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function formatDate(dateValue) {
+    if (!dateValue) {
+      return "Not specified";
+    }
+
+    const date = new Date(dateValue);
+
+    if (Number.isNaN(date.getTime())) {
+      return dateValue;
+    }
+
+    return date.toLocaleDateString("en-KE", {
+      day: "numeric",
+      month: "short",
+      year: "numeric"
+    });
+  }
+
+  function formatSalary(value) {
+    if (value === null || value === undefined || value === "") {
+      return "";
+    }
+
+    if (typeof value === "number") {
+      return "KSh " + value.toLocaleString("en-KE");
+    }
+
+    return escapeHTML(value);
+  }
+
+  async function loadCategories() {
+    const { data, error } = await supabaseClient
+      .from("categories")
+      .select("id,name")
+      .order("name", { ascending: true });
+
+    if (error) {
+      console.error("Categories could not be loaded:", error);
+      return;
+    }
+
+    categorySelect.innerHTML =
+      '<option value="">All categories</option>';
+
+    (data || []).forEach(category => {
+      const option = document.createElement("option");
+
+      option.value = category.id;
+      option.textContent = category.name;
+
+      categorySelect.appendChild(option);
+    });
+  }
+
+  async function loadJobs() {
+
+    loading.style.display = "block";
+    empty.style.display = "none";
+    errorBox.style.display = "none";
+
+    jobsList.innerHTML = "";
+    resultsInfo.textContent = "Loading jobs...";
+
+    try {
+
+      const { data, error } = await supabaseClient
+        .from("public_active_jobs")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        throw error;
+      }
+
+      allJobs = data || [];
+
+      loading.style.display = "none";
+
+      renderJobs();
+
+    } catch (err) {
+
+      console.error("KaziNexus Supabase error:", err);
+
+      loading.style.display = "none";
+      errorBox.style.display = "block";
+
+      errorMessage.textContent =
+        "We could not connect to the jobs database. Please refresh and try again.";
+
+      resultsInfo.textContent = "Jobs could not be loaded.";
+    }
+  }
+
+  function renderJobs() {
+
+    const search =
+      searchInput.value.trim().toLowerCase();
+
+    const county =
+      countySelect.value.trim().toLowerCase();
+
+    const category =
+      categorySelect.value;
+
+    const jobType =
+      jobTypeSelect.value;
+
+    const filtered =
+      allJobs.filter(job => {
+
+        const searchable = [
+          job.title,
+          job.company,
+          job.location,
+          job.description,
+          job.qualifications,
+          job.responsibilities,
+          job.category_name
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        if (
+          search &&
+          !searchable.includes(search)
+        ) {
+          return false;
+        }
+
+        if (
+          county &&
+          !String(job.location || "")
+            .toLowerCase()
+            .includes(county)
+        ) {
+          return false;
+        }
+
+        if (
+          category &&
+          String(job.category_id || "") !==
+          String(category)
+        ) {
+          return false;
+        }
+
+        if (
+          jobType &&
+          String(job.job_type || "") !==
+          String(jobType)
+        ) {
+          return false;
+        }
+
+        return true;
+      });
+
+    jobsList.innerHTML = "";
+
+    resultsInfo.textContent =
+      filtered.length +
+      (filtered.length === 1 ? " job" : " jobs") +
+      " found";
+
+    if (!filtered.length) {
+      empty.style.display = "block";
+      return;
+    }
+
+    empty.style.display = "none";
+
+    filtered.forEach(job => {
+
+      const card =
+        document.createElement("article");
+
+      card.className = "job-card";
+
+      const featured =
+        job.featured === true
+          ? '<span class="featured">FEATURED</span>'
+          : "";
+
+      const salary =
+        job.salary
+          ? `<span class="salary">${formatSalary(job.salary)}</span>`
+          : "";
+
+      const category =
+        job.category_name
+          ? `<span class="tag">${escapeHTML(job.category_name)}</span>`
+          : "";
+
+      const jobType =
+        job.job_type
+          ? `<span class="tag">${escapeHTML(job.job_type)}</span>`
+          : "";
+
+      const location =
+        job.location
+          ? `<span class="tag">📍 ${escapeHTML(job.location)}</span>`
+          : "";
+
+      const description =
+        job.description
+          ? escapeHTML(
+              String(job.description).length > 230
+                ? String(job.description).substring(0, 230) + "..."
+                : job.description
+            )
+          : "View this opportunity for more information.";
+
+      card.innerHTML = `
+        <div class="job-top">
+
+          <div>
+            <h2 class="job-title">
+              ${escapeHTML(job.title || "Job Opportunity")}
+            </h2>
+
+            <div class="company">
+              ${escapeHTML(job.company || "Employer")}
+            </div>
+          </div>
+
+          ${featured}
+
+        </div>
+
+        <div class="meta">
+          ${location}
+          ${jobType}
+          ${category}
+        </div>
+
+        ${salary ? `<div>${salary}</div>` : ""}
+
+        <p class="description">
+          ${description}
+        </p>
+
+        <div class="deadline">
+          Application deadline:
+          ${formatDate(job.deadline)}
+        </div>
+
+        <br>
+
+        <a
+          class="view-btn"
+          href="/jobs/detail.html?id=${encodeURIComponent(job.id)}"
+        >
+          View Job
+        </a>
+      `;
+
+      jobsList.appendChild(card);
+    });
+  }
+
+  searchInput.addEventListener(
+    "input",
+    renderJobs
+  );
+
+  countySelect.addEventListener(
+    "change",
+    renderJobs
+  );
+
+  categorySelect.addEventListener(
+    "change",
+    renderJobs
+  );
+
+  jobTypeSelect.addEventListener(
+    "change",
+    renderJobs
+  );
+
+  document
+    .getElementById("clearBtn")
+    .addEventListener("click", () => {
+
+      searchInput.value = "";
+      countySelect.value = "";
+      categorySelect.value = "";
+      jobTypeSelect.value = "";
+
+      renderJobs();
+    });
+
+  async function start() {
+    await loadCategories();
+    await loadJobs();
+  }
+
+  start();
+</script>
+
+</body>
+</html>
