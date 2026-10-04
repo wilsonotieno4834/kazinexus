@@ -4,47 +4,67 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>Apply for Job | KaziNexus</title>
+<title>KaziNexus CV Builder | Create a Professional CV</title>
 
-<meta name="description" content="Apply for a job on KaziNexus using your saved CV.">
+<meta name="description"
+content="Create, edit, save and download a professional ATS-friendly CV with KaziNexus.">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js"></script>
+<script src="https://unpkg.com/docx@9.5.1/build/index.umd.js"></script>
 
 <style>
 *{box-sizing:border-box}
 
+:root{
+  --blue:#0b5ed7;
+  --blue-dark:#084298;
+  --gold:#f5b301;
+  --green:#198754;
+  --red:#dc3545;
+  --bg:#f4f7fb;
+  --text:#172033;
+  --muted:#667085;
+  --border:#d8e0ea;
+  --white:#fff;
+}
+
 body{
   margin:0;
   font-family:Arial,Helvetica,sans-serif;
-  background:#f4f7fb;
-  color:#172033;
+  background:var(--bg);
+  color:var(--text);
 }
 
 header{
-  background:#0b5ed7;
+  background:var(--blue);
   color:white;
-  padding:16px 20px;
+  padding:15px 20px;
+  position:sticky;
+  top:0;
+  z-index:100;
 }
 
 .header-inner{
-  max-width:1050px;
+  max-width:1250px;
   margin:auto;
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  gap:15px;
+  justify-content:space-between;
+  gap:20px;
 }
 
 .logo{
   color:white;
   text-decoration:none;
-  font-size:22px;
+  font-size:23px;
   font-weight:800;
 }
 
 nav{
   display:flex;
-  gap:15px;
+  gap:16px;
   flex-wrap:wrap;
 }
 
@@ -54,175 +74,485 @@ nav a{
   font-weight:600;
 }
 
-.container{
-  max-width:900px;
-  margin:30px auto;
-  padding:0 16px;
+.page{
+  max-width:1250px;
+  margin:25px auto;
+  padding:0 15px;
 }
 
-.card{
+.hero{
   background:white;
-  border-radius:14px;
-  padding:24px;
+  border-radius:16px;
+  padding:25px;
   margin-bottom:20px;
-  box-shadow:0 4px 18px rgba(0,0,0,.07);
+  box-shadow:0 3px 15px rgba(0,0,0,.06);
 }
 
-h1{
-  margin-top:0;
+.hero h1{
+  margin:0 0 8px;
   font-size:30px;
 }
 
-h2{
-  margin-top:0;
+.hero p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.6;
 }
 
-.job-box{
-  background:#eef5ff;
-  border-left:5px solid #0b5ed7;
-  padding:18px;
-  border-radius:8px;
-}
-
-.job-box h2{
-  margin:0 0 8px;
-}
-
-.job-meta{
-  color:#526174;
-  line-height:1.7;
-}
-
-label{
-  display:block;
-  font-weight:700;
-  margin:16px 0 7px;
-}
-
-input,
-textarea,
-select{
-  width:100%;
-  padding:12px;
-  border:1px solid #cbd5e1;
-  border-radius:8px;
-  font-size:15px;
-  font-family:inherit;
-}
-
-textarea{
-  min-height:150px;
-  resize:vertical;
-}
-
-button,
-.button{
-  display:inline-block;
-  border:0;
-  border-radius:8px;
-  padding:12px 18px;
-  font-weight:700;
-  cursor:pointer;
-  text-decoration:none;
-}
-
-.primary{
-  background:#0b5ed7;
-  color:white;
-}
-
-.secondary{
-  background:#e8eef7;
-  color:#172033;
-}
-
-.danger{
-  background:#dc3545;
-  color:white;
-}
-
-.actions{
+.toolbar{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
   margin-top:20px;
 }
 
-.cv-card{
-  border:1px solid #d7dee8;
-  border-radius:10px;
-  padding:16px;
-  margin-top:12px;
-  background:#fafcff;
-}
-
-.cv-title{
-  font-size:18px;
-  font-weight:800;
-  margin-bottom:6px;
-}
-
-.cv-info{
-  color:#526174;
-  line-height:1.6;
+button,
+.button{
+  border:0;
+  border-radius:8px;
+  padding:11px 16px;
+  font-weight:700;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-block;
   font-size:14px;
 }
 
-.status{
-  padding:13px;
-  border-radius:8px;
-  margin:15px 0;
-  display:none;
+.primary{
+  background:var(--blue);
+  color:white;
+}
+
+.secondary{
+  background:#e9eef5;
+  color:var(--text);
 }
 
 .success{
+  background:var(--green);
+  color:white;
+}
+
+.gold{
+  background:var(--gold);
+  color:#222;
+}
+
+.danger{
+  background:var(--red);
+  color:white;
+}
+
+.workspace{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(380px,500px);
+  gap:20px;
+  align-items:start;
+}
+
+.panel{
+  background:white;
+  border-radius:14px;
+  padding:20px;
+  box-shadow:0 3px 15px rgba(0,0,0,.06);
+  margin-bottom:20px;
+}
+
+.panel h2{
+  margin:0 0 15px;
+  font-size:20px;
+}
+
+.panel h3{
+  margin:20px 0 10px;
+  font-size:17px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.field{
+  margin-bottom:13px;
+}
+
+.field.full{
+  grid-column:1/-1;
+}
+
+label{
+  display:block;
+  font-weight:700;
+  margin-bottom:6px;
+  font-size:14px;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:11px;
+  font:inherit;
+  color:var(--text);
+  background:white;
+}
+
+textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  outline:2px solid rgba(11,94,215,.15);
+  border-color:var(--blue);
+}
+
+.small{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-top:20px;
+  margin-bottom:10px;
+}
+
+.section-head h3{
+  margin:0;
+}
+
+.item{
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:15px;
+  margin-bottom:12px;
+  background:#fbfcfe;
+}
+
+.item-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.item-number{
+  font-weight:800;
+  color:var(--blue);
+}
+
+.remove{
+  background:#fff0f1;
+  color:var(--red);
+  padding:7px 10px;
+  font-size:12px;
+}
+
+.cv-list{
+  display:grid;
+  gap:10px;
+}
+
+.saved-cv{
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:13px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.saved-cv.default{
+  border-color:var(--blue);
+  background:#f0f6ff;
+}
+
+.saved-title{
+  font-weight:800;
+}
+
+.saved-meta{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+}
+
+.status{
+  display:none;
+  padding:12px;
+  border-radius:8px;
+  margin:12px 0;
+  line-height:1.5;
+}
+
+.status.success{
   background:#d1e7dd;
   color:#0f5132;
 }
 
-.error{
+.status.error{
   background:#f8d7da;
   color:#842029;
 }
 
-.info{
+.status.info{
   background:#cff4fc;
   color:#055160;
 }
 
-.small{
-  font-size:13px;
-  color:#667085;
+.preview-wrap{
+  position:sticky;
+  top:85px;
 }
 
-.loading{
+.preview-tools{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+
+.cv-paper{
+  background:white;
+  width:100%;
+  min-height:900px;
+  padding:38px;
+  box-shadow:0 4px 20px rgba(0,0,0,.12);
+  color:#222;
+  overflow:hidden;
+}
+
+.cv-paper.modern{
+  border-top:8px solid var(--blue);
+}
+
+.cv-paper.executive{
+  border-top:8px solid #222;
+}
+
+.cv-name{
+  font-size:30px;
+  font-weight:800;
+  margin-bottom:5px;
+}
+
+.cv-headline{
+  font-size:16px;
+  color:#555;
+  margin-bottom:10px;
+}
+
+.cv-contact{
+  color:#555;
+  font-size:12px;
+  line-height:1.7;
+  border-bottom:1px solid #ddd;
+  padding-bottom:12px;
+}
+
+.cv-section{
+  margin-top:20px;
+}
+
+.cv-section-title{
+  font-size:14px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  border-bottom:1px solid #bbb;
+  padding-bottom:5px;
+  margin-bottom:10px;
+}
+
+.cv-summary{
+  font-size:12px;
+  line-height:1.65;
+}
+
+.cv-entry{
+  margin-bottom:13px;
+}
+
+.cv-entry-title{
+  font-size:13px;
+  font-weight:800;
+}
+
+.cv-entry-sub{
+  font-size:11px;
+  color:#555;
+  margin:2px 0 5px;
+}
+
+.cv-entry-body{
+  font-size:11px;
+  line-height:1.55;
+}
+
+.cv-entry-body ul{
+  margin:5px 0;
+  padding-left:18px;
+}
+
+.skills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.skill{
+  border:1px solid #ccc;
+  border-radius:15px;
+  padding:4px 8px;
+  font-size:10px;
+}
+
+.analysis-box{
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px;
+  margin-top:12px;
+}
+
+.score{
+  font-size:30px;
+  font-weight:800;
+  color:var(--blue);
+}
+
+.progress{
+  height:9px;
+  background:#e9ecef;
+  border-radius:10px;
+  overflow:hidden;
+  margin:8px 0 12px;
+}
+
+.progress div{
+  height:100%;
+  background:var(--blue);
+}
+
+.check{
+  margin:6px 0;
+  font-size:13px;
+}
+
+.good{color:var(--green)}
+.warn{color:#a66a00}
+
+.import-box{
+  border:2px dashed #c8d2df;
+  border-radius:10px;
+  padding:18px;
   text-align:center;
-  padding:25px;
-  color:#526174;
+  background:#fafcff;
 }
 
 .hidden{
   display:none!important;
 }
 
-footer{
+.empty{
+  padding:15px;
   text-align:center;
-  color:#667085;
-  padding:30px 15px;
+  color:var(--muted);
 }
 
-@media(max-width:650px){
+footer{
+  text-align:center;
+  color:var(--muted);
+  padding:30px;
+}
+
+@media(max-width:950px){
+  .workspace{
+    grid-template-columns:1fr;
+  }
+
+  .preview-wrap{
+    position:static;
+  }
+}
+
+@media(max-width:600px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .field.full{
+    grid-column:auto;
+  }
+
   .header-inner{
     flex-direction:column;
     align-items:flex-start;
   }
 
-  h1{
+  .cv-paper{
+    padding:25px;
+  }
+
+  .cv-name{
     font-size:25px;
   }
 
-  .card{
-    padding:18px;
+  .saved-cv{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+}
+
+@media print{
+  body{
+    background:white;
+  }
+
+  header,
+  .hero,
+  .editor,
+  footer,
+  .preview-tools{
+    display:none!important;
+  }
+
+  .page{
+    margin:0;
+    padding:0;
+    max-width:none;
+  }
+
+  .workspace{
+    display:block;
+  }
+
+  .preview-wrap{
+    position:static;
+  }
+
+  .panel.preview-panel{
+    box-shadow:none;
+    padding:0;
+    margin:0;
+  }
+
+  .cv-paper{
+    box-shadow:none;
+    width:100%;
+    min-height:auto;
   }
 }
 </style>
@@ -242,859 +572,2913 @@ footer{
   </div>
 </header>
 
-<main class="container">
+<main class="page">
 
-  <div id="loading" class="card loading">
-    Loading application...
+<section class="hero">
+  <h1>Build Your Professional CV</h1>
+  <p>
+    Create an ATS-friendly CV, import an existing CV, save multiple versions
+    to your KaziNexus account and use your CV when applying for jobs.
+  </p>
+
+  <div class="toolbar">
+    <button class="primary" onclick="newCV()">+ New CV</button>
+    <button class="secondary" onclick="saveDraft()">Save Draft</button>
+    <button class="secondary" onclick="loadDraft()">Load Draft</button>
+    <button class="success" onclick="saveCV()">Save to KaziNexus</button>
+    <button class="gold" onclick="printCV()">Print / Save PDF</button>
+    <button class="secondary" onclick="downloadWord()">Download Word</button>
   </div>
 
-  <div id="loginBox" class="card hidden">
-    <h1>Login Required</h1>
+  <div id="status" class="status"></div>
+</section>
 
-    <p>
-      You need to be logged in as a jobseeker to apply for this opportunity.
-    </p>
+<div class="workspace">
 
-    <div class="actions">
-      <a class="button primary" href="/kazinexus_job_seeker.html">
-        Login / Create Account
-      </a>
+<div class="editor">
 
-      <a class="button secondary" href="/jobs/">
-        Back to Jobs
-      </a>
-    </div>
-  </div>
+<div class="panel">
 
-  <div id="applicationPage" class="hidden">
+<h2>CV Information</h2>
 
-    <div class="card">
+<div class="grid">
 
-      <h1>Apply for Job</h1>
+<div class="field">
+<label for="cvTitle">CV Name</label>
+<input id="cvTitle" placeholder="e.g. Finance CV">
+</div>
 
-      <div class="job-box">
-        <h2 id="jobTitle">Loading...</h2>
+<div class="field">
+<label for="template">Template</label>
+<select id="template">
+<option value="modern">Modern</option>
+<option value="classic">Classic</option>
+<option value="executive">Executive</option>
+</select>
+</div>
 
-        <div class="job-meta">
-          <strong id="jobCompany"></strong><br>
-          <span id="jobLocation"></span><br>
-          <span id="jobType"></span>
-        </div>
-      </div>
+</div>
 
-    </div>
+</div>
 
-    <div class="card">
+<div class="panel">
 
-      <h2>Your CV</h2>
+<h2>Personal Information</h2>
 
-      <div id="cvStatus" class="status"></div>
+<div class="grid">
 
-      <div id="noCV" class="hidden">
+<div class="field">
+<label>Full Name *</label>
+<input id="fullName" placeholder="Your full name">
+</div>
 
-        <p>
-          You do not have a saved KaziNexus CV yet.
-        </p>
+<div class="field">
+<label>Professional Headline</label>
+<input id="headline"
+placeholder="e.g. Sociology Graduate | Research & Community Development">
+</div>
 
-        <p class="small">
-          You can create a professional CV and save it to your KaziNexus
-          account before applying.
-        </p>
+<div class="field">
+<label>Phone</label>
+<input id="phone" placeholder="+254...">
+</div>
 
-        <div class="actions">
-          <a
-            class="button primary"
-            href="/cv-builder.html"
-          >
-            Create / Build CV
-          </a>
+<div class="field">
+<label>Email</label>
+<input id="email" type="email" placeholder="you@example.com">
+</div>
 
-          <button
-            type="button"
-            class="secondary"
-            onclick="continueWithoutCV()"
-          >
-            Apply Without CV
-          </button>
-        </div>
+<div class="field">
+<label>Location / County</label>
+<input id="location" placeholder="Kisumu, Kenya">
+</div>
 
-      </div>
+<div class="field">
+<label>LinkedIn / Portfolio</label>
+<input id="website" placeholder="https://...">
+</div>
 
-      <div id="cvSelection" class="hidden">
+</div>
+</div>
 
-        <label for="cvSelect">
-          Select CV to submit
-        </label>
+<div class="panel">
 
-        <select id="cvSelect">
-          <option value="">Apply without attaching a CV</option>
-        </select>
+<h2>Professional Summary</h2>
 
-        <div id="selectedCV" class="cv-card hidden"></div>
+<div class="field">
+<label>Summary</label>
+<textarea id="summary"
+placeholder="Write a concise professional summary highlighting your experience, strengths and career direction."></textarea>
+</div>
 
-        <div class="actions">
+<button class="secondary" onclick="improveSummary()">
+Improve Summary
+</button>
 
-          <a
-            class="button secondary"
-            href="/cv-builder.html"
-          >
-            Create / Edit CV
-          </a>
+</div>
 
-          <button
-            type="button"
-            class="secondary"
-            onclick="loadCVs()"
-          >
-            Refresh CVs
-          </button>
+<div class="panel">
 
-        </div>
+<div class="section-head">
+<h2>Work Experience</h2>
+<button class="primary" onclick="addExperience()">+ Add Experience</button>
+</div>
 
-        <p class="small">
-          Your selected CV is saved as a snapshot with this application.
-          This means the employer will receive the version you submitted,
-          even if you edit your CV later.
-        </p>
+<div id="experienceList"></div>
 
-      </div>
+</div>
 
-    </div>
+<div class="panel">
 
-    <div class="card">
+<div class="section-head">
+<h2>Education</h2>
+<button class="primary" onclick="addEducation()">+ Add Education</button>
+</div>
 
-      <h2>Application Details</h2>
+<div id="educationList"></div>
 
-      <div id="formStatus" class="status"></div>
+</div>
 
-      <form id="applicationForm">
+<div class="panel">
 
-        <label for="name">
-          Full Name *
-        </label>
+<div class="section-head">
+<h2>Skills</h2>
+</div>
 
-        <input
-          id="name"
-          type="text"
-          required
-          autocomplete="name"
-        >
+<div class="field">
+<label>Skills</label>
+<textarea id="skills"
+placeholder="Enter skills separated by commas, for example: Microsoft Excel, Data Analysis, Customer Service, Research"></textarea>
+</div>
 
-        <label for="email">
-          Email *
-        </label>
+<button class="secondary" onclick="organizeSkills()">
+Organize Skills
+</button>
 
-        <input
-          id="email"
-          type="email"
-          required
-          autocomplete="email"
-        >
+</div>
 
-        <label for="phone">
-          Phone Number
-        </label>
+<div class="panel">
 
-        <input
-          id="phone"
-          type="tel"
-          placeholder="+254..."
-          autocomplete="tel"
-        >
+<div class="section-head">
+<h2>Certifications & Training</h2>
+<button class="primary" onclick="addCertification()">+ Add</button>
+</div>
 
-        <label for="coverLetter">
-          Cover Letter
-        </label>
+<div id="certificationList"></div>
 
-        <textarea
-          id="coverLetter"
-          placeholder="Tell the employer why you are suitable for this opportunity..."
-        ></textarea>
+</div>
 
-        <div class="actions">
+<div class="panel">
 
-          <button
-            id="submitButton"
-            class="primary"
-            type="submit"
-          >
-            Submit Application
-          </button>
+<div class="section-head">
+<h2>Languages</h2>
+<button class="primary" onclick="addLanguage()">+ Add</button>
+</div>
 
-          <a
-            class="button secondary"
-            href="/jobs/"
-          >
-            Cancel
-          </a>
+<div id="languageList"></div>
 
-        </div>
+</div>
 
-      </form>
+<div class="panel">
 
-    </div>
+<div class="section-head">
+<h2>Projects</h2>
+<button class="primary" onclick="addProject()">+ Add</button>
+</div>
 
-  </div>
+<div id="projectList"></div>
+
+</div>
+
+<div class="panel">
+
+<div class="section-head">
+<h2>Achievements</h2>
+<button class="primary" onclick="addAchievement()">+ Add</button>
+</div>
+
+<div id="achievementList"></div>
+
+</div>
+
+<div class="panel">
+
+<div class="section-head">
+<h2>Referees</h2>
+<button class="primary" onclick="addReferee()">+ Add</button>
+</div>
+
+<div id="refereeList"></div>
+
+</div>
+
+<div class="panel">
+
+<h2>Additional Information</h2>
+
+<div class="field">
+<label>Additional Information</label>
+<textarea id="additional"
+placeholder="Professional memberships, volunteer work, interests or other relevant information."></textarea>
+</div>
+
+</div>
+
+<div class="panel">
+
+<h2>Import Existing CV</h2>
+
+<div class="import-box">
+
+<p>
+Upload a PDF or Word document and KaziNexus will attempt to extract
+the information into your editable CV.
+</p>
+
+<input
+id="cvFile"
+type="file"
+accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+>
+
+<br><br>
+
+<button class="primary" onclick="importCV()">
+Import CV
+</button>
+
+<p class="small">
+Imported information should be reviewed before saving or applying.
+</p>
+
+</div>
+
+</div>
+
+<div class="panel">
+
+<h2>CV Analysis</h2>
+
+<button class="primary" onclick="analyzeCV()">
+Analyze CV
+</button>
+
+<div id="analysis"></div>
+
+</div>
+
+<div class="panel">
+
+<h2>Job Match</h2>
+
+<p class="small">
+Paste a job description below to estimate how well your CV matches the opportunity.
+</p>
+
+<textarea id="jobDescription"
+placeholder="Paste the job description here..."></textarea>
+
+<br><br>
+
+<button class="primary" onclick="matchJob()">
+Check Job Match
+</button>
+
+<div id="matchResult"></div>
+
+</div>
+
+</div>
+
+<div class="preview-wrap">
+
+<div class="panel preview-panel">
+
+<h2>Live Preview</h2>
+
+<div class="preview-tools">
+
+<button class="primary" onclick="printCV()">
+Print / Save PDF
+</button>
+
+<button class="secondary" onclick="downloadWord()">
+Download Word
+</button>
+
+</div>
+
+<div id="preview" class="cv-paper modern"></div>
+
+</div>
+
+<div class="panel">
+
+<h2>Saved CVs</h2>
+
+<div id="savedCVs">
+<div class="empty">Log in to see saved CVs.</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 </main>
 
 <footer>
-  KaziNexus — Connect Opportunities With the Right Talent.
+KaziNexus — Connect Opportunities With the Right Talent.
 </footer>
 
 <script>
 
 const SUPABASE_URL =
-  "https://vljehlfeglstpgphzebj.supabase.co";
+"https://vljehlfeglstpgphzebj.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3";
+"sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3";
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+const db =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
-const params = new URLSearchParams(window.location.search);
-const jobId = params.get("id");
-
+let currentCVId = null;
 let session = null;
-let job = null;
-let cvs = [];
-let selectedCV = null;
 
-const loading =
-  document.getElementById("loading");
-
-const loginBox =
-  document.getElementById("loginBox");
-
-const applicationPage =
-  document.getElementById("applicationPage");
-
-const cvStatus =
-  document.getElementById("cvStatus");
-
-const formStatus =
-  document.getElementById("formStatus");
-
-const cvSelect =
-  document.getElementById("cvSelect");
-
-const selectedCVBox =
-  document.getElementById("selectedCV");
-
-const noCV =
-  document.getElementById("noCV");
-
-const cvSelection =
-  document.getElementById("cvSelection");
-
-const nameInput =
-  document.getElementById("name");
-
-const emailInput =
-  document.getElementById("email");
-
-const phoneInput =
-  document.getElementById("phone");
-
-const coverInput =
-  document.getElementById("coverLetter");
-
-const submitButton =
-  document.getElementById("submitButton");
+const $ = id =>
+document.getElementById(id);
 
 
-function showStatus(element, message, type){
+function showStatus(message,type="info"){
 
-  element.textContent = message;
+const box=$("status");
 
-  element.className =
-    "status " + type;
+box.textContent=message;
 
-  element.style.display = "block";
-}
+box.className="status "+type;
 
+box.style.display="block";
 
-function hideStatus(element){
-
-  element.style.display = "none";
+setTimeout(()=>{
+box.style.display="none";
+},5000);
 
 }
 
 
 function escapeHTML(value){
 
-  if(value === null || value === undefined){
-    return "";
-  }
-
-  return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
-
-
-function formatDate(value){
-
-  if(!value){
-    return "";
-  }
-
-  const parts =
-    String(value).split("-");
-
-  if(parts.length === 3){
-
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
-
-  }
-
-  return value;
-}
-
-
-async function loadJob(){
-
-  if(!jobId){
-
-    throw new Error(
-      "No job ID was provided."
-    );
-
-  }
-
-  const {data,error} =
-    await db
-      .from("public_active_jobs")
-      .select("*")
-      .eq("id",jobId)
-      .maybeSingle();
-
-  if(error){
-    throw error;
-  }
-
-  if(!data){
-
-    throw new Error(
-      "This job could not be found or is no longer active."
-    );
-
-  }
-
-  job = data;
-
-  document.getElementById("jobTitle")
-    .textContent =
-      job.title || "Job Opportunity";
-
-  document.getElementById("jobCompany")
-    .textContent =
-      job.company || "";
-
-  document.getElementById("jobLocation")
-    .textContent =
-      job.location || "";
-
-  document.getElementById("jobType")
-    .textContent =
-      job.job_type || "";
+return String(value ?? "")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
 }
 
 
-async function loadProfile(){
+function splitLines(value){
 
-  const {data,error} =
-    await db
-      .from("job_seekers")
-      .select("*")
-      .eq("id",session.user.id)
-      .maybeSingle();
-
-  if(error){
-
-    console.warn(
-      "Jobseeker profile could not be loaded:",
-      error
-    );
-
-    return;
-
-  }
-
-  if(!data){
-    return;
-  }
-
-  const fullName =
-    data.full_name ||
-    data.name ||
-    data.fullname ||
-    "";
-
-  const email =
-    data.email ||
-    session.user.email ||
-    "";
-
-  const phone =
-    data.phone ||
-    data.phone_number ||
-    "";
-
-  if(fullName){
-    nameInput.value = fullName;
-  }
-
-  if(email){
-    emailInput.value = email;
-  }
-
-  if(phone){
-    phoneInput.value = phone;
-  }
+return String(value || "")
+.split(/\n/)
+.map(x=>x.trim())
+.filter(Boolean);
 
 }
 
 
-async function loadCVs(){
+function getData(){
 
-  hideStatus(cvStatus);
+return {
 
-  cvSelection.classList.add("hidden");
-  noCV.classList.add("hidden");
+personal:{
+fullName:$("fullName").value.trim(),
+phone:$("phone").value.trim(),
+email:$("email").value.trim(),
+location:$("location").value.trim(),
+website:$("website").value.trim()
+},
 
-  const {data,error} =
-    await db
-      .from("job_seeker_cvs")
-      .select("*")
-      .eq("user_id",session.user.id)
-      .order("is_default",{ascending:false})
-      .order("updated_at",{ascending:false});
+headline:$("headline").value.trim(),
 
-  if(error){
+summary:$("summary").value.trim(),
 
-    console.error(error);
+experience:getExperience(),
 
-    showStatus(
-      cvStatus,
-      "Unable to load your saved CVs. Please try again.",
-      "error"
-    );
+education:getEducation(),
 
-    return;
+skills:splitSkills($("skills").value),
 
-  }
+certifications:getCertifications(),
 
-  cvs = data || [];
+languages:getLanguages(),
 
-  cvSelect.innerHTML = "";
+projects:getProjects(),
 
-  const emptyOption =
-    document.createElement("option");
+achievements:getAchievements(),
 
-  emptyOption.value = "";
+referees:getReferees(),
 
-  emptyOption.textContent =
-    "Apply without attaching a CV";
+additional:$("additional").value.trim(),
 
-  cvSelect.appendChild(emptyOption);
+template:$("template").value
 
-
-  if(cvs.length === 0){
-
-    noCV.classList.remove("hidden");
-
-    return;
-
-  }
-
-
-  cvSelection.classList.remove("hidden");
-
-
-  cvs.forEach(cv => {
-
-    const option =
-      document.createElement("option");
-
-    option.value = cv.id;
-
-    option.textContent =
-      cv.title ||
-      "My CV";
-
-    if(cv.is_default){
-
-      option.textContent +=
-        " — Default";
-
-    }
-
-    cvSelect.appendChild(option);
-
-  });
-
-
-  const defaultCV =
-    cvs.find(cv => cv.is_default) ||
-    cvs[0];
-
-  if(defaultCV){
-
-    cvSelect.value =
-      defaultCV.id;
-
-    selectCV(defaultCV.id);
-
-  }
+};
 
 }
 
 
-function selectCV(cvId){
+function splitSkills(value){
 
-  if(!cvId){
-
-    selectedCV = null;
-
-    selectedCVBox.classList.add("hidden");
-
-    selectedCVBox.innerHTML = "";
-
-    return;
-
-  }
-
-  selectedCV =
-    cvs.find(cv => cv.id === cvId);
-
-  if(!selectedCV){
-
-    return;
-
-  }
-
-  const data =
-    selectedCV.cv_data || {};
-
-  const personal =
-    data.personal || {};
-
-  const headline =
-    data.headline ||
-    data.professionalHeadline ||
-    "";
-
-  const experience =
-    Array.isArray(data.experience)
-      ? data.experience.length
-      : 0;
-
-  const education =
-    Array.isArray(data.education)
-      ? data.education.length
-      : 0;
-
-  const skills =
-    Array.isArray(data.skills)
-      ? data.skills.length
-      : 0;
-
-
-  selectedCVBox.innerHTML = `
-
-    <div class="cv-title">
-      ${escapeHTML(
-        selectedCV.title || "My CV"
-      )}
-    </div>
-
-    ${
-      headline
-        ? `<div class="cv-info">
-             ${escapeHTML(headline)}
-           </div>`
-        : ""
-    }
-
-    ${
-      personal.fullName
-        ? `<div class="cv-info">
-             <strong>Name:</strong>
-             ${escapeHTML(personal.fullName)}
-           </div>`
-        : ""
-    }
-
-    <div class="cv-info">
-      Experience: ${experience}
-      &nbsp; | &nbsp;
-      Education: ${education}
-      &nbsp; | &nbsp;
-      Skills: ${skills}
-    </div>
-
-    ${
-      selectedCV.is_default
-        ? `<div class="cv-info">
-             <strong>Default CV</strong>
-           </div>`
-        : ""
-    }
-
-  `;
-
-  selectedCVBox.classList.remove("hidden");
+return String(value || "")
+.split(/[,;\n]/)
+.map(x=>x.trim())
+.filter(Boolean);
 
 }
 
 
-cvSelect.addEventListener(
-  "change",
-  function(){
+function getExperience(){
 
-    selectCV(this.value);
+return [...document.querySelectorAll("#experienceList .item")]
+.map(item=>({
 
-  }
+jobTitle:item.querySelector(".exp-title").value.trim(),
+
+company:item.querySelector(".exp-company").value.trim(),
+
+location:item.querySelector(".exp-location").value.trim(),
+
+start:item.querySelector(".exp-start").value.trim(),
+
+end:item.querySelector(".exp-end").value.trim(),
+
+description:item.querySelector(".exp-description").value.trim()
+
+}))
+.filter(x=>x.jobTitle||x.company||x.description);
+
+}
+
+
+function getEducation(){
+
+return [...document.querySelectorAll("#educationList .item")]
+.map(item=>({
+
+degree:item.querySelector(".edu-degree").value.trim(),
+
+institution:item.querySelector(".edu-institution").value.trim(),
+
+location:item.querySelector(".edu-location").value.trim(),
+
+start:item.querySelector(".edu-start").value.trim(),
+
+end:item.querySelector(".edu-end").value.trim(),
+
+details:item.querySelector(".edu-details").value.trim()
+
+}))
+.filter(x=>x.degree||x.institution||x.details);
+
+}
+
+
+function getCertifications(){
+
+return [...document.querySelectorAll("#certificationList .item")]
+.map(item=>({
+
+name:item.querySelector(".cert-name").value.trim(),
+
+institution:item.querySelector(".cert-institution").value.trim(),
+
+year:item.querySelector(".cert-year").value.trim(),
+
+details:item.querySelector(".cert-details").value.trim()
+
+}))
+.filter(x=>x.name||x.institution||x.details);
+
+}
+
+
+function getLanguages(){
+
+return [...document.querySelectorAll("#languageList .item")]
+.map(item=>({
+
+language:item.querySelector(".lang-name").value.trim(),
+
+level:item.querySelector(".lang-level").value.trim()
+
+}))
+.filter(x=>x.language);
+
+}
+
+
+function getProjects(){
+
+return [...document.querySelectorAll("#projectList .item")]
+.map(item=>({
+
+name:item.querySelector(".project-name").value.trim(),
+
+role:item.querySelector(".project-role").value.trim(),
+
+description:item.querySelector(".project-description").value.trim(),
+
+link:item.querySelector(".project-link").value.trim()
+
+}))
+.filter(x=>x.name||x.description);
+
+}
+
+
+function getAchievements(){
+
+return [...document.querySelectorAll("#achievementList .item")]
+.map(item=>({
+
+title:item.querySelector(".achievement-title").value.trim(),
+
+description:item.querySelector(".achievement-description").value.trim(),
+
+year:item.querySelector(".achievement-year").value.trim()
+
+}))
+.filter(x=>x.title||x.description);
+
+}
+
+
+function getReferees(){
+
+return [...document.querySelectorAll("#refereeList .item")]
+.map(item=>({
+
+name:item.querySelector(".ref-name").value.trim(),
+
+position:item.querySelector(".ref-position").value.trim(),
+
+organization:item.querySelector(".ref-organization").value.trim(),
+
+phone:item.querySelector(".ref-phone").value.trim(),
+
+email:item.querySelector(".ref-email").value.trim()
+
+}))
+.filter(x=>x.name||x.organization);
+
+}
+
+
+function addExperience(data={}){
+
+const list=$("experienceList");
+
+const item=document.createElement("div");
+
+item.className="item";
+
+item.innerHTML=`
+
+<div class="item-top">
+<span class="item-number">Work Experience</span>
+<button type="button" class="remove"
+onclick="this.closest('.item').remove();updatePreview();">
+Remove
+</button>
+</div>
+
+<div class="grid">
+
+<div class="field">
+<label>Job Title</label>
+<input class="exp-title"
+value="${escapeHTML(data.jobTitle)}"
+placeholder="e.g. Sales Representative">
+</div>
+
+<div class="field">
+<label>Employer / Organization</label>
+<input class="exp-company"
+value="${escapeHTML(data.company)}"
+placeholder="Company name">
+</div>
+
+<div class="field">
+<label>Location</label>
+<input class="exp-location"
+value="${escapeHTML(data.location)}"
+placeholder="Kisumu, Kenya">
+</div>
+
+<div class="field">
+<label>Start Date</label>
+<input class="exp-start"
+value="${escapeHTML(data.start)}"
+placeholder="Jan 2024">
+</div>
+
+<div class="field">
+<label>End Date</label>
+<input class="exp-end"
+value="${escapeHTML(data.end)}"
+placeholder="Present">
+</div>
+
+<div class="field full">
+<label>Responsibilities / Achievements</label>
+<textarea class="exp-description"
+placeholder="Use one responsibility or achievement per line">${escapeHTML(data.description)}</textarea>
+</div>
+
+</div>
+`;
+
+list.appendChild(item);
+
+item.querySelectorAll("input,textarea")
+.forEach(el=>el.addEventListener("input",updatePreview));
+
+updatePreview();
+
+}
+
+
+function addEducation(data={}){
+
+const list=$("educationList");
+
+const item=document.createElement("div");
+
+item.className="item";
+
+item.innerHTML=`
+
+<div class="item-top">
+<span class="item-number">Education</span>
+<button type="button" class="remove"
+onclick="this.closest('.item').remove();updatePreview();">
+Remove
+</button>
+</div>
+
+<div class="grid">
+
+<div class="field">
+<label>Qualification / Degree</label>
+<input class="edu-degree"
+value="${escapeHTML(data.degree)}"
+placeholder="Bachelor of Arts in Sociology">
+</div>
+
+<div class="field">
+<label>Institution</label>
+<input class="edu-institution"
+value="${escapeHTML(data.institution)}"
+placeholder="University / College">
+</div>
+
+<div class="field">
+<label>Location</label>
+<input class="edu-location"
+value="${escapeHTML(data.location)}"
+placeholder="Kenya">
+</div>
+
+<div class="field">
+<label>Start Year</label>
+<input class="edu-start"
+value="${escapeHTML(data.start)}"
+placeholder="2016">
+</div>
+
+<div class="field">
+<label>End Year</label>
+<input class="edu-end"
+value="${escapeHTML(data.end)}"
+placeholder="2021">
+</div>
+
+<div class="field full">
+<label>Details</label>
+<textarea class="edu-details"
+placeholder="Grade, classification, relevant subjects or other details">${escapeHTML(data.details)}</textarea>
+</div>
+
+</div>
+`;
+
+list.appendChild(item);
+
+item.querySelectorAll("input,textarea")
+.forEach(el=>el.addEventListener("input",updatePreview));
+
+updatePreview();
+
+}
+
+
+function addCertification(data={}){
+
+const item=document.createElement("div");
+
+item.className="item";
+
+item.innerHTML=`
+
+<div class="item-top">
+<span class="item-number">Certification / Training</span>
+<button type="button" class="remove"
+onclick="this.closest('.item').remove();updatePreview();">
+Remove
+</button>
+</div>
+
+<div class="grid">
+
+<div class="field">
+<label>Name</label>
+<input class="cert-name"
+value="${escapeHTML(data.name)}"
+placeholder="Certification or training">
+</div>
+
+<div class="field">
+<label>Institution / Provider</label>
+<input class="cert-institution"
+value="${escapeHTML(data.institution)}">
+</div>
+
+<div class="field">
+<label>Year</label>
+<input class="cert-year"
+value="${escapeHTML(data.year)}">
+</div>
+
+<div class="field full">
+<label>Details</label>
+<textarea class="cert-details">${escapeHTML(data.details)}</textarea>
+</div>
+
+</div>
+`;
+
+$("certificationList").appendChild(item);
+
+item.querySelectorAll("input,textarea")
+.forEach(el=>el.addEventListener("input",updatePreview));
+
+updatePreview();
+
+}
+
+
+function addLanguage(data={}){
+
+const item=document.createElement("div");
+
+item.className="item";
+
+item.innerHTML=`
+
+<div class="item-top">
+<span class="item-number">Language</span>
+<button type="button" class="remove"
+onclick="this.closest('.item').remove();updatePreview();">
+Remove
+</button>
+</div>
+
+<div class="grid">
+
+<div class="field">
+<label>Language</label>
+<input class="lang-name"
+value="${escapeHTML(data.language)}"
+placeholder="English">
+</div>
+
+<div class="field">
+<label>Proficiency</label>
+<input class="lang-level"
+value="${escapeHTML(data.level)}"
+placeholder="Fluent">
+</div>
+
+</div>
+`;
+
+$("languageList").appendChild(item);
+
+item.querySelectorAll("input")
+.forEach(el=>el.addEventListener("input",updatePreview));
+
+updatePreview();
+
+}
+
+
+function addProject(data={}){
+
+const item=document.createElement("div");
+
+item.className="item";
+
+item.innerHTML=`
+
+<div class="item-top">
+<span class="item-number">Project</span>
+<button type="button" class="remove"
+onclick="this.closest('.item').remove();updatePreview();">
+Remove
+</button>
+</div>
+
+<div class="grid">
+
+<div class="field">
+<label>Project Name</label>
+<input class="project-name"
+value="${escapeHTML(data.name)}">
+</div>
+
+<div class="field">
+<label>Your Role</label>
+<input class="project-role"
+value="${escapeHTML(data.role)}">
+</div>
+
+<div class="field">
+<label>Project Link</label>
+<input class="project-link"
+value="${escapeHTML(data.link)}"
+placeholder="https://...">
+</div>
+
+<div class="field full">
+<label>Description</label>
+<textarea class="project-description">${escapeHTML(data.description)}</textarea>
+</div>
+
+</div>
+`;
+
+$("projectList").appendChild(item);
+
+item.querySelectorAll("input,textarea")
+.forEach(el=>el.addEventListener("input",updatePreview));
+
+updatePreview();
+
+}
+
+
+function addAchievement(data={}){
+
+const item=document.createElement("div");
+
+item.className="item";
+
+item.innerHTML=`
+
+<div class="item-top">
+<span class="item-number">Achievement</span>
+<button type="button" class="remove"
+onclick="this.closest('.item').remove();updatePreview();">
+Remove
+</button>
+</div>
+
+<div class="grid">
+
+<div class="field">
+<label>Achievement</label>
+<input class="achievement-title"
+value="${escapeHTML(data.title)}">
+</div>
+
+<div class="field">
+<label>Year</label>
+<input class="achievement-year"
+value="${escapeHTML(data.year)}">
+</div>
+
+<div class="field full">
+<label>Description</label>
+<textarea class="achievement-description">${escapeHTML(data.description)}</textarea>
+</div>
+
+</div>
+`;
+
+$("achievementList").appendChild(item);
+
+item.querySelectorAll("input,textarea")
+.forEach(el=>el.addEventListener("input",updatePreview));
+
+updatePreview();
+
+}
+
+
+function addReferee(data={}){
+
+const item=document.createElement("div");
+
+item.className="item";
+
+item.innerHTML=`
+
+<div class="item-top">
+<span class="item-number">Referee</span>
+<button type="button" class="remove"
+onclick="this.closest('.item').remove();updatePreview();">
+Remove
+</button>
+</div>
+
+<div class="grid">
+
+<div class="field">
+<label>Name</label>
+<input class="ref-name"
+value="${escapeHTML(data.name)}">
+</div>
+
+<div class="field">
+<label>Position</label>
+<input class="ref-position"
+value="${escapeHTML(data.position)}">
+</div>
+
+<div class="field">
+<label>Organization</label>
+<input class="ref-organization"
+value="${escapeHTML(data.organization)}">
+</div>
+
+<div class="field">
+<label>Phone</label>
+<input class="ref-phone"
+value="${escapeHTML(data.phone)}">
+</div>
+
+<div class="field">
+<label>Email</label>
+<input class="ref-email"
+value="${escapeHTML(data.email)}">
+</div>
+
+</div>
+`;
+
+$("refereeList").appendChild(item);
+
+item.querySelectorAll("input")
+.forEach(el=>el.addEventListener("input",updatePreview));
+
+updatePreview();
+
+}
+
+
+function section(title,content){
+
+if(!content) return "";
+
+return `
+
+<div class="cv-section">
+
+<div class="cv-section-title">
+${escapeHTML(title)}
+</div>
+
+${content}
+
+</div>
+
+`;
+
+}
+
+
+function updatePreview(){
+
+const d=getData();
+
+const p=d.personal;
+
+let html="";
+
+html+=`
+
+<div class="cv-name">
+${escapeHTML(p.fullName || "Your Name")}
+</div>
+
+<div class="cv-headline">
+${escapeHTML(d.headline || "Professional Headline")}
+</div>
+
+<div class="cv-contact">
+
+${escapeHTML(p.location)}
+
+${p.location && (p.phone||p.email||p.website) ? " · " : ""}
+
+${escapeHTML(p.phone)}
+
+${p.phone && p.email ? " · " : ""}
+
+${escapeHTML(p.email)}
+
+${p.email && p.website ? " · " : ""}
+
+${escapeHTML(p.website)}
+
+</div>
+`;
+
+
+if(d.summary){
+
+html+=section(
+"Professional Summary",
+`<div class="cv-summary">${escapeHTML(d.summary)}</div>`
+);
+
+}
+
+
+if(d.experience.length){
+
+let content="";
+
+d.experience.forEach(x=>{
+
+let dates =
+[x.start,x.end]
+.filter(Boolean)
+.join(" – ");
+
+content+=`
+
+<div class="cv-entry">
+
+<div class="cv-entry-title">
+${escapeHTML(x.jobTitle)}
+${x.company ? " — "+escapeHTML(x.company) : ""}
+</div>
+
+<div class="cv-entry-sub">
+
+${escapeHTML(x.location)}
+
+${x.location && dates ? " · " : ""}
+
+${escapeHTML(dates)}
+
+</div>
+
+<div class="cv-entry-body">
+
+${
+splitLines(x.description).length
+?
+"<ul>"+splitLines(x.description)
+.map(v=>`<li>${escapeHTML(v)}</li>`)
+.join("")
++"</ul>"
+:
+""
+}
+
+</div>
+
+</div>
+`;
+
+});
+
+html+=section("Professional Experience",content);
+
+}
+
+
+if(d.education.length){
+
+let content="";
+
+d.education.forEach(x=>{
+
+const dates =
+[x.start,x.end]
+.filter(Boolean)
+.join(" – ");
+
+content+=`
+
+<div class="cv-entry">
+
+<div class="cv-entry-title">
+${escapeHTML(x.degree)}
+</div>
+
+<div class="cv-entry-sub">
+${escapeHTML(x.institution)}
+
+${x.location ? " · "+escapeHTML(x.location) : ""}
+
+${dates ? " · "+escapeHTML(dates) : ""}
+</div>
+
+<div class="cv-entry-body">
+${escapeHTML(x.details)}
+</div>
+
+</div>
+`;
+
+});
+
+html+=section("Education",content);
+
+}
+
+
+if(d.skills.length){
+
+html+=section(
+"Skills",
+`<div class="skills">
+${d.skills.map(x=>
+`<span class="skill">${escapeHTML(x)}</span>`
+).join("")}
+</div>`
+);
+
+}
+
+
+if(d.certifications.length){
+
+let content="";
+
+d.certifications.forEach(x=>{
+
+content+=`
+
+<div class="cv-entry">
+
+<div class="cv-entry-title">
+${escapeHTML(x.name)}
+</div>
+
+<div class="cv-entry-sub">
+
+${escapeHTML(x.institution)}
+
+${x.year ? " · "+escapeHTML(x.year) : ""}
+
+</div>
+
+<div class="cv-entry-body">
+${escapeHTML(x.details)}
+</div>
+
+</div>
+`;
+
+});
+
+html+=section(
+"Certifications & Training",
+content
+);
+
+}
+
+
+if(d.languages.length){
+
+let content="";
+
+d.languages.forEach(x=>{
+
+content+=`
+
+<div class="cv-entry">
+
+<div class="cv-entry-title">
+${escapeHTML(x.language)}
+</div>
+
+<div class="cv-entry-sub">
+${escapeHTML(x.level)}
+</div>
+
+</div>
+`;
+
+});
+
+html+=section("Languages",content);
+
+}
+
+
+if(d.projects.length){
+
+let content="";
+
+d.projects.forEach(x=>{
+
+content+=`
+
+<div class="cv-entry">
+
+<div class="cv-entry-title">
+${escapeHTML(x.name)}
+</div>
+
+<div class="cv-entry-sub">
+${escapeHTML(x.role)}
+</div>
+
+<div class="cv-entry-body">
+${escapeHTML(x.description)}
+</div>
+
+</div>
+`;
+
+});
+
+html+=section("Projects",content);
+
+}
+
+
+if(d.achievements.length){
+
+let content="";
+
+d.achievements.forEach(x=>{
+
+content+=`
+
+<div class="cv-entry">
+
+<div class="cv-entry-title">
+${escapeHTML(x.title)}
+</div>
+
+<div class="cv-entry-sub">
+${escapeHTML(x.year)}
+</div>
+
+<div class="cv-entry-body">
+${escapeHTML(x.description)}
+</div>
+
+</div>
+`;
+
+});
+
+html+=section("Achievements",content);
+
+}
+
+
+if(d.referees.length){
+
+let content="";
+
+d.referees.forEach(x=>{
+
+content+=`
+
+<div class="cv-entry">
+
+<div class="cv-entry-title">
+${escapeHTML(x.name)}
+</div>
+
+<div class="cv-entry-sub">
+${escapeHTML(x.position)}
+
+${x.organization ? " · "+escapeHTML(x.organization) : ""}
+</div>
+
+<div class="cv-entry-body">
+
+${x.phone ? "Phone: "+escapeHTML(x.phone)+"<br>" : ""}
+
+${x.email ? "Email: "+escapeHTML(x.email) : ""}
+
+</div>
+
+</div>
+`;
+
+});
+
+html+=section("Referees",content);
+
+}
+
+
+if(d.additional){
+
+html+=section(
+"Additional Information",
+`<div class="cv-entry-body">${escapeHTML(d.additional)}</div>`
+);
+
+}
+
+
+$("preview").className =
+"cv-paper "+d.template;
+
+$("preview").innerHTML=html;
+
+}
+
+
+function newCV(){
+
+if(!confirm(
+"Start a new CV? Unsaved changes will be cleared."
+)) return;
+
+currentCVId=null;
+
+$("cvTitle").value="My CV";
+$("template").value="modern";
+
+$("fullName").value="";
+$("headline").value="";
+$("phone").value="";
+$("email").value="";
+$("location").value="";
+$("website").value="";
+$("summary").value="";
+$("skills").value="";
+$("additional").value="";
+
+$("experienceList").innerHTML="";
+$("educationList").innerHTML="";
+$("certificationList").innerHTML="";
+$("languageList").innerHTML="";
+$("projectList").innerHTML="";
+$("achievementList").innerHTML="";
+$("refereeList").innerHTML="";
+
+addExperience();
+addEducation();
+
+updatePreview();
+
+showStatus(
+"New CV started.",
+"success"
+);
+
+}
+
+
+function populateCV(data){
+
+const p=data.personal || {};
+
+$("fullName").value=p.fullName || "";
+$("headline").value=data.headline || "";
+$("phone").value=p.phone || "";
+$("email").value=p.email || "";
+$("location").value=p.location || "";
+$("website").value=p.website || "";
+
+$("summary").value=data.summary || "";
+
+$("skills").value=
+(data.skills || []).join(", ");
+
+$("additional").value=
+data.additional || "";
+
+$("template").value=
+data.template || "modern";
+
+
+$("experienceList").innerHTML="";
+$("educationList").innerHTML="";
+$("certificationList").innerHTML="";
+$("languageList").innerHTML="";
+$("projectList").innerHTML="";
+$("achievementList").innerHTML="";
+$("refereeList").innerHTML="";
+
+
+(data.experience || [])
+.forEach(addExperience);
+
+(data.education || [])
+.forEach(addEducation);
+
+(data.certifications || [])
+.forEach(addCertification);
+
+(data.languages || [])
+.forEach(addLanguage);
+
+(data.projects || [])
+.forEach(addProject);
+
+(data.achievements || [])
+.forEach(addAchievement);
+
+(data.referees || [])
+.forEach(addReferee);
+
+
+if(!(data.experience || []).length)
+addExperience();
+
+if(!(data.education || []).length)
+addEducation();
+
+
+updatePreview();
+
+}
+
+
+function saveDraft(){
+
+const data=getData();
+
+localStorage.setItem(
+"kazinexus_cv_draft",
+JSON.stringify(data)
+);
+
+showStatus(
+"CV draft saved on this device.",
+"success"
+);
+
+}
+
+
+function loadDraft(){
+
+const raw=
+localStorage.getItem(
+"kazinexus_cv_draft"
+);
+
+if(!raw){
+
+showStatus(
+"No saved draft was found on this device.",
+"info"
+);
+
+return;
+
+}
+
+try{
+
+populateCV(JSON.parse(raw));
+
+showStatus(
+"Draft loaded.",
+"success"
+);
+
+}catch(e){
+
+showStatus(
+"Could not load the draft.",
+"error"
+);
+
+}
+
+}
+
+
+async function saveCV(){
+
+const data=getData();
+
+if(!data.personal.fullName){
+
+showStatus(
+"Please enter your full name before saving.",
+"error"
+);
+
+return;
+
+}
+
+
+if(!session){
+
+showStatus(
+"Please log in as a jobseeker before saving your CV.",
+"error"
+);
+
+setTimeout(()=>{
+window.location.href=
+"/kazinexus_job_seeker.html";
+},1200);
+
+return;
+
+}
+
+
+const title=
+$("cvTitle").value.trim() ||
+"My CV";
+
+
+try{
+
+if(currentCVId){
+
+const {error}=await db
+.from("job_seeker_cvs")
+.update({
+title:title,
+cv_data:data,
+updated_at:new Date().toISOString()
+})
+.eq("id",currentCVId)
+.eq("user_id",session.user.id);
+
+if(error) throw error;
+
+showStatus(
+"CV updated successfully.",
+"success"
+);
+
+}else{
+
+const {data:created,error}=await db
+.from("job_seeker_cvs")
+.insert({
+
+user_id:session.user.id,
+
+title:title,
+
+cv_data:data,
+
+is_default:false
+
+})
+.select()
+.single();
+
+if(error) throw error;
+
+currentCVId=created.id;
+
+showStatus(
+"CV saved to your KaziNexus account.",
+"success"
+);
+
+}
+
+await loadSavedCVs();
+
+}catch(error){
+
+console.error(error);
+
+showStatus(
+error.message ||
+"Unable to save CV.",
+"error"
+);
+
+}
+
+}
+
+
+async function loadSavedCVs(){
+
+if(!session){
+
+$("savedCVs").innerHTML=
+`<div class="empty">
+Log in to manage saved CVs.
+</div>`;
+
+return;
+
+}
+
+
+const {data,error}=await db
+.from("job_seeker_cvs")
+.select("*")
+.eq("user_id",session.user.id)
+.order("is_default",{ascending:false})
+.order("updated_at",{ascending:false});
+
+
+if(error){
+
+console.error(error);
+
+$("savedCVs").innerHTML=
+`<div class="empty">
+Unable to load saved CVs.
+</div>`;
+
+return;
+
+}
+
+
+if(!data || !data.length){
+
+$("savedCVs").innerHTML=
+`<div class="empty">
+No saved CVs yet.
+</div>`;
+
+return;
+
+}
+
+
+$("savedCVs").innerHTML=
+data.map(cv=>`
+
+<div class="saved-cv ${cv.is_default ? "default":""}">
+
+<div>
+
+<div class="saved-title">
+${escapeHTML(cv.title || "My CV")}
+</div>
+
+<div class="saved-meta">
+
+${cv.is_default ? "★ Default CV · " : ""}
+
+Updated:
+${new Date(cv.updated_at).toLocaleDateString()}
+
+</div>
+
+</div>
+
+<div class="toolbar">
+
+<button
+class="secondary"
+onclick="loadSavedCV('${cv.id}')">
+Edit
+</button>
+
+<button
+class="gold"
+onclick="setDefaultCV('${cv.id}')">
+Default
+</button>
+
+<button
+class="danger"
+onclick="deleteCV('${cv.id}')">
+Delete
+</button>
+
+</div>
+
+</div>
+
+`).join("");
+
+}
+
+
+async function loadSavedCV(id){
+
+const {data,error}=await db
+.from("job_seeker_cvs")
+.select("*")
+.eq("id",id)
+.eq("user_id",session.user.id)
+.single();
+
+if(error){
+
+showStatus(
+error.message,
+"error"
+);
+
+return;
+
+}
+
+
+currentCVId=data.id;
+
+$("cvTitle").value=
+data.title || "My CV";
+
+populateCV(
+data.cv_data || {}
+);
+
+showStatus(
+"Saved CV loaded for editing.",
+"success"
+);
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+
+}
+
+
+async function setDefaultCV(id){
+
+if(!session) return;
+
+
+const {error:clearError}=await db
+.from("job_seeker_cvs")
+.update({is_default:false})
+.eq("user_id",session.user.id);
+
+
+if(clearError){
+
+showStatus(
+clearError.message,
+"error"
+);
+
+return;
+
+}
+
+
+const {error}=await db
+.from("job_seeker_cvs")
+.update({is_default:true})
+.eq("id",id)
+.eq("user_id",session.user.id);
+
+
+if(error){
+
+showStatus(
+error.message,
+"error"
+);
+
+return;
+
+}
+
+
+showStatus(
+"Default CV updated.",
+"success"
+);
+
+loadSavedCVs();
+
+}
+
+
+async function deleteCV(id){
+
+if(!confirm(
+"Delete this saved CV?"
+)) return;
+
+
+const {error}=await db
+.from("job_seeker_cvs")
+.delete()
+.eq("id",id)
+.eq("user_id",session.user.id);
+
+
+if(error){
+
+showStatus(
+error.message,
+"error"
+);
+
+return;
+
+}
+
+
+if(currentCVId===id)
+currentCVId=null;
+
+
+showStatus(
+"CV deleted.",
+"success"
+);
+
+loadSavedCVs();
+
+}
+
+
+function printCV(){
+
+updatePreview();
+
+window.print();
+
+}
+
+
+async function downloadWord(){
+
+const d=getData();
+
+if(!d.personal.fullName){
+
+showStatus(
+"Please enter your name first.",
+"error"
+);
+
+return;
+
+}
+
+
+if(!window.docx){
+
+showStatus(
+"Word export library is still loading. Please try again.",
+"error"
+);
+
+return;
+
+}
+
+
+const {
+Document,
+Packer,
+Paragraph,
+TextRun,
+HeadingLevel
+}=window.docx;
+
+
+const children=[];
+
+
+children.push(
+new Paragraph({
+text:d.personal.fullName,
+heading:HeadingLevel.TITLE
+})
 );
 
 
-function continueWithoutCV(){
+if(d.headline){
 
-  cvSelection.classList.remove("hidden");
-
-  noCV.classList.add("hidden");
-
-}
-
-
-async function submitApplication(event){
-
-  event.preventDefault();
-
-  hideStatus(formStatus);
-
-  if(!session){
-
-    showStatus(
-      formStatus,
-      "Your session has expired. Please log in again.",
-      "error"
-    );
-
-    return;
-
-  }
-
-  const name =
-    nameInput.value.trim();
-
-  const email =
-    emailInput.value.trim();
-
-  const phone =
-    phoneInput.value.trim();
-
-  const coverLetter =
-    coverInput.value.trim();
-
-
-  if(!name || !email){
-
-    showStatus(
-      formStatus,
-      "Please enter your full name and email.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  submitButton.disabled = true;
-
-  submitButton.textContent =
-    "Submitting...";
-
-
-  const application = {
-
-    job_id: job.id,
-
-    job_seeker_id:
-      session.user.id,
-
-    applicant_name:
-      name,
-
-    applicant_email:
-      email,
-
-    applicant_phone:
-      phone || null,
-
-    cover_letter:
-      coverLetter || null,
-
-    cv_id:
-      selectedCV
-        ? selectedCV.id
-        : null,
-
-    cv_title:
-      selectedCV
-        ? (
-            selectedCV.title ||
-            "My CV"
-          )
-        : null,
-
-    cv_snapshot:
-      selectedCV
-        ? selectedCV.cv_data
-        : null
-
-  };
-
-
-  const {error} =
-    await db
-      .from("applications")
-      .insert(application);
-
-
-  submitButton.disabled = false;
-
-  submitButton.textContent =
-    "Submit Application";
-
-
-  if(error){
-
-    console.error(error);
-
-    if(error.code === "23505"){
-
-      showStatus(
-        formStatus,
-        "You have already applied for this job.",
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    showStatus(
-      formStatus,
-      error.message ||
-      "Unable to submit your application. Please try again.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  showStatus(
-    formStatus,
-    "Application submitted successfully.",
-    "success"
-  );
-
-
-  setTimeout(function(){
-
-    window.location.href =
-      "/kazinexus_job_seeker_dashboard.html";
-
-  },1200);
+children.push(
+new Paragraph({
+children:[
+new TextRun({
+text:d.headline,
+bold:true
+})
+]
+})
+);
 
 }
 
 
-document
-  .getElementById("applicationForm")
-  .addEventListener(
-    "submit",
-    submitApplication
-  );
+const contact=[
+d.personal.location,
+d.personal.phone,
+d.personal.email,
+d.personal.website
+]
+.filter(Boolean)
+.join(" | ");
+
+
+if(contact){
+
+children.push(
+new Paragraph(contact)
+);
+
+}
+
+
+function addHeading(text){
+
+children.push(
+new Paragraph({
+text:text,
+heading:HeadingLevel.HEADING_1
+})
+);
+
+}
+
+
+if(d.summary){
+
+addHeading("PROFESSIONAL SUMMARY");
+
+children.push(
+new Paragraph(d.summary)
+);
+
+}
+
+
+if(d.experience.length){
+
+addHeading("PROFESSIONAL EXPERIENCE");
+
+d.experience.forEach(x=>{
+
+children.push(
+new Paragraph({
+children:[
+new TextRun({
+text:x.jobTitle+
+(x.company ? " — "+x.company:""),
+bold:true
+})
+]
+})
+);
+
+const dates=
+[x.start,x.end]
+.filter(Boolean)
+.join(" – ");
+
+if(dates){
+
+children.push(
+new Paragraph(dates)
+);
+
+}
+
+splitLines(x.description)
+.forEach(line=>{
+
+children.push(
+new Paragraph({
+text:line,
+bullet:{}
+})
+);
+
+});
+
+});
+
+}
+
+
+if(d.education.length){
+
+addHeading("EDUCATION");
+
+d.education.forEach(x=>{
+
+children.push(
+new Paragraph({
+children:[
+new TextRun({
+text:x.degree,
+bold:true
+})
+]
+})
+);
+
+children.push(
+new Paragraph(
+[x.institution,x.start,x.end]
+.filter(Boolean)
+.join(" | ")
+)
+);
+
+if(x.details){
+
+children.push(
+new Paragraph(x.details)
+);
+
+}
+
+});
+
+}
+
+
+if(d.skills.length){
+
+addHeading("SKILLS");
+
+children.push(
+new Paragraph(d.skills.join(" • "))
+);
+
+}
+
+
+if(d.certifications.length){
+
+addHeading("CERTIFICATIONS & TRAINING");
+
+d.certifications.forEach(x=>{
+
+children.push(
+new Paragraph(
+[x.name,x.institution,x.year]
+.filter(Boolean)
+.join(" — ")
+)
+);
+
+});
+
+}
+
+
+if(d.languages.length){
+
+addHeading("LANGUAGES");
+
+d.languages.forEach(x=>{
+
+children.push(
+new Paragraph(
+x.language+
+(x.level ? " — "+x.level:"")
+)
+);
+
+});
+
+}
+
+
+if(d.projects.length){
+
+addHeading("PROJECTS");
+
+d.projects.forEach(x=>{
+
+children.push(
+new Paragraph({
+children:[
+new TextRun({
+text:x.name,
+bold:true
+})
+]
+})
+);
+
+if(x.description)
+children.push(
+new Paragraph(x.description)
+);
+
+});
+
+}
+
+
+if(d.achievements.length){
+
+addHeading("ACHIEVEMENTS");
+
+d.achievements.forEach(x=>{
+
+children.push(
+new Paragraph(
+[x.title,x.year,x.description]
+.filter(Boolean)
+.join(" — ")
+)
+);
+
+});
+
+}
+
+
+if(d.referees.length){
+
+addHeading("REFEREES");
+
+d.referees.forEach(x=>{
+
+children.push(
+new Paragraph({
+children:[
+new TextRun({
+text:x.name,
+bold:true
+})
+]
+})
+);
+
+children.push(
+new Paragraph(
+[
+x.position,
+x.organization,
+x.phone,
+x.email
+]
+.filter(Boolean)
+.join(" | ")
+)
+);
+
+});
+
+}
+
+
+if(d.additional){
+
+addHeading("ADDITIONAL INFORMATION");
+
+children.push(
+new Paragraph(d.additional)
+);
+
+}
+
+
+const doc=new Document({
+
+sections:[{
+
+properties:{},
+
+children:children
+
+}]
+
+});
+
+
+const blob=
+await Packer.toBlob(doc);
+
+
+const url=
+URL.createObjectURL(blob);
+
+
+const a=
+document.createElement("a");
+
+a.href=url;
+
+a.download=
+(d.personal.fullName
+.replace(/\s+/g,"_") ||
+"KaziNexus_CV")+
+".docx";
+
+a.click();
+
+URL.revokeObjectURL(url);
+
+
+showStatus(
+"Word CV downloaded.",
+"success"
+);
+
+}
+
+
+function improveSummary(){
+
+const field=$("summary");
+
+const text=field.value.trim();
+
+if(!text){
+
+showStatus(
+"Write a summary first.",
+"info"
+);
+
+return;
+
+}
+
+
+let improved=text;
+
+if(!/[.!?]$/.test(improved))
+improved+=".";
+
+
+if(!/experienced|skilled|professional/i.test(improved)){
+
+improved=
+"Results-oriented professional with "+improved.charAt(0).toLowerCase()+improved.slice(1);
+
+}
+
+
+field.value=improved;
+
+updatePreview();
+
+showStatus(
+"Summary improved. Review it and personalize it before saving.",
+"success"
+);
+
+}
+
+
+function organizeSkills(){
+
+const skills=splitSkills(
+$("skills").value
+);
+
+const unique=[
+...new Set(
+skills.map(x=>x.trim())
+.filter(Boolean)
+)
+];
+
+$("skills").value=
+unique.join(", ");
+
+updatePreview();
+
+showStatus(
+"Skills organized.",
+"success"
+);
+
+}
+
+
+function analyzeCV(){
+
+const d=getData();
+
+let score=0;
+
+const checks=[];
+
+
+if(d.personal.fullName){
+
+score+=10;
+
+checks.push(
+`<div class="check good">✓ Full name included</div>`
+);
+
+}else{
+
+checks.push(
+`<div class="check warn">⚠ Add your full name</div>`
+);
+
+}
+
+
+if(d.personal.email){
+
+score+=10;
+
+checks.push(
+`<div class="check good">✓ Email included</div>`
+);
+
+}else{
+
+checks.push(
+`<div class="check warn">⚠ Add an email address</div>`
+);
+
+}
+
+
+if(d.personal.phone){
+
+score+=5;
+
+checks.push(
+`<div class="check good">✓ Phone number included</div>`
+);
+
+}
+
+
+if(d.headline){
+
+score+=10;
+
+checks.push(
+`<div class="check good">✓ Professional headline included</div>`
+);
+
+}else{
+
+checks.push(
+`<div class="check warn">⚠ Add a professional headline</div>`
+);
+
+}
+
+
+if(d.summary && d.summary.length>=80){
+
+score+=15;
+
+checks.push(
+`<div class="check good">✓ Strong professional summary</div>`
+);
+
+}else{
+
+checks.push(
+`<div class="check warn">⚠ Expand your professional summary</div>`
+);
+
+}
+
+
+if(d.experience.length){
+
+score+=20;
+
+checks.push(
+`<div class="check good">✓ Work experience included</div>`
+);
+
+}else{
+
+checks.push(
+`<div class="check warn">⚠ Add relevant work experience</div>`
+);
+
+}
+
+
+if(d.education.length){
+
+score+=10;
+
+checks.push(
+`<div class="check good">✓ Education included</div>`
+);
+
+}
+
+
+if(d.skills.length>=5){
+
+score+=10;
+
+checks.push(
+`<div class="check good">✓ Good number of skills</div>`
+);
+
+}else{
+
+checks.push(
+`<div class="check warn">⚠ Add at least 5 relevant skills</div>`
+);
+
+}
+
+
+if(d.certifications.length){
+
+score+=5;
+
+checks.push(
+`<div class="check good">✓ Certifications/training included</div>`
+);
+
+}
+
+
+$("analysis").innerHTML=`
+
+<div class="analysis-box">
+
+<div class="score">
+${score}/100
+</div>
+
+<div class="progress">
+<div style="width:${score}%"></div>
+</div>
+
+${checks.join("")}
+
+<p class="small">
+This is a guidance score, not a guarantee of ATS or employer performance.
+Tailor your CV to each job before applying.
+</p>
+
+</div>
+
+`;
+
+}
+
+
+function matchJob(){
+
+const job=$("jobDescription")
+.value
+.toLowerCase()
+.trim();
+
+if(!job){
+
+showStatus(
+"Paste a job description first.",
+"info"
+);
+
+return;
+
+}
+
+
+const d=getData();
+
+const cvText=JSON.stringify(d)
+.toLowerCase();
+
+const words=[
+...new Set(
+job
+.replace(/[^a-z0-9\s]/g," ")
+.split(/\s+/)
+.filter(w=>w.length>=4)
+)
+];
+
+
+let matched=0;
+
+const matchedWords=[];
+
+
+words.forEach(word=>{
+
+if(cvText.includes(word)){
+
+matched++;
+
+matchedWords.push(word);
+
+}
+
+});
+
+
+const score=
+words.length
+?
+Math.round((matched/words.length)*100)
+:0;
+
+
+$("matchResult").innerHTML=`
+
+<div class="analysis-box">
+
+<div class="score">
+${score}%
+</div>
+
+<div class="progress">
+<div style="width:${score}%"></div>
+</div>
+
+<p>
+Your CV contains approximately
+<strong>${matched}</strong>
+of the important terms detected in the job description.
+</p>
+
+${
+matchedWords.length
+?
+`<p class="small">
+Matched terms:
+${escapeHTML(
+matchedWords.slice(0,30).join(", ")
+)}
+</p>`
+:""
+}
+
+<p class="small">
+Use this as a guide. Never add skills or experience you do not genuinely have.
+</p>
+
+</div>
+
+`;
+
+}
+
+
+async function importCV(){
+
+const file=
+$("cvFile").files[0];
+
+if(!file){
+
+showStatus(
+"Choose a PDF or Word CV first.",
+"error"
+);
+
+return;
+
+}
+
+
+showStatus(
+"Reading your CV...",
+"info"
+);
+
+
+try{
+
+let text="";
+
+if(
+file.type==="application/pdf" ||
+file.name.toLowerCase().endsWith(".pdf")
+){
+
+const buffer=
+await file.arrayBuffer();
+
+const pdf=
+await pdfjsLib.getDocument({
+data:buffer
+}).promise;
+
+
+for(let i=1;i<=pdf.numPages;i++){
+
+const page=
+await pdf.getPage(i);
+
+const content=
+await page.getTextContent();
+
+text+=
+content.items
+.map(item=>item.str)
+.join(" ")
++"\n";
+
+}
+
+}else{
+
+const buffer=
+await file.arrayBuffer();
+
+const result=
+await mammoth.extractRawText({
+arrayBuffer:buffer
+});
+
+text=result.value;
+
+}
+
+
+parseImportedText(text);
+
+showStatus(
+"CV imported. Please review every section before saving.",
+"success"
+);
+
+}catch(error){
+
+console.error(error);
+
+showStatus(
+"Unable to read this file. Please try another PDF or Word document.",
+"error"
+);
+
+}
+
+}
+
+
+function findSection(text,names){
+
+const pattern=
+names
+.map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"))
+.join("|");
+
+const regex=
+new RegExp(
+"(?:^|\\n)\\s*(?:"+pattern+")\\s*\\n([\\s\\S]*?)(?=\\n\\s*[A-Z][A-Z &/\\-]{3,}\\s*\\n|$)",
+"i"
+);
+
+const match=text.match(regex);
+
+return match ? match[1].trim() : "";
+
+}
+
+
+function parseImportedText(raw){
+
+const text=
+raw
+.replace(/\r/g,"")
+.replace(/[ \t]+/g," ")
+.replace(/\n{3,}/g,"\n\n");
+
+
+const lines=
+text
+.split("\n")
+.map(x=>x.trim())
+.filter(Boolean);
+
+
+if(lines.length){
+
+$("fullName").value=
+lines[0].replace(
+/^(curriculum vitae|cv|resume)\s*[:\-]*/i,
+""
+).trim();
+
+}
+
+
+const emailMatch=
+text.match(
+/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i
+);
+
+if(emailMatch)
+$("email").value=emailMatch[0];
+
+
+const phoneMatch=
+text.match(
+/(?:\+?254|0)\s*(?:7|1)\s*\d{2}\s*\d{3}\s*\d{3}/
+);
+
+if(phoneMatch)
+$("phone").value=
+phoneMatch[0].replace(/\s+/g," ");
+
+
+const summary=
+findSection(text,[
+"PROFESSIONAL SUMMARY",
+"PROFESSIONAL PROFILE",
+"PROFILE",
+"CAREER SUMMARY",
+"CAREER OBJECTIVE"
+]);
+
+if(summary)
+$("summary").value=summary;
+
+
+const skills=
+findSection(text,[
+"SKILLS",
+"CORE COMPETENCIES",
+"KEY SKILLS",
+"TECHNICAL SKILLS"
+]);
+
+if(skills)
+$("skills").value=
+skills
+.replace(/[•●▪]/g,",")
+.replace(/\n/g,", ");
+
+
+const education=
+findSection(text,[
+"EDUCATION",
+"ACADEMIC QUALIFICATIONS"
+]);
+
+if(education){
+
+const parts=
+education
+.split(/\n(?=[A-Z][A-Za-z].*(?:University|College|School|Institute))/);
+
+$("educationList").innerHTML="";
+
+parts
+.filter(Boolean)
+.slice(0,8)
+.forEach(part=>{
+
+const ls=
+part
+.split("\n")
+.filter(Boolean);
+
+addEducation({
+
+degree:ls[0] || "",
+
+institution:ls[1] || "",
+
+details:ls.slice(2).join(" ")
+
+});
+
+});
+
+}
+
+
+const experience=
+findSection(text,[
+"PROFESSIONAL EXPERIENCE",
+"WORK EXPERIENCE",
+"EMPLOYMENT HISTORY",
+"EXPERIENCE"
+]);
+
+if(experience){
+
+const blocks=
+experience
+.split(
+/\n(?=[A-Z][A-Z0-9 &/.,'’\-]{3,}\n)/
+);
+
+$("experienceList").innerHTML="";
+
+blocks
+.filter(Boolean)
+.slice(0,10)
+.forEach(block=>{
+
+const ls=
+block
+.split("\n")
+.filter(Boolean);
+
+addExperience({
+
+jobTitle:ls[0] || "",
+
+company:ls[1] || "",
+
+description:ls.slice(2).join("\n")
+
+});
+
+});
+
+}
+
+
+updatePreview();
+
+}
+
+
+$("template")
+.addEventListener(
+"change",
+updatePreview
+);
+
+
+[
+"fullName",
+"headline",
+"phone",
+"email",
+"location",
+"website",
+"summary",
+"skills",
+"additional"
+]
+.forEach(id=>{
+
+$(id).addEventListener(
+"input",
+updatePreview
+);
+
+});
 
 
 async function initialize(){
 
-  try{
+const result=
+await db.auth.getSession();
 
-    if(!jobId){
-
-      throw new Error(
-        "No job was selected."
-      );
-
-    }
+session=
+result.data.session;
 
 
-    const auth =
-      await db.auth.getSession();
+if(session){
 
-    session =
-      auth.data.session;
+$("email").value=
+session.user.email || "";
 
+await loadSavedCVs();
 
-    if(!session){
+}else{
 
-      loading.classList.add("hidden");
+$("savedCVs").innerHTML=
+`<div class="empty">
+Log in as a jobseeker to save CVs to your KaziNexus account.
+</div>`;
 
-      loginBox.classList.remove("hidden");
-
-      return;
-
-    }
-
-
-    await loadJob();
-
-    await loadProfile();
-
-    await loadCVs();
+}
 
 
-    loading.classList.add("hidden");
+addExperience();
+addEducation();
 
-    applicationPage.classList.remove("hidden");
-
-
-  }catch(error){
-
-    console.error(error);
-
-    loading.innerHTML = `
-      <strong>Unable to load application.</strong>
-      <p>
-        ${escapeHTML(
-          error.message ||
-          "Please try again."
-        )}
-      </p>
-      <a
-        class="button secondary"
-        href="/jobs/"
-      >
-        Back to Jobs
-      </a>
-    `;
-
-  }
+updatePreview();
 
 }
 
