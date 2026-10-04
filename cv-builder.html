@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>KaziNexus CV Builder | Create a Professional CV</title>
-<meta name="description" content="Create, import, improve and analyse professional CVs with the KaziNexus CV Builder.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.9.0/mammoth.browser.min.js"></script>
+<title>KaziNexus CV Builder</title>
+<meta name="description" content="Build a professional, ATS-friendly CV with KaziNexus. Import an existing CV or create one from scratch.">
+
+<script src="https://unpkg.com/docx@9.5.1/build/index.umd.js"></script>
 
 <style>
 *{box-sizing:border-box}
@@ -18,1929 +19,1749 @@ body{
 }
 header{
   background:#075e54;
-  color:white;
-  padding:14px 22px;
+  color:#fff;
+  padding:15px 20px;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+.header-inner{
+  max-width:1200px;
+  margin:auto;
   display:flex;
   justify-content:space-between;
   align-items:center;
   gap:15px;
-  position:sticky;
-  top:0;
-  z-index:50;
 }
-.logo{font-size:23px;font-weight:800}
-.logo span{font-weight:400}
-nav{display:flex;gap:8px;flex-wrap:wrap}
-nav a,.navbtn{
-  color:white;
+.logo{
+  font-size:22px;
+  font-weight:800;
+}
+nav a{
+  color:#fff;
   text-decoration:none;
-  border:1px solid rgba(255,255,255,.4);
-  padding:8px 12px;
-  border-radius:7px;
-  font-size:13px;
-  background:transparent;
+  margin-left:15px;
+  font-weight:700;
+}
+.container{
+  max-width:1200px;
+  margin:25px auto;
+  padding:0 15px;
 }
 .hero{
-  background:linear-gradient(135deg,#075e54,#0b8f7f);
-  color:white;
-  padding:45px 20px;
-  text-align:center;
+  background:#fff;
+  border-radius:15px;
+  padding:30px;
+  margin-bottom:20px;
+  box-shadow:0 4px 18px rgba(0,0,0,.07);
 }
-.hero h1{margin:0 0 10px;font-size:36px}
-.hero p{margin:0 auto;max-width:750px;line-height:1.6}
-.container{max-width:1450px;margin:auto;padding:22px}
-.start{
-  max-width:1000px;
-  margin:25px auto;
+.hero h1{margin-top:0}
+.grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:20px;
 }
-.start-card{
-  background:white;
-  padding:30px;
-  border-radius:15px;
-  box-shadow:0 5px 25px rgba(0,0,0,.08);
-  text-align:center;
-}
-.start-card h2{margin-top:0}
-.btn{
-  border:0;
-  padding:11px 16px;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:700;
-  background:#075e54;
-  color:white;
-}
-.btn.secondary{background:#e9eef4;color:#172033}
-.btn.warning{background:#9a6700;color:white}
-.btn.danger{background:#b42318;color:white}
-.btn.small{padding:7px 10px;font-size:12px}
-input[type=file]{display:none}
-.status{
-  max-width:1000px;
-  margin:15px auto;
-  padding:12px;
-  border-radius:8px;
-  display:none;
-}
-.status.show{display:block;background:#eaf7f3}
-.builder{
-  display:grid;
-  grid-template-columns:minmax(350px,1fr) minmax(360px,650px);
-  gap:22px;
-  align-items:start;
-}
-.panel{
-  background:white;
+.card{
+  background:#fff;
   border-radius:14px;
-  padding:18px;
-  margin-bottom:18px;
-  box-shadow:0 3px 16px rgba(0,0,0,.06);
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:0 4px 18px rgba(0,0,0,.06);
 }
-.panel h2{
-  margin:0 0 15px;
+.card h2{
+  margin-top:0;
   color:#075e54;
-  font-size:20px;
 }
-.panel h3{
-  font-size:15px;
-  margin:20px 0 10px;
-}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 label{
   display:block;
-  font-size:13px;
   font-weight:700;
-  margin-bottom:5px;
+  margin:12px 0 6px;
 }
 input,textarea,select{
   width:100%;
-  padding:10px;
-  border:1px solid #ccd5df;
-  border-radius:7px;
-  font:inherit;
+  padding:11px;
+  border:1px solid #ccd4df;
+  border-radius:8px;
+  font-size:15px;
+  background:#fff;
 }
-textarea{min-height:100px;resize:vertical}
-.item{
-  border:1px solid #dce3ea;
-  padding:14px;
-  border-radius:10px;
-  margin-bottom:12px;
-  background:#fafcfe;
+textarea{
+  min-height:110px;
+  resize:vertical;
 }
-.item-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
+button{
+  border:0;
+  border-radius:8px;
+  padding:11px 16px;
+  font-weight:700;
+  cursor:pointer;
+  margin:5px 4px 5px 0;
 }
+.primary{background:#075e54;color:#fff}
+.secondary{background:#e7eef3;color:#172033}
+.danger{background:#c62828;color:#fff}
+.success{background:#2e7d32;color:#fff}
+.small{font-size:13px;color:#667085}
 .actions{
   display:flex;
   flex-wrap:wrap;
-  gap:8px;
-  margin-top:12px;
+  gap:5px;
+  margin-bottom:15px;
 }
-.top-actions{
+.entry{
+  border:1px solid #dce3ea;
+  border-radius:10px;
+  padding:15px;
+  margin:12px 0;
+  background:#fafcff;
+}
+.preview-wrap{
+  position:sticky;
+  top:85px;
+}
+#preview{
+  background:#fff;
+  min-height:900px;
+  padding:45px;
+  box-shadow:0 4px 20px rgba(0,0,0,.12);
+}
+.preview-name{
+  font-size:30px;
+  font-weight:800;
+  margin-bottom:5px;
+}
+.preview-headline{
+  color:#075e54;
+  font-size:17px;
+  font-weight:700;
+}
+.preview-contact{
+  font-size:13px;
+  color:#555;
+  margin:12px 0 20px;
+}
+.preview-section{
+  margin-top:24px;
+}
+.preview-section h3{
+  border-bottom:2px solid #075e54;
+  padding-bottom:5px;
+  color:#075e54;
+  font-size:16px;
+}
+.preview-job{
+  margin-bottom:15px;
+}
+.preview-job-title{
+  font-weight:800;
+}
+.preview-meta{
+  font-size:13px;
+  color:#666;
+}
+ul{
+  margin-top:6px;
+}
+.status{
+  display:none;
+  padding:12px;
+  border-radius:8px;
+  background:#e8f5e9;
+  color:#1b5e20;
+  margin:10px 0;
+}
+.start-screen{
+  text-align:center;
+  padding:40px 20px;
+}
+.start-box{
+  max-width:800px;
+  margin:auto;
+}
+.template-buttons{
   display:flex;
   flex-wrap:wrap;
   gap:8px;
   margin-bottom:15px;
 }
-.tag{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  background:#e7f5f1;
-  color:#075e54;
-  border-radius:20px;
-  padding:7px 10px;
-  margin:4px;
-  font-size:13px;
-}
-.preview-wrap{
-  position:sticky;
-  top:75px;
-}
-.preview-controls{
-  display:flex;
-  gap:8px;
-  margin-bottom:12px;
-}
-.cv-paper{
-  background:white;
-  min-height:1120px;
-  width:100%;
-  padding:55px;
-  box-shadow:0 5px 25px rgba(0,0,0,.12);
-  color:#222;
-}
-.cv-name{
-  font-size:32px;
-  font-weight:800;
-  margin-bottom:5px;
-}
-.cv-headline{font-size:16px;color:#075e54;margin-bottom:10px}
-.cv-contact{font-size:12px;color:#555;margin-bottom:25px}
-.cv-section{margin-top:22px}
-.cv-section-title{
-  font-size:15px;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:1px;
-  border-bottom:2px solid #075e54;
-  padding-bottom:5px;
-  margin-bottom:12px;
-}
-.cv-summary{font-size:13px;line-height:1.6;white-space:pre-line}
-.cv-job{margin-bottom:16px}
-.cv-job-title{font-size:14px;font-weight:800}
-.cv-company{font-size:13px;font-weight:700}
-.cv-date{font-size:12px;color:#666}
-.cv-text{font-size:12px;line-height:1.55;white-space:pre-line}
-.cv-list{font-size:12px;line-height:1.55;margin:6px 0;padding-left:20px}
-.cv-skills{display:flex;flex-wrap:wrap;gap:6px}
-.cv-skill{font-size:11px;padding:5px 8px;border:1px solid #ccd5df;border-radius:4px}
-.template-classic .cv-section-title{
-  border-bottom:1px solid #555;
-  color:#222;
-}
-.template-classic .cv-headline{color:#333}
-.template-executive{
-  font-family:Georgia,"Times New Roman",serif;
-}
-.template-executive .cv-name{font-size:35px}
-.template-executive .cv-section-title{
-  color:#333;
-  border-bottom:1px solid #333;
-}
-.result{
-  margin-top:12px;
-  padding:14px;
-  border-radius:9px;
-  background:#f2f6fa;
-  line-height:1.6;
-}
-.score{
-  font-size:30px;
-  font-weight:800;
-  color:#075e54;
+.template-buttons button.active{
+  background:#075e54;
+  color:#fff;
 }
 .hidden{display:none!important}
-footer{
-  text-align:center;
-  padding:30px;
-  color:#667085;
+
+.modern #preview{
+  border-top:7px solid #075e54;
 }
-@media(max-width:900px){
-  .builder{grid-template-columns:1fr}
+.classic #preview{
+  font-family:Georgia,serif;
+}
+.classic .preview-section h3{
+  color:#222;
+  border-bottom:1px solid #222;
+}
+.executive #preview{
+  border-left:7px solid #075e54;
+}
+@media(max-width:850px){
+  .grid{grid-template-columns:1fr}
   .preview-wrap{position:static}
-}
-@media(max-width:650px){
-  .start,.grid2{grid-template-columns:1fr}
-  .hero h1{font-size:28px}
-  .container{padding:10px}
-  .cv-paper{padding:28px;min-height:900px}
-  .cv-name{font-size:26px}
-  header{position:static}
+  #preview{padding:25px}
+  .header-inner{flex-direction:column;align-items:flex-start}
+  nav a{margin-left:0;margin-right:12px}
 }
 @media print{
-  body{background:white}
-  header,.hero,.start,.status,.editor-column,.preview-controls,footer{display:none!important}
-  .container{padding:0}
-  .builder{display:block}
+  body{background:#fff}
+  header,.hero,.editor,.no-print{display:none!important}
+  .container{margin:0;padding:0}
+  .grid{display:block}
   .preview-wrap{position:static}
-  .cv-paper{
+  #preview{
     box-shadow:none;
-    width:100%;
+    padding:25px;
     min-height:auto;
-    padding:35px;
   }
 }
 </style>
 </head>
 
-<body>
+<body class="modern">
 
 <header>
-  <div class="logo">Kazi<span>Nexus</span></div>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="kazinexus_find_jobs_connected.html">Find Jobs</a>
-  </nav>
+  <div class="header-inner">
+    <div class="logo">KaziNexus CV Builder</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="kazinexus_find_jobs_connected.html">Find Jobs</a>
+    </nav>
+  </div>
 </header>
-
-<section class="hero">
-  <h1>Professional CV Builder</h1>
-  <p>Create a professional, ATS-friendly CV from scratch or import an existing CV and turn it into an editable professional document.</p>
-</section>
 
 <div class="container">
 
-  <div id="startScreen" class="start">
+<div class="hero">
+  <h1>Build a Professional CV</h1>
+  <p>
+    Create an ATS-friendly CV from scratch or import your existing PDF or Word CV.
+    Edit, improve, analyse and download your finished CV.
+  </p>
 
-    <div class="start-card">
-      <h2>Build From Scratch</h2>
-      <p>Create your CV section by section using professional templates.</p>
-      <button class="btn" onclick="startBuilder()">Start Building</button>
-    </div>
-
-    <div class="start-card">
-      <h2>Import Existing CV</h2>
-      <p>Upload a PDF or Word CV and extract its content into the builder.</p>
-      <label class="btn" for="cvUpload">Upload CV</label>
-      <input id="cvUpload" type="file" accept=".pdf,.doc,.docx">
-    </div>
-
+  <div class="actions no-print">
+    <button class="primary" onclick="startBuilder()">Build From Scratch</button>
+    <button class="secondary" onclick="document.getElementById('cvFile').click()">Import Existing CV</button>
+    <input id="cvFile" type="file" accept=".pdf,.doc,.docx" hidden onchange="importCV(event)">
   </div>
 
   <div id="status" class="status"></div>
+</div>
 
-  <div id="builder" class="builder hidden">
+<div id="builder" class="hidden">
 
-    <!-- EDITOR -->
-    <div class="editor-column">
+<div class="actions no-print">
+  <button class="primary" onclick="saveDraft()">Save Draft</button>
+  <button class="secondary" onclick="loadDraft()">Load Draft</button>
+  <button class="success" onclick="printCV()">Print / Save PDF</button>
+  <button class="secondary" onclick="downloadWord()">Download Word</button>
+  <button class="secondary" onclick="saveVersion()">Save CV Version</button>
+  <button class="secondary" onclick="clearBuilder()">Clear</button>
+</div>
 
-      <div class="panel">
-        <div class="top-actions">
-          <button class="btn small" onclick="saveDraft()">Save Draft</button>
-          <button class="btn secondary small" onclick="loadDraft()">Load Draft</button>
-          <button class="btn secondary small" onclick="window.print()">PDF / Print</button>
-          <button class="btn small" onclick="downloadWord()">Download Word</button>
-        </div>
-
-        <label>CV Template</label>
-        <select id="template" onchange="updatePreview()">
-          <option value="modern">Modern</option>
-          <option value="classic">Classic</option>
-          <option value="executive">Executive</option>
-        </select>
-      </div>
-
-      <div class="panel">
-        <h2>1. Personal Information</h2>
-
-        <div class="grid2">
-          <div>
-            <label>Full Name *</label>
-            <input id="fullName" placeholder="e.g. Wilson Odhiambo Otieno">
-          </div>
-
-          <div>
-            <label>Professional Headline</label>
-            <input id="headline" placeholder="e.g. Sales & Relationship Management Professional">
-          </div>
-
-          <div>
-            <label>Phone</label>
-            <input id="phone" placeholder="+254 7XX XXX XXX">
-          </div>
-
-          <div>
-            <label>Email</label>
-            <input id="email" placeholder="name@example.com">
-          </div>
-
-          <div>
-            <label>Location</label>
-            <input id="location" placeholder="Nairobi, Kenya">
-          </div>
-
-          <div>
-            <label>LinkedIn</label>
-            <input id="linkedin" placeholder="linkedin.com/in/yourname">
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h2>2. Professional Summary</h2>
-        <textarea id="summary" placeholder="Write a concise 3–5 line professional summary highlighting your experience, strengths and value."></textarea>
-        <div class="actions">
-          <button class="btn small" onclick="improveSummary()">Improve Summary</button>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h2>3. Work Experience</h2>
-        <div id="experienceList"></div>
-        <button class="btn small" onclick="addExperience()">+ Add Experience</button>
-      </div>
-
-      <div class="panel">
-        <h2>4. Education</h2>
-        <div id="educationList"></div>
-        <button class="btn small" onclick="addEducation()">+ Add Education</button>
-      </div>
-
-      <div class="panel">
-        <h2>5. Skills</h2>
-        <div class="grid2">
-          <input id="skillInput" placeholder="Enter a skill">
-          <button class="btn" onclick="addSkill()">Add Skill</button>
-        </div>
-        <div id="skillsList"></div>
-      </div>
-
-      <div class="panel">
-        <h2>6. Certifications & Training</h2>
-        <div id="certificationList"></div>
-        <button class="btn small" onclick="addCertification()">+ Add Certification</button>
-      </div>
-
-      <div class="panel">
-        <h2>7. Languages</h2>
-        <div id="languageList"></div>
-        <button class="btn small" onclick="addLanguage()">+ Add Language</button>
-      </div>
-
-      <div class="panel">
-        <h2>8. Projects</h2>
-        <div id="projectList"></div>
-        <button class="btn small" onclick="addProject()">+ Add Project</button>
-      </div>
-
-      <div class="panel">
-        <h2>9. Achievements</h2>
-        <textarea id="achievements" placeholder="List measurable achievements, awards, targets exceeded, recognitions or major accomplishments."></textarea>
-        <button class="btn small" onclick="improveAchievements()">Improve Achievements</button>
-      </div>
-
-      <div class="panel">
-        <h2>10. Referees</h2>
-        <div id="refereeList"></div>
-        <button class="btn small" onclick="addReferee()">+ Add Referee</button>
-      </div>
-
-      <div class="panel">
-        <h2>11. Additional Information</h2>
-        <textarea id="additional" placeholder="Optional: professional memberships, volunteer work, interests or other relevant information."></textarea>
-      </div>
-
-      <div class="panel">
-        <h2>12. Job-Specific CV Analysis</h2>
-
-        <label>Paste the job advert here</label>
-        <textarea id="jobAdvert" placeholder="Paste a KaziNexus job advert or any job description here..."></textarea>
-
-        <div class="actions">
-          <button class="btn" onclick="analyseMatch()">Analyse Job Match</button>
-          <button class="btn secondary" onclick="runATS()">Run ATS Check</button>
-          <button class="btn warning" onclick="improveAll()">Improve CV Content</button>
-        </div>
-
-        <div id="matchResult"></div>
-        <div id="atsResult"></div>
-      </div>
-
-      <div class="panel">
-        <h2>CV Versions</h2>
-        <p>Create a saved version before tailoring your CV for a different job.</p>
-        <button class="btn" onclick="saveVersion()">Save Current Version</button>
-        <div id="versionList"></div>
-      </div>
-
-    </div>
-
-    <!-- PREVIEW -->
-    <div class="preview-wrap">
-
-      <div class="panel preview-controls">
-        <button class="btn small" onclick="window.print()">Print / Save PDF</button>
-        <button class="btn small" onclick="downloadWord()">Download Word</button>
-      </div>
-
-      <div id="cvPreview" class="cv-paper template-modern">
-
-        <div id="previewName" class="cv-name">Your Name</div>
-        <div id="previewHeadline" class="cv-headline">Professional Headline</div>
-        <div id="previewContact" class="cv-contact"></div>
-
-        <div id="summarySection" class="cv-section">
-          <div class="cv-section-title">Professional Summary</div>
-          <div id="previewSummary" class="cv-summary"></div>
-        </div>
-
-        <div id="experienceSection" class="cv-section">
-          <div class="cv-section-title">Professional Experience</div>
-          <div id="previewExperience"></div>
-        </div>
-
-        <div id="educationSection" class="cv-section">
-          <div class="cv-section-title">Education</div>
-          <div id="previewEducation"></div>
-        </div>
-
-        <div id="skillsSection" class="cv-section">
-          <div class="cv-section-title">Skills</div>
-          <div id="previewSkills" class="cv-skills"></div>
-        </div>
-
-        <div id="previewCertificationSection" class="cv-section">
-          <div class="cv-section-title">Certifications & Training</div>
-          <div id="previewCertifications"></div>
-        </div>
-
-        <div id="previewLanguageSection" class="cv-section">
-          <div class="cv-section-title">Languages</div>
-          <div id="previewLanguages"></div>
-        </div>
-
-        <div id="previewProjectSection" class="cv-section">
-          <div class="cv-section-title">Projects</div>
-          <div id="previewProjects"></div>
-        </div>
-
-        <div id="previewAchievementSection" class="cv-section">
-          <div class="cv-section-title">Achievements</div>
-          <div id="previewAchievements" class="cv-text"></div>
-        </div>
-
-        <div id="previewRefereeSection" class="cv-section">
-          <div class="cv-section-title">Referees</div>
-          <div id="previewReferees"></div>
-        </div>
-
-        <div id="previewAdditionalSection" class="cv-section">
-          <div class="cv-section-title">Additional Information</div>
-          <div id="previewAdditional" class="cv-text"></div>
-        </div>
-
-      </div>
-    </div>
-
+<div class="card no-print">
+  <h2>CV Template</h2>
+  <div class="template-buttons">
+    <button id="modernBtn" class="active" onclick="setTemplate('modern')">Modern</button>
+    <button id="classicBtn" onclick="setTemplate('classic')">Classic</button>
+    <button id="executiveBtn" onclick="setTemplate('executive')">Executive</button>
   </div>
 </div>
 
-<footer>
-  KaziNexus — Connect Opportunities With the Right Talent.
-</footer>
+<div class="grid">
+
+<div class="editor">
+
+<div class="card">
+<h2>1. Personal Information</h2>
+
+<label>Full Name</label>
+<input id="fullName" oninput="updatePreview()" placeholder="e.g. ODHIAMBO WILSON OTIENO">
+
+<label>Professional Headline</label>
+<input id="headline" oninput="updatePreview()" placeholder="e.g. Sales & Customer Relationship Management Professional">
+
+<label>Phone</label>
+<input id="phone" oninput="updatePreview()" placeholder="0700000000">
+
+<label>Email</label>
+<input id="email" oninput="updatePreview()" placeholder="name@email.com">
+
+<label>Location / County</label>
+<input id="location" oninput="updatePreview()" placeholder="Nairobi, Kenya">
+
+<label>LinkedIn</label>
+<input id="linkedin" oninput="updatePreview()" placeholder="https://linkedin.com/in/...">
+
+<label>Professional Website</label>
+<input id="website" oninput="updatePreview()" placeholder="https://...">
+</div>
+
+<div class="card">
+<h2>2. Professional Summary</h2>
+<textarea id="summary" oninput="updatePreview()" placeholder="Write a concise professional summary..."></textarea>
+<button class="secondary no-print" onclick="improveSummary()">Improve Summary</button>
+</div>
+
+<div class="card">
+<h2>3. Work Experience</h2>
+<div id="experienceList"></div>
+<button class="primary no-print" onclick="addExperience()">+ Add Experience</button>
+</div>
+
+<div class="card">
+<h2>4. Education</h2>
+<div id="educationList"></div>
+<button class="primary no-print" onclick="addEducation()">+ Add Education</button>
+</div>
+
+<div class="card">
+<h2>5. Skills</h2>
+<div id="skillsList"></div>
+<div class="actions no-print">
+<input id="skillInput" placeholder="Enter a skill">
+<button class="primary" onclick="addSkill()">Add Skill</button>
+</div>
+</div>
+
+<div class="card">
+<h2>6. Certifications & Training</h2>
+<div id="certificationList"></div>
+<button class="primary no-print" onclick="addCertification()">+ Add Certification</button>
+</div>
+
+<div class="card">
+<h2>7. Languages</h2>
+<div id="languageList"></div>
+<button class="primary no-print" onclick="addLanguage()">+ Add Language</button>
+</div>
+
+<div class="card">
+<h2>8. Projects</h2>
+<div id="projectList"></div>
+<button class="primary no-print" onclick="addProject()">+ Add Project</button>
+</div>
+
+<div class="card">
+<h2>9. Achievements</h2>
+<textarea id="achievements" oninput="updatePreview()" placeholder="List measurable achievements..."></textarea>
+<button class="secondary no-print" onclick="improveAchievements()">Improve Achievements</button>
+</div>
+
+<div class="card">
+<h2>10. Referees</h2>
+<div id="refereeList"></div>
+<button class="primary no-print" onclick="addReferee()">+ Add Referee</button>
+</div>
+
+<div class="card">
+<h2>11. Additional Information</h2>
+<textarea id="additional" oninput="updatePreview()" placeholder="Languages, availability, relocation, professional memberships, volunteer work, etc."></textarea>
+</div>
+
+<div class="card no-print">
+<h2>12. Job-Specific CV Analysis</h2>
+
+<label>Paste Job Advert</label>
+<textarea id="jobAdvert" placeholder="Paste the job description here..."></textarea>
+
+<div class="actions">
+<button class="primary" onclick="analyzeMatch()">Analyze Match</button>
+<button class="secondary" onclick="atsCheck()">ATS Check</button>
+<button class="secondary" onclick="improveCVContent()">Improve CV Content</button>
+</div>
+
+<div id="analysisResult"></div>
+</div>
+
+<div class="card no-print">
+<h2>CV Versions</h2>
+<p class="small">Save different versions for different jobs.</p>
+<div id="versionsList"></div>
+</div>
+
+</div>
+
+<div class="preview-wrap">
+<div id="preview"></div>
+</div>
+
+</div>
+</div>
+
+</div>
 
 <script>
-"use strict";
-
-const DB_KEY = "kazinexus_cv_builder_v1";
-let experienceData = [];
-let educationData = [];
-let certificationData = [];
-let languageData = [];
-let projectData = [];
-let refereeData = [];
-let skillsData = [];
-
-function $(id){
-  return document.getElementById(id);
-}
-
-function esc(value){
-  return String(value || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
-
-function showStatus(message){
-  const box=$("status");
-  box.textContent=message;
-  box.classList.add("show");
-  setTimeout(()=>box.classList.remove("show"),5000);
-}
-
-function startBuilder(){
-  $("startScreen").classList.add("hidden");
-  $("builder").classList.remove("hidden");
-
-  if(!experienceData.length) addExperience();
-  if(!educationData.length) addEducation();
-
-  updatePreview();
-}
-
-function uid(){
-  return Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-}
-
-function addExperience(data={}){
-  experienceData.push({
-    id:uid(),
-    title:data.title||"",
-    company:data.company||"",
-    location:data.location||"",
-    start:data.start||"",
-    end:data.end||"",
-    description:data.description||""
-  });
-  renderExperience();
-  updatePreview();
-}
-
-function renderExperience(){
-  const box=$("experienceList");
-  box.innerHTML="";
-
-  experienceData.forEach((x,i)=>{
-    box.innerHTML+=`
-      <div class="item">
-        <div class="item-head">
-          <strong>Experience ${i+1}</strong>
-          <button class="btn danger small" onclick="removeExperience(${i})">Remove</button>
-        </div>
-
-        <div class="grid2">
-          <div>
-            <label>Job Title</label>
-            <input value="${esc(x.title)}" oninput="experienceData[${i}].title=this.value;updatePreview()">
-          </div>
-
-          <div>
-            <label>Company / Organisation</label>
-            <input value="${esc(x.company)}" oninput="experienceData[${i}].company=this.value;updatePreview()">
-          </div>
-
-          <div>
-            <label>Location</label>
-            <input value="${esc(x.location)}" oninput="experienceData[${i}].location=this.value;updatePreview()">
-          </div>
-
-          <div>
-            <label>Start Date</label>
-            <input value="${esc(x.start)}" placeholder="Jan 2024" oninput="experienceData[${i}].start=this.value;updatePreview()">
-          </div>
-
-          <div>
-            <label>End Date</label>
-            <input value="${esc(x.end)}" placeholder="Present" oninput="experienceData[${i}].end=this.value;updatePreview()">
-          </div>
-        </div>
-
-        <label>Responsibilities & Achievements</label>
-        <textarea oninput="experienceData[${i}].description=this.value;updatePreview()">${esc(x.description)}</textarea>
-      </div>
-    `;
-  });
-}
-
-function removeExperience(i){
-  experienceData.splice(i,1);
-  renderExperience();
-  updatePreview();
-}
-
-function addEducation(data={}){
-  educationData.push({
-    id:uid(),
-    qualification:data.qualification||"",
-    institution:data.institution||"",
-    location:data.location||"",
-    start:data.start||"",
-    end:data.end||"",
-    details:data.details||""
-  });
-  renderEducation();
-  updatePreview();
-}
-
-function renderEducation(){
-  const box=$("educationList");
-  box.innerHTML="";
-
-  educationData.forEach((x,i)=>{
-    box.innerHTML+=`
-      <div class="item">
-        <div class="item-head">
-          <strong>Education ${i+1}</strong>
-          <button class="btn danger small" onclick="removeEducation(${i})">Remove</button>
-        </div>
-
-        <div class="grid2">
-          <div>
-            <label>Qualification</label>
-            <input value="${esc(x.qualification)}" placeholder="Bachelor of Arts in Sociology" oninput="educationData[${i}].qualification=this.value;updatePreview()">
-          </div>
-
-          <div>
-            <label>Institution</label>
-            <input value="${esc(x.institution)}" oninput="educationData[${i}].institution=this.value;updatePreview()">
-          </div>
-
-          <div>
-            <label>Location</label>
-            <input value="${esc(x.location)}" oninput="educationData[${i}].location=this.value;updatePreview()">
-          </div>
-
-          <div>
-            <label>Period</label>
-            <input value="${esc(x.start)}" placeholder="2016 - 2021" oninput="educationData[${i}].start=this.value;updatePreview()">
-          </div>
-        </div>
-
-        <label>Additional Details</label>
-        <textarea oninput="educationData[${i}].details=this.value;updatePreview()">${esc(x.details)}</textarea>
-      </div>
-    `;
-  });
-}
-
-function removeEducation(i){
-  educationData.splice(i,1);
-  renderEducation();
-  updatePreview();
-}
-
-function addSkill(value){
-  const input=$("skillInput");
-
-  if(value===undefined){
-    value=input.value.trim();
-    input.value="";
-  }
-
-  if(!value)return;
-
-  if(!skillsData.some(s=>s.toLowerCase()===value.toLowerCase())){
-    skillsData.push(value);
-  }
-
-  renderSkills();
-  updatePreview();
-}
-
-function renderSkills(){
-  $("skillsList").innerHTML=skillsData.map((s,i)=>
-    `<span class="tag">${esc(s)}
-      <button class="btn danger small" onclick="removeSkill(${i})">×</button>
-    </span>`
-  ).join("");
-}
-
-function removeSkill(i){
-  skillsData.splice(i,1);
-  renderSkills();
-  updatePreview();
-}
-
-function addCertification(data={}){
-  certificationData.push({
-    id:uid(),
-    name:data.name||"",
-    institution:data.institution||"",
-    year:data.year||"",
-    details:data.details||""
-  });
-  renderCertifications();
-  updatePreview();
-}
-
-function renderCertifications(){
-  $("certificationList").innerHTML=certificationData.map((x,i)=>`
-    <div class="item">
-      <div class="item-head">
-        <strong>Certification ${i+1}</strong>
-        <button class="btn danger small" onclick="removeCertification(${i})">Remove</button>
-      </div>
-
-      <div class="grid2">
-        <div>
-          <label>Certification / Training</label>
-          <input value="${esc(x.name)}" oninput="certificationData[${i}].name=this.value;updatePreview()">
-        </div>
-        <div>
-          <label>Institution</label>
-          <input value="${esc(x.institution)}" oninput="certificationData[${i}].institution=this.value;updatePreview()">
-        </div>
-        <div>
-          <label>Year</label>
-          <input value="${esc(x.year)}" oninput="certificationData[${i}].year=this.value;updatePreview()">
-        </div>
-      </div>
-
-      <label>Details</label>
-      <textarea oninput="certificationData[${i}].details=this.value;updatePreview()">${esc(x.details)}</textarea>
-    </div>
-  `).join("");
-}
-
-function removeCertification(i){
-  certificationData.splice(i,1);
-  renderCertifications();
-  updatePreview();
-}
-
-function addLanguage(data={}){
-  languageData.push({
-    id:uid(),
-    language:data.language||"",
-    level:data.level||""
-  });
-  renderLanguages();
-  updatePreview();
-}
-
-function renderLanguages(){
-  $("languageList").innerHTML=languageData.map((x,i)=>`
-    <div class="item">
-      <div class="item-head">
-        <strong>Language ${i+1}</strong>
-        <button class="btn danger small" onclick="removeLanguage(${i})">Remove</button>
-      </div>
-
-      <div class="grid2">
-        <input placeholder="Language" value="${esc(x.language)}" oninput="languageData[${i}].language=this.value;updatePreview()">
-        <input placeholder="Proficiency e.g. Fluent" value="${esc(x.level)}" oninput="languageData[${i}].level=this.value;updatePreview()">
-      </div>
-    </div>
-  `).join("");
-}
-
-function removeLanguage(i){
-  languageData.splice(i,1);
-  renderLanguages();
-  updatePreview();
-}
-
-function addProject(data={}){
-  projectData.push({
-    id:uid(),
-    name:data.name||"",
-    role:data.role||"",
-    description:data.description||"",
-    link:data.link||""
-  });
-  renderProjects();
-  updatePreview();
-}
-
-function renderProjects(){
-  $("projectList").innerHTML=projectData.map((x,i)=>`
-    <div class="item">
-      <div class="item-head">
-        <strong>Project ${i+1}</strong>
-        <button class="btn danger small" onclick="removeProject(${i})">Remove</button>
-      </div>
-
-      <div class="grid2">
-        <div>
-          <label>Project Name</label>
-          <input value="${esc(x.name)}" oninput="projectData[${i}].name=this.value;updatePreview()">
-        </div>
-
-        <div>
-          <label>Your Role</label>
-          <input value="${esc(x.role)}" oninput="projectData[${i}].role=this.value;updatePreview()">
-        </div>
-
-        <div>
-          <label>Project Link</label>
-          <input value="${esc(x.link)}" oninput="projectData[${i}].link=this.value;updatePreview()">
-        </div>
-      </div>
-
-      <label>Description</label>
-      <textarea oninput="projectData[${i}].description=this.value;updatePreview()">${esc(x.description)}</textarea>
-    </div>
-  `).join("");
-}
-
-function removeProject(i){
-  projectData.splice(i,1);
-  renderProjects();
-  updatePreview();
-}
-
-function addReferee(data={}){
-  refereeData.push({
-    id:uid(),
-    name:data.name||"",
-    position:data.position||"",
-    organization:data.organization||"",
-    phone:data.phone||"",
-    email:data.email||""
-  });
-  renderReferees();
-  updatePreview();
-}
-
-function renderReferees(){
-  $("refereeList").innerHTML=refereeData.map((x,i)=>`
-    <div class="item">
-      <div class="item-head">
-        <strong>Referee ${i+1}</strong>
-        <button class="btn danger small" onclick="removeReferee(${i})">Remove</button>
-      </div>
-
-      <div class="grid2">
-        <input placeholder="Full Name" value="${esc(x.name)}" oninput="refereeData[${i}].name=this.value;updatePreview()">
-        <input placeholder="Position" value="${esc(x.position)}" oninput="refereeData[${i}].position=this.value;updatePreview()">
-        <input placeholder="Organisation" value="${esc(x.organization)}" oninput="refereeData[${i}].organization=this.value;updatePreview()">
-        <input placeholder="Phone" value="${esc(x.phone)}" oninput="refereeData[${i}].phone=this.value;updatePreview()">
-        <input placeholder="Email" value="${esc(x.email)}" oninput="refereeData[${i}].email=this.value;updatePreview()">
-      </div>
-    </div>
-  `).join("");
-}
-
-function removeReferee(i){
-  refereeData.splice(i,1);
-  renderReferees();
-  updatePreview();
-}
-
-function updatePreview(){
-
-  $("previewName").textContent=$("fullName").value.trim() || "Your Name";
-  $("previewHeadline").textContent=$("headline").value.trim() || "Professional Headline";
-
-  const contact=[
-    $("phone").value.trim(),
-    $("email").value.trim(),
-    $("location").value.trim(),
-    $("linkedin").value.trim()
-  ].filter(Boolean);
-
-  $("previewContact").textContent=contact.join("  •  ");
-
-  $("previewSummary").textContent=$("summary").value.trim();
-
-  $("summarySection").style.display=$("summary").value.trim()?"block":"none";
-
-  $("previewExperience").innerHTML=experienceData.filter(x=>
-    x.title||x.company||x.description
-  ).map(x=>`
-    <div class="cv-job">
-      <div class="cv-job-title">${esc(x.title)}</div>
-      <div class="cv-company">${esc(x.company)}${x.location?" — "+esc(x.location):""}</div>
-      <div class="cv-date">${esc(x.start)}${x.end?" – "+esc(x.end):""}</div>
-      <div class="cv-text">${esc(x.description)}</div>
-    </div>
-  `).join("");
-
-  $("experienceSection").style.display=
-    experienceData.some(x=>x.title||x.company||x.description)?"block":"none";
-
-  $("previewEducation").innerHTML=educationData.filter(x=>
-    x.qualification||x.institution
-  ).map(x=>`
-    <div class="cv-job">
-      <div class="cv-job-title">${esc(x.qualification)}</div>
-      <div class="cv-company">${esc(x.institution)}${x.location?" — "+esc(x.location):""}</div>
-      <div class="cv-date">${esc(x.start)}</div>
-      <div class="cv-text">${esc(x.details)}</div>
-    </div>
-  `).join("");
-
-  $("educationSection").style.display=
-    educationData.some(x=>x.qualification||x.institution)?"block":"none";
-
-  $("previewSkills").innerHTML=skillsData.map(s=>
-    `<span class="cv-skill">${esc(s)}</span>`
-  ).join("");
-
-  $("skillsSection").style.display=skillsData.length?"block":"none";
-
-  $("previewCertifications").innerHTML=certificationData.filter(x=>x.name).map(x=>`
-    <div class="cv-job">
-      <div class="cv-job-title">${esc(x.name)}</div>
-      <div class="cv-company">${esc(x.institution)}</div>
-      <div class="cv-date">${esc(x.year)}</div>
-      <div class="cv-text">${esc(x.details)}</div>
-    </div>
-  `).join("");
-
-  $("previewCertificationSection").style.display=
-    certificationData.some(x=>x.name)?"block":"none";
-
-  $("previewLanguages").innerHTML=languageData.filter(x=>x.language).map(x=>
-    `<div class="cv-text"><strong>${esc(x.language)}</strong>${x.level?" — "+esc(x.level):""}</div>`
-  ).join("");
-
-  $("previewLanguageSection").style.display=
-    languageData.some(x=>x.language)?"block":"none";
-
-  $("previewProjects").innerHTML=projectData.filter(x=>x.name).map(x=>`
-    <div class="cv-job">
-      <div class="cv-job-title">${esc(x.name)}</div>
-      <div class="cv-company">${esc(x.role)}</div>
-      <div class="cv-text">${esc(x.description)}</div>
-      ${x.link?`<div class="cv-date">${esc(x.link)}</div>`:""}
-    </div>
-  `).join("");
-
-  $("previewProjectSection").style.display=
-    projectData.some(x=>x.name)?"block":"none";
-
-  $("previewAchievements").textContent=$("achievements").value.trim();
-
-  $("previewAchievementSection").style.display=
-    $("achievements").value.trim()?"block":"none";
-
-  $("previewReferees").innerHTML=refereeData.filter(x=>x.name).map(x=>`
-    <div class="cv-job">
-      <div class="cv-job-title">${esc(x.name)}</div>
-      <div class="cv-company">${esc(x.position)}${x.organization?" — "+esc(x.organization):""}</div>
-      <div class="cv-text">${esc(x.phone)}${x.email?" • "+esc(x.email):""}</div>
-    </div>
-  `).join("");
-
-  $("previewRefereeSection").style.display=
-    refereeData.some(x=>x.name)?"block":"none";
-
-  $("previewAdditional").textContent=$("additional").value.trim();
-
-  $("previewAdditionalSection").style.display=
-    $("additional").value.trim()?"block":"none";
-
-  const paper=$("cvPreview");
-  paper.className="cv-paper template-"+$("template").value;
-}
-
-function getData(){
-  return {
-    fullName:$("fullName").value,
-    headline:$("headline").value,
-    phone:$("phone").value,
-    email:$("email").value,
-    location:$("location").value,
-    linkedin:$("linkedin").value,
-    summary:$("summary").value,
-    achievements:$("achievements").value,
-    additional:$("additional").value,
-    template:$("template").value,
-    jobAdvert:$("jobAdvert").value,
-    experience:experienceData,
-    education:educationData,
-    skills:skillsData,
-    certifications:certificationData,
-    languages:languageData,
-    projects:projectData,
-    referees:refereeData
-  };
-}
-
-function applyData(d){
-
-  $("fullName").value=d.fullName||"";
-  $("headline").value=d.headline||"";
-  $("phone").value=d.phone||"";
-  $("email").value=d.email||"";
-  $("location").value=d.location||"";
-  $("linkedin").value=d.linkedin||"";
-  $("summary").value=d.summary||"";
-  $("achievements").value=d.achievements||"";
-  $("additional").value=d.additional||"";
-  $("template").value=d.template||"modern";
-  $("jobAdvert").value=d.jobAdvert||"";
-
-  experienceData=d.experience||[];
-  educationData=d.education||[];
-  skillsData=d.skills||[];
-  certificationData=d.certifications||[];
-  languageData=d.languages||[];
-  projectData=d.projects||[];
-  refereeData=d.referees||[];
-
-  renderExperience();
-  renderEducation();
-  renderSkills();
-  renderCertifications();
-  renderLanguages();
-  renderProjects();
-  renderReferees();
-  updatePreview();
-}
-
-function saveDraft(){
-  localStorage.setItem(DB_KEY,JSON.stringify(getData()));
-  showStatus("CV draft saved on this device.");
-}
-
-function loadDraft(){
-  const raw=localStorage.getItem(DB_KEY);
-
-  if(!raw){
-    showStatus("No saved CV draft was found on this device.");
-    return;
-  }
-
-  try{
-    applyData(JSON.parse(raw));
-    $("startScreen").classList.add("hidden");
-    $("builder").classList.remove("hidden");
-    showStatus("CV draft loaded.");
-  }catch(e){
-    showStatus("The saved draft could not be loaded.");
-  }
-}
-
-function improveSummary(){
-
-  const value=$("summary").value.trim();
-
-  if(!value){
-    $("summary").value=
-      "Results-oriented professional with experience supporting customers, managing relationships, achieving performance targets and delivering quality service. Strong communication, problem-solving and teamwork skills with the ability to work effectively in fast-paced environments.";
-  }else{
-    let text=value
-      .replace(/\bI am\b/gi,"")
-      .replace(/\bI have\b/gi,"")
-      .replace(/\bI\b/gi,"")
-      .replace(/\s+/g," ")
-      .trim();
-
-    $("summary").value=
-      text.charAt(0).toUpperCase()+text.slice(1);
-  }
-
-  updatePreview();
-}
-
-function improveAchievements(){
-
-  const value=$("achievements").value.trim();
-
-  if(!value){
-    $("achievements").value=
-      "• Consistently worked toward and achieved performance targets.\n• Built positive customer and stakeholder relationships.\n• Maintained accurate records and delivered work within required timelines.";
-  }else{
-    const lines=value.split(/\n+/).filter(Boolean);
-
-    $("achievements").value=lines.map(line=>{
-      line=line.replace(/^[•\-*]\s*/,"");
-      if(!/[.!?]$/.test(line)) line+=".";
-      return "• "+line;
-    }).join("\n");
-  }
-
-  updatePreview();
-}
-
-function improveAll(){
-
-  improveSummary();
-  improveAchievements();
-
-  experienceData.forEach(x=>{
-    if(x.description && !x.description.includes("•")){
-      x.description=x.description
-        .split(/\n+/)
-        .filter(Boolean)
-        .map(line=>{
-          line=line.replace(/^[•\-*]\s*/,"");
-          return "• "+line;
-        }).join("\n");
-    }
-  });
-
-  renderExperience();
-  updatePreview();
-
-  showStatus("Basic CV content improvements applied. Review the wording before submitting.");
-}
-
-function getCVText(){
-
-  let parts=[];
-
-  parts.push($("fullName").value);
-  parts.push($("headline").value);
-  parts.push($("summary").value);
-
-  experienceData.forEach(x=>{
-    parts.push(x.title,x.company,x.location,x.description);
-  });
-
-  educationData.forEach(x=>{
-    parts.push(x.qualification,x.institution,x.details);
-  });
-
-  parts.push(skillsData.join(" "));
-
-  certificationData.forEach(x=>{
-    parts.push(x.name,x.institution,x.details);
-  });
-
-  languageData.forEach(x=>{
-    parts.push(x.language,x.level);
-  });
-
-  projectData.forEach(x=>{
-    parts.push(x.name,x.role,x.description);
-  });
-
-  parts.push($("achievements").value);
-  parts.push($("additional").value);
-
-  return parts.join(" ").toLowerCase();
-}
-
-function analyseMatch(){
-
-  const advert=$("jobAdvert").value.trim();
-
-  if(!advert){
-    $("matchResult").innerHTML=
-      `<div class="result">Paste a job advert first.</div>`;
-    return;
-  }
-
-  const cv=getCVText();
-  const words=advert
-    .toLowerCase()
-    .replace(/[^a-z0-9+#. ]/g," ")
-    .split(/\s+/)
-    .filter(w=>w.length>=4);
-
-  const stop=new Set([
-    "with","from","that","this","have","your","will","their",
-    "work","working","team","about","into","role","job",
-    "must","should","using","experience","company","position",
-    "years","required","responsibilities","skills"
-  ]);
-
-  const unique=[...new Set(words)].filter(w=>!stop.has(w));
-
-  const matches=unique.filter(w=>cv.includes(w));
-  const score=unique.length
-    ? Math.round(matches.length/unique.length*100)
-    : 0;
-
-  const missing=unique.filter(w=>!cv.includes(w)).slice(0,20);
-
-  $("matchResult").innerHTML=`
-    <div class="result">
-      <div class="score">${score}%</div>
-      <strong>Estimated Job Match</strong>
-      <p>Matched keywords: ${matches.length} of ${unique.length}</p>
-
-      ${
-        missing.length
-        ? `<p><strong>Consider adding relevant keywords:</strong><br>${esc(missing.join(", "))}</p>`
-        : `<p>Strong keyword coverage detected.</p>`
-      }
-
-      <small>
-        This is a guidance score, not a guarantee of recruitment or ATS selection.
-      </small>
-    </div>
-  `;
-}
-
-function runATS(){
-
-  const data=getData();
-  let score=0;
-  let checks=[];
-  let improvements=[];
-
-  if(data.fullName.trim()){score+=10;checks.push("✓ Full name present")}
-  else improvements.push("Add your full name.");
-
-  if(data.email.trim()){score+=10;checks.push("✓ Email present")}
-  else improvements.push("Add a professional email address.");
-
-  if(data.phone.trim()){score+=10;checks.push("✓ Phone present")}
-  else improvements.push("Add a phone number.");
-
-  if(data.summary.trim()){score+=15;checks.push("✓ Professional summary present")}
-  else improvements.push("Add a concise professional summary.");
-
-  if(data.experience.some(x=>x.title||x.company)){score+=15;checks.push("✓ Work experience present")}
-  else improvements.push("Add relevant work experience.");
-
-  if(data.education.some(x=>x.qualification||x.institution)){score+=10;checks.push("✓ Education present")}
-  else improvements.push("Add your education.");
-
-  if(data.skills.length>=5){score+=15;checks.push("✓ Good skills coverage")}
-  else improvements.push("Add at least 5 relevant skills.");
-
-  if(data.email.includes("@")){score+=5;checks.push("✓ Email format looks valid")}
-
-  if(data.summary.length>=80){score+=5;checks.push("✓ Summary has useful detail")}
-  else improvements.push("Expand the professional summary slightly.");
-
-  $("atsResult").innerHTML=`
-    <div class="result">
-      <div class="score">${score}/100</div>
-      <strong>ATS / Readability Check</strong>
-
-      <p>${checks.join("<br>")}</p>
-
-      ${
-        improvements.length
-        ? `<p><strong>Recommended improvements:</strong><br>• ${improvements.join("<br>• ")}</p>`
-        : `<p>Excellent basic structure. Your CV is ready for further job-specific tailoring.</p>`
-      }
-    </div>
-  `;
-}
-
-function saveVersion(){
-
-  const versions=JSON.parse(localStorage.getItem(DB_KEY+"_versions")||"[]");
-
-  const name=prompt(
-    "Name this CV version:",
-    $("headline").value || "General CV"
-  );
-
-  if(!name)return;
-
-  versions.unshift({
-    name,
-    saved:new Date().toLocaleString(),
-    data:getData()
-  });
-
-  localStorage.setItem(DB_KEY+"_versions",JSON.stringify(versions.slice(0,10)));
-
-  renderVersions();
-  showStatus("CV version saved.");
-}
-
-function renderVersions(){
-
-  const versions=JSON.parse(localStorage.getItem(DB_KEY+"_versions")||"[]");
-
-  $("versionList").innerHTML=versions.length
-    ? versions.map((v,i)=>`
-      <div class="item">
-        <strong>${esc(v.name)}</strong>
-        <div class="cv-date">${esc(v.saved)}</div>
-        <div class="actions">
-          <button class="btn small" onclick="loadVersion(${i})">Load</button>
-          <button class="btn danger small" onclick="deleteVersion(${i})">Delete</button>
-        </div>
-      </div>
-    `).join("")
-    : "<p>No saved versions yet.</p>";
-}
-
-function loadVersion(i){
-
-  const versions=JSON.parse(localStorage.getItem(DB_KEY+"_versions")||"[]");
-
-  if(!versions[i])return;
-
-  applyData(versions[i].data);
-
-  showStatus("CV version loaded.");
-}
-
-function deleteVersion(i){
-
-  const versions=JSON.parse(localStorage.getItem(DB_KEY+"_versions")||"[]");
-
-  versions.splice(i,1);
-
-  localStorage.setItem(DB_KEY+"_versions",JSON.stringify(versions));
-
-  renderVersions();
+let experienceData=[];
+let educationData=[];
+let skillsData=[];
+let certificationData=[];
+let languageData=[];
+let projectData=[];
+let refereeData=[];
+let currentTemplate="modern";
+
+const $=id=>document.getElementById(id);
+
+function esc(v){
+ return String(v||"")
+ .replace(/&/g,"&amp;")
+ .replace(/</g,"&lt;")
+ .replace(/>/g,"&gt;")
+ .replace(/"/g,"&quot;");
 }
 
 function cleanText(text){
-  return String(text||"")
-    .replace(/\r/g,"")
-    .replace(/[ \t]+/g," ")
-    .replace(/\n{3,}/g,"\n\n")
-    .trim();
+ return String(text||"")
+ .replace(/\r/g,"\n")
+ .replace(/[ \t]+/g," ")
+ .replace(/\n{3,}/g,"\n\n")
+ .trim();
 }
 
-function parseImportedCV(text){
-
-  text=cleanText(text);
-
-  const lines=text
-    .split(/\n/)
-    .map(x=>x.trim())
-    .filter(Boolean);
-
-  if(!lines.length)return;
-
-  let emailMatch=text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
-  let phoneMatch=text.match(/(?:\+254|0)\s?(?:7|1)\d[\d\s-]{7,}/);
-
-  if(emailMatch)$("email").value=emailMatch[0];
-  if(phoneMatch)$("phone").value=phoneMatch[0].replace(/\s+/g," ").trim();
-
-  let nameCandidate=lines[0];
-
-  if(
-    nameCandidate.length<80 &&
-    !nameCandidate.includes("@") &&
-    !/^(curriculum|resume|cv)$/i.test(nameCandidate)
-  ){
-    $("fullName").value=nameCandidate;
-  }
-
-  const sectionIndex=(patterns)=>{
-    return lines.findIndex(line=>patterns.some(p=>p.test(line)));
-  };
-
-  const summaryIndex=sectionIndex([
-    /^professional summary$/i,
-    /^profile$/i,
-    /^career summary$/i,
-    /^personal profile$/i,
-    /^summary$/i
-  ]);
-
-  const skillsIndex=sectionIndex([
-    /^skills$/i,
-    /^key skills$/i,
-    /^core skills$/i,
-    /^competencies$/i
-  ]);
-
-  const educationIndex=sectionIndex([
-    /^education$/i,
-    /^academic background$/i,
-    /^academic qualifications$/i
-  ]);
-
-  const experienceIndex=sectionIndex([
-    /^work experience$/i,
-    /^professional experience$/i,
-    /^employment history$/i,
-    /^career history$/i,
-    /^experience$/i
-  ]);
-
-  function sectionText(index){
-    if(index<0)return "";
-    const possible=[
-      summaryIndex,skillsIndex,educationIndex,experienceIndex
-    ].filter(x=>x>index).sort((a,b)=>a-b);
-
-    const end=possible.length?possible[0]:lines.length;
-
-    return lines.slice(index+1,end).join("\n");
-  }
-
-  if(summaryIndex>=0){
-    $("summary").value=sectionText(summaryIndex);
-  }
-
-  if(skillsIndex>=0){
-    const raw=sectionText(skillsIndex);
-
-    raw
-      .split(/[,•|;\n]/)
-      .map(x=>x.trim())
-      .filter(x=>x.length>1 && x.length<80)
-      .slice(0,30)
-      .forEach(addSkill);
-  }
-
-  if(educationIndex>=0){
-    const raw=sectionText(educationIndex);
-
-    if(raw){
-      educationData=[];
-      addEducation({
-        qualification:raw
-      });
-    }
-  }
-
-  if(experienceIndex>=0){
-    const raw=sectionText(experienceIndex);
-
-    if(raw){
-      experienceData=[];
-      addExperience({
-        description:raw
-      });
-    }
-  }
-
-  updatePreview();
-
-  showStatus(
-    "CV imported. Please review and restructure the extracted information before using it."
-  );
+function showStatus(message,error=false){
+ const s=$("status");
+ s.style.display="block";
+ s.style.background=error?"#ffebee":"#e8f5e9";
+ s.style.color=error?"#b71c1c":"#1b5e20";
+ s.textContent=message;
 }
 
-async function loadPDFJS(){
-
-  if(window.pdfjsLib)return;
-
-  await new Promise((resolve,reject)=>{
-
-    const script=document.createElement("script");
-
-    script.src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
-
-    script.onload=resolve;
-    script.onerror=reject;
-
-    document.head.appendChild(script);
-  });
-
-  if(window.pdfjsLib){
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc=
-      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-  }
+function startBuilder(){
+ $("builder").classList.remove("hidden");
+ if(!experienceData.length)addExperience();
+ if(!educationData.length)addEducation();
+ updatePreview();
+ window.scrollTo({top:$("builder").offsetTop-70,behavior:"smooth"});
 }
 
-async function extractPDF(file){
-
-  await loadPDFJS();
-
-  const buffer=await file.arrayBuffer();
-
-  const pdf=await window.pdfjsLib.getDocument({
-    data:buffer
-  }).promise;
-
-  let text="";
-
-  for(let i=1;i<=pdf.numPages;i++){
-
-    const page=await pdf.getPage(i);
-
-    const content=await page.getTextContent();
-
-    text+=content.items.map(item=>item.str).join(" ")+"\n";
-  }
-
-  return text;
+function setTemplate(template){
+ currentTemplate=template;
+ document.body.className=template;
+ ["modern","classic","executive"].forEach(x=>{
+   $(x+"Btn").classList.toggle("active",x===template);
+ });
+ updatePreview();
 }
 
-async function extractDOCX(file){
-
-  if(!window.mammoth){
-    throw new Error("Word extraction library did not load.");
-  }
-
-  const buffer=await file.arrayBuffer();
-
-  const result=await mammoth.extractRawText({
-    arrayBuffer:buffer
-  });
-
-  return result.value;
+function addExperience(data){
+ experienceData.push(data||{
+   title:"",
+   company:"",
+   location:"",
+   start:"",
+   end:"",
+   description:""
+ });
+ renderExperience();
+ updatePreview();
 }
 
-async function importFile(file){
+function renderExperience(){
+ const box=$("experienceList");
+ box.innerHTML="";
+ experienceData.forEach((x,i)=>{
+  const div=document.createElement("div");
+  div.className="entry";
+  div.innerHTML=`
+   <label>Job Title</label>
+   <input value="${esc(x.title)}" oninput="experienceData[${i}].title=this.value;updatePreview()">
 
-  if(!file)return;
+   <label>Employer</label>
+   <input value="${esc(x.company)}" oninput="experienceData[${i}].company=this.value;updatePreview()">
 
-  $("startScreen").classList.add("hidden");
+   <label>Location</label>
+   <input value="${esc(x.location)}" oninput="experienceData[${i}].location=this.value;updatePreview()">
+
+   <label>Start Date</label>
+   <input value="${esc(x.start)}" oninput="experienceData[${i}].start=this.value;updatePreview()">
+
+   <label>End Date</label>
+   <input value="${esc(x.end)}" oninput="experienceData[${i}].end=this.value;updatePreview()">
+
+   <label>Responsibilities & Achievements</label>
+   <textarea oninput="experienceData[${i}].description=this.value;updatePreview()">${esc(x.description)}</textarea>
+
+   <button class="danger no-print" onclick="experienceData.splice(${i},1);renderExperience();updatePreview()">Remove</button>
+  `;
+  box.appendChild(div);
+ });
+}
+
+function addEducation(data){
+ educationData.push(data||{
+   qualification:"",
+   institution:"",
+   location:"",
+   start:"",
+   end:"",
+   details:""
+ });
+ renderEducation();
+ updatePreview();
+}
+
+function renderEducation(){
+ const box=$("educationList");
+ box.innerHTML="";
+ educationData.forEach((x,i)=>{
+  const div=document.createElement("div");
+  div.className="entry";
+  div.innerHTML=`
+   <label>Qualification</label>
+   <input value="${esc(x.qualification)}" oninput="educationData[${i}].qualification=this.value;updatePreview()">
+
+   <label>Institution</label>
+   <input value="${esc(x.institution)}" oninput="educationData[${i}].institution=this.value;updatePreview()">
+
+   <label>Location</label>
+   <input value="${esc(x.location)}" oninput="educationData[${i}].location=this.value;updatePreview()">
+
+   <label>Start</label>
+   <input value="${esc(x.start)}" oninput="educationData[${i}].start=this.value;updatePreview()">
+
+   <label>End</label>
+   <input value="${esc(x.end)}" oninput="educationData[${i}].end=this.value;updatePreview()">
+
+   <label>Details</label>
+   <textarea oninput="educationData[${i}].details=this.value;updatePreview()">${esc(x.details)}</textarea>
+
+   <button class="danger no-print" onclick="educationData.splice(${i},1);renderEducation();updatePreview()">Remove</button>
+  `;
+  box.appendChild(div);
+ });
+}
+
+function addSkill(value){
+ const input=$("skillInput");
+ const skill=value||input.value.trim();
+ if(!skill)return;
+
+ if(!skillsData.includes(skill))skillsData.push(skill);
+
+ input.value="";
+ renderSkills();
+ updatePreview();
+}
+
+function renderSkills(){
+ $("skillsList").innerHTML=skillsData.map((s,i)=>`
+ <span style="display:inline-block;background:#e8f5e9;padding:7px 10px;border-radius:20px;margin:4px">
+ ${esc(s)}
+ <button class="no-print" style="padding:2px 6px;margin:0" onclick="skillsData.splice(${i},1);renderSkills();updatePreview()">×</button>
+ </span>`).join("");
+}
+
+function addCertification(data){
+ certificationData.push(data||{
+   name:"",
+   institution:"",
+   year:"",
+   details:""
+ });
+ renderCertifications();
+ updatePreview();
+}
+
+function renderCertifications(){
+ $("certificationList").innerHTML=certificationData.map((x,i)=>`
+ <div class="entry">
+  <label>Certification / Training</label>
+  <input value="${esc(x.name)}" oninput="certificationData[${i}].name=this.value;updatePreview()">
+  <label>Institution</label>
+  <input value="${esc(x.institution)}" oninput="certificationData[${i}].institution=this.value;updatePreview()">
+  <label>Year</label>
+  <input value="${esc(x.year)}" oninput="certificationData[${i}].year=this.value;updatePreview()">
+  <label>Details</label>
+  <textarea oninput="certificationData[${i}].details=this.value;updatePreview()">${esc(x.details)}</textarea>
+  <button class="danger no-print" onclick="certificationData.splice(${i},1);renderCertifications();updatePreview()">Remove</button>
+ </div>`).join("");
+}
+
+function addLanguage(data){
+ languageData.push(data||{language:"",level:""});
+ renderLanguages();
+ updatePreview();
+}
+
+function renderLanguages(){
+ $("languageList").innerHTML=languageData.map((x,i)=>`
+ <div class="entry">
+  <label>Language</label>
+  <input value="${esc(x.language)}" oninput="languageData[${i}].language=this.value;updatePreview()">
+  <label>Level</label>
+  <input value="${esc(x.level)}" placeholder="e.g. Fluent, Native, Professional" oninput="languageData[${i}].level=this.value;updatePreview()">
+  <button class="danger no-print" onclick="languageData.splice(${i},1);renderLanguages();updatePreview()">Remove</button>
+ </div>`).join("");
+}
+
+function addProject(data){
+ projectData.push(data||{
+   name:"",
+   role:"",
+   description:"",
+   link:""
+ });
+ renderProjects();
+ updatePreview();
+}
+
+function renderProjects(){
+ $("projectList").innerHTML=projectData.map((x,i)=>`
+ <div class="entry">
+  <label>Project Name</label>
+  <input value="${esc(x.name)}" oninput="projectData[${i}].name=this.value;updatePreview()">
+  <label>Role</label>
+  <input value="${esc(x.role)}" oninput="projectData[${i}].role=this.value;updatePreview()">
+  <label>Description</label>
+  <textarea oninput="projectData[${i}].description=this.value;updatePreview()">${esc(x.description)}</textarea>
+  <label>Link</label>
+  <input value="${esc(x.link)}" oninput="projectData[${i}].link=this.value;updatePreview()">
+  <button class="danger no-print" onclick="projectData.splice(${i},1);renderProjects();updatePreview()">Remove</button>
+ </div>`).join("");
+}
+
+function addReferee(data){
+ refereeData.push(data||{
+   name:"",
+   position:"",
+   organization:"",
+   phone:"",
+   email:""
+ });
+ renderReferees();
+ updatePreview();
+}
+
+function renderReferees(){
+ $("refereeList").innerHTML=refereeData.map((x,i)=>`
+ <div class="entry">
+  <label>Name</label>
+  <input value="${esc(x.name)}" oninput="refereeData[${i}].name=this.value;updatePreview()">
+  <label>Position</label>
+  <input value="${esc(x.position)}" oninput="refereeData[${i}].position=this.value;updatePreview()">
+  <label>Organization</label>
+  <input value="${esc(x.organization)}" oninput="refereeData[${i}].organization=this.value;updatePreview()">
+  <label>Phone</label>
+  <input value="${esc(x.phone)}" oninput="refereeData[${i}].phone=this.value;updatePreview()">
+  <label>Email</label>
+  <input value="${esc(x.email)}" oninput="refereeData[${i}].email=this.value;updatePreview()">
+  <button class="danger no-print" onclick="refereeData.splice(${i},1);renderReferees();updatePreview()">Remove</button>
+ </div>`).join("");
+}
+
+function formatBullets(text){
+ if(!text)return "";
+ return text.split(/\n+/)
+   .map(x=>x.replace(/^[•*-]\s*/,"").trim())
+   .filter(Boolean)
+   .map(x=>`<li>${esc(x)}</li>`).join("");
+}
+
+function updatePreview(){
+ const name=$("fullName").value||"Your Name";
+ const headline=$("headline").value;
+ const phone=$("phone").value;
+ const email=$("email").value;
+ const location=$("location").value;
+ const linkedin=$("linkedin").value;
+ const website=$("website").value;
+ const summary=$("summary").value;
+
+ let html=`
+ <div class="preview-name">${esc(name)}</div>
+ ${headline?`<div class="preview-headline">${esc(headline)}</div>`:""}
+ <div class="preview-contact">
+ ${[phone,email,location,linkedin,website].filter(Boolean).map(esc).join(" | ")}
+ </div>`;
+
+ if(summary){
+  html+=`
+  <div class="preview-section">
+   <h3>PROFESSIONAL SUMMARY</h3>
+   <p>${esc(summary).replace(/\n/g,"<br>")}</p>
+  </div>`;
+ }
+
+ if(experienceData.length){
+  const valid=experienceData.filter(x=>x.title||x.company||x.description);
+  if(valid.length){
+   html+=`<div class="preview-section"><h3>WORK EXPERIENCE</h3>`;
+   valid.forEach(x=>{
+    html+=`
+    <div class="preview-job">
+      <div class="preview-job-title">${esc(x.title)}</div>
+      <div class="preview-meta">
+        ${esc(x.company)}${x.location?" — "+esc(x.location):""}
+        ${(x.start||x.end)?` | ${esc(x.start)}${x.end?" – "+esc(x.end):""}`:""}
+      </div>
+      ${x.description?`<ul>${formatBullets(x.description)}</ul>`:""}
+    </div>`;
+   });
+   html+=`</div>`;
+  }
+ }
+
+ if(educationData.length){
+  const valid=educationData.filter(x=>x.qualification||x.institution);
+  if(valid.length){
+   html+=`<div class="preview-section"><h3>EDUCATION</h3>`;
+   valid.forEach(x=>{
+    html+=`
+    <div class="preview-job">
+      <div class="preview-job-title">${esc(x.qualification)}</div>
+      <div class="preview-meta">
+        ${esc(x.institution)}${x.location?" — "+esc(x.location):""}
+        ${(x.start||x.end)?` | ${esc(x.start)}${x.end?" – "+esc(x.end):""}`:""}
+      </div>
+      ${x.details?`<p>${esc(x.details).replace(/\n/g,"<br>")}</p>`:""}
+    </div>`;
+   });
+   html+=`</div>`;
+  }
+ }
+
+ if(skillsData.length){
+  html+=`
+  <div class="preview-section">
+   <h3>SKILLS</h3>
+   <p>${skillsData.map(esc).join(" • ")}</p>
+  </div>`;
+ }
+
+ if(certificationData.length){
+  const valid=certificationData.filter(x=>x.name);
+  if(valid.length){
+   html+=`<div class="preview-section"><h3>CERTIFICATIONS & TRAINING</h3><ul>`;
+   valid.forEach(x=>{
+    html+=`<li><strong>${esc(x.name)}</strong>${x.institution?" — "+esc(x.institution):""}${x.year?" ("+esc(x.year)+")":""}${x.details?" — "+esc(x.details):""}</li>`;
+   });
+   html+=`</ul></div>`;
+  }
+ }
+
+ if(languageData.length){
+  const valid=languageData.filter(x=>x.language);
+  if(valid.length){
+   html+=`<div class="preview-section"><h3>LANGUAGES</h3><ul>`;
+   valid.forEach(x=>html+=`<li>${esc(x.language)}${x.level?" — "+esc(x.level):""}</li>`);
+   html+=`</ul></div>`;
+  }
+ }
+
+ if(projectData.length){
+  const valid=projectData.filter(x=>x.name);
+  if(valid.length){
+   html+=`<div class="preview-section"><h3>PROJECTS</h3>`;
+   valid.forEach(x=>{
+    html+=`
+    <div class="preview-job">
+     <div class="preview-job-title">${esc(x.name)}</div>
+     ${x.role?`<div class="preview-meta">${esc(x.role)}</div>`:""}
+     ${x.description?`<p>${esc(x.description).replace(/\n/g,"<br>")}</p>`:""}
+    </div>`;
+   });
+   html+=`</div>`;
+  }
+ }
+
+ if($("achievements").value){
+  html+=`
+  <div class="preview-section">
+   <h3>ACHIEVEMENTS</h3>
+   <ul>${formatBullets($("achievements").value)}</ul>
+  </div>`;
+ }
+
+ if(refereeData.length){
+  const valid=refereeData.filter(x=>x.name);
+  if(valid.length){
+   html+=`<div class="preview-section"><h3>REFEREES</h3>`;
+   valid.forEach(x=>{
+    html+=`
+    <div class="preview-job">
+     <strong>${esc(x.name)}</strong><br>
+     ${esc(x.position)}${x.organization?" — "+esc(x.organization):""}<br>
+     ${esc(x.phone)}${x.email?" | "+esc(x.email):""}
+    </div>`;
+   });
+   html+=`</div>`;
+  }
+ }
+
+ if($("additional").value){
+  html+=`
+  <div class="preview-section">
+   <h3>ADDITIONAL INFORMATION</h3>
+   <ul>${formatBullets($("additional").value)}</ul>
+  </div>`;
+ }
+
+ $("preview").innerHTML=html;
+}
+
+function getCVData(){
+ return {
+  fullName:$("fullName").value,
+  headline:$("headline").value,
+  phone:$("phone").value,
+  email:$("email").value,
+  location:$("location").value,
+  linkedin:$("linkedin").value,
+  website:$("website").value,
+  summary:$("summary").value,
+  achievements:$("achievements").value,
+  additional:$("additional").value,
+  jobAdvert:$("jobAdvert").value,
+  experienceData,
+  educationData,
+  skillsData,
+  certificationData,
+  languageData,
+  projectData,
+  refereeData,
+  currentTemplate
+ };
+}
+
+function setCVData(d){
+ if(!d)return;
+
+ ["fullName","headline","phone","email","location","linkedin","website","summary","achievements","additional","jobAdvert"]
+ .forEach(id=>{if($(id)&&d[id]!=null)$(id).value=d[id]});
+
+ experienceData=d.experienceData||[];
+ educationData=d.educationData||[];
+ skillsData=d.skillsData||[];
+ certificationData=d.certificationData||[];
+ languageData=d.languageData||[];
+ projectData=d.projectData||[];
+ refereeData=d.refereeData||[];
+
+ renderExperience();
+ renderEducation();
+ renderSkills();
+ renderCertifications();
+ renderLanguages();
+ renderProjects();
+ renderReferees();
+
+ setTemplate(d.currentTemplate||"modern");
+ updatePreview();
+}
+
+function saveDraft(){
+ localStorage.setItem("kazinexus_cv_draft",JSON.stringify(getCVData()));
+ showStatus("CV draft saved on this device.");
+}
+
+function loadDraft(){
+ const raw=localStorage.getItem("kazinexus_cv_draft");
+ if(!raw){
+  showStatus("No saved CV draft was found on this device.",true);
+  return;
+ }
+ try{
+  setCVData(JSON.parse(raw));
   $("builder").classList.remove("hidden");
-
-  showStatus("Reading your CV...");
-
-  try{
-
-    let text="";
-
-    const name=file.name.toLowerCase();
-
-    if(name.endsWith(".pdf")){
-      text=await extractPDF(file);
-    }
-    else if(name.endsWith(".docx")){
-      text=await extractDOCX(file);
-    }
-    else if(name.endsWith(".doc")){
-      throw new Error(
-        "Old .doc files are not supported directly in the browser. Please save the file as .docx or PDF and upload again."
-      );
-    }
-    else{
-      throw new Error("Please upload a PDF or Word document.");
-    }
-
-    if(!text.trim()){
-      throw new Error(
-        "No readable text was found. The PDF may be scanned/image-only."
-      );
-    }
-
-    parseImportedCV(text);
-
-  }catch(error){
-
-    console.error(error);
-
-    showStatus(
-      "Import problem: "+error.message
-    );
-  }
+  showStatus("Saved CV draft loaded.");
+ }catch(e){
+  showStatus("Could not load the saved draft.",true);
+ }
 }
 
-function loadScript(src){
+function saveVersion(){
+ const name=prompt("Enter a name for this CV version:");
+ if(!name)return;
 
-  return new Promise((resolve,reject)=>{
-
-    const existing=document.querySelector(
-      'script[src="'+src+'"]'
-    );
-
-    if(existing){
-      if(existing.dataset.loaded==="yes")return resolve();
-      existing.addEventListener("load",resolve,{once:true});
-      existing.addEventListener("error",reject,{once:true});
-      return;
-    }
-
-    const script=document.createElement("script");
-
-    script.src=src;
-
-    script.onload=()=>{
-      script.dataset.loaded="yes";
-      resolve();
-    };
-
-    script.onerror=reject;
-
-    document.head.appendChild(script);
-  });
+ const versions=JSON.parse(localStorage.getItem("kazinexus_cv_versions")||"[]");
+ versions.push({
+   name,
+   savedAt:new Date().toISOString(),
+   data:getCVData()
+ });
+ localStorage.setItem("kazinexus_cv_versions",JSON.stringify(versions));
+ renderVersions();
+ showStatus("CV version saved.");
 }
 
-function htmlToPlainText(){
+function renderVersions(){
+ const box=$("versionsList");
+ const versions=JSON.parse(localStorage.getItem("kazinexus_cv_versions")||"[]");
 
-  const data=getData();
+ if(!versions.length){
+  box.innerHTML="<p class='small'>No saved versions yet.</p>";
+  return;
+ }
 
-  let text="";
+ box.innerHTML=versions.map((v,i)=>`
+ <div class="entry">
+  <strong>${esc(v.name)}</strong>
+  <div class="small">${new Date(v.savedAt).toLocaleString()}</div>
+  <button class="primary no-print" onclick="loadVersion(${i})">Load</button>
+  <button class="danger no-print" onclick="deleteVersion(${i})">Delete</button>
+ </div>
+ `).join("");
+}
 
-  text+=data.fullName+"\n";
-  text+=data.headline+"\n";
-  text+=[data.phone,data.email,data.location,data.linkedin]
-    .filter(Boolean).join(" | ")+"\n\n";
+function loadVersion(i){
+ const versions=JSON.parse(localStorage.getItem("kazinexus_cv_versions")||"[]");
+ if(!versions[i])return;
+ setCVData(versions[i].data);
+ $("builder").classList.remove("hidden");
+ showStatus("CV version loaded.");
+}
 
-  if(data.summary)
-    text+="PROFESSIONAL SUMMARY\n"+data.summary+"\n\n";
+function deleteVersion(i){
+ const versions=JSON.parse(localStorage.getItem("kazinexus_cv_versions")||"[]");
+ versions.splice(i,1);
+ localStorage.setItem("kazinexus_cv_versions",JSON.stringify(versions));
+ renderVersions();
+}
 
-  if(data.experience.length){
-    text+="PROFESSIONAL EXPERIENCE\n";
+function clearBuilder(){
+ if(!confirm("Clear all CV information?"))return;
 
-    data.experience.forEach(x=>{
-      text+=`${x.title}\n${x.company}\n${x.location}\n${x.start}${x.end?" - "+x.end:""}\n${x.description}\n\n`;
-    });
-  }
+ $("fullName").value="";
+ $("headline").value="";
+ $("phone").value="";
+ $("email").value="";
+ $("location").value="";
+ $("linkedin").value="";
+ $("website").value="";
+ $("summary").value="";
+ $("achievements").value="";
+ $("additional").value="";
+ $("jobAdvert").value="";
 
-  if(data.education.length){
-    text+="EDUCATION\n";
+ experienceData=[];
+ educationData=[];
+ skillsData=[];
+ certificationData=[];
+ languageData=[];
+ projectData=[];
+ refereeData=[];
 
-    data.education.forEach(x=>{
-      text+=`${x.qualification}\n${x.institution}\n${x.location}\n${x.start}\n${x.details}\n\n`;
-    });
-  }
+ renderExperience();
+ renderEducation();
+ renderSkills();
+ renderCertifications();
+ renderLanguages();
+ renderProjects();
+ renderReferees();
+ updatePreview();
+}
 
-  if(data.skills.length)
-    text+="SKILLS\n"+data.skills.join(" • ")+"\n\n";
+function improveSummary(){
+ const field=$("summary");
+ const text=field.value.trim();
 
-  if(data.certifications.length){
-    text+="CERTIFICATIONS & TRAINING\n";
+ if(!text){
+  field.value="Results-oriented professional with experience in customer service, sales, relationship management and target-driven environments. Skilled in client engagement, business development, communication, problem-solving and reporting, with strong ability to work independently and collaboratively to deliver measurable results.";
+ }else{
+  field.value=text
+   .replace(/\bi\b/g,"I")
+   .replace(/\s+/g," ")
+   .trim();
+ }
 
-    data.certifications.forEach(x=>{
-      text+=`${x.name} - ${x.institution} ${x.year}\n${x.details}\n`;
-    });
+ updatePreview();
+ showStatus("Summary improved. Review it and personalise it before applying.");
+}
 
-    text+="\n";
-  }
+function improveAchievements(){
+ const field=$("achievements");
+ if(!field.value.trim()){
+  field.value="• Contributed to customer acquisition, sales growth and achievement of business targets.\n• Built and maintained strong professional relationships with customers and stakeholders.\n• Demonstrated adaptability in target-driven and customer-focused environments.";
+ }else{
+  field.value=field.value
+   .split(/\n+/)
+   .map(x=>x.replace(/^[•*-]\s*/,"").trim())
+   .filter(Boolean)
+   .map(x=>"• "+x.charAt(0).toUpperCase()+x.slice(1))
+   .join("\n");
+ }
+ updatePreview();
+}
 
-  if(data.languages.length){
-    text+="LANGUAGES\n";
+function analyzeMatch(){
+ const advert=$("jobAdvert").value.trim();
+ if(!advert){
+  $("analysisResult").innerHTML="<p>Please paste the job advert first.</p>";
+  return;
+ }
 
-    data.languages.forEach(x=>{
-      text+=`${x.language} - ${x.level}\n`;
-    });
+ const cv=JSON.stringify(getCVData()).toLowerCase();
+ const words=advert.toLowerCase()
+   .replace(/[^a-z0-9\s]/g," ")
+   .split(/\s+/)
+   .filter(x=>x.length>4);
 
-    text+="\n";
-  }
+ const unique=[...new Set(words)];
+ const matched=unique.filter(w=>cv.includes(w));
+ const score=Math.min(100,Math.round((matched.length/Math.max(unique.length,1))*100));
 
-  if(data.projects.length){
-    text+="PROJECTS\n";
+ $("analysisResult").innerHTML=`
+ <div class="entry">
+  <h3>Estimated Job Match: ${score}%</h3>
+  <p>This is a keyword-based screening estimate, not a guarantee of selection.</p>
+  <p><strong>Matched keywords:</strong> ${matched.slice(0,30).map(esc).join(", ")||"None detected"}</p>
+  <p><strong>Recommendation:</strong> Add relevant skills, responsibilities and measurable achievements that genuinely match the advert.</p>
+ </div>`;
+}
 
-    data.projects.forEach(x=>{
-      text+=`${x.name} - ${x.role}\n${x.description}\n${x.link}\n`;
-    });
+function atsCheck(){
+ const d=getCVData();
+ const checks=[
+  ["Name",!!d.fullName],
+  ["Professional headline",!!d.headline],
+  ["Email",!!d.email],
+  ["Phone",!!d.phone],
+  ["Professional summary",!!d.summary],
+  ["Work experience",d.experienceData.some(x=>x.title||x.company)],
+  ["Education",d.educationData.some(x=>x.qualification||x.institution)],
+  ["Skills",d.skillsData.length>0]
+ ];
 
-    text+="\n";
-  }
+ const score=Math.round(checks.filter(x=>x[1]).length/checks.length*100);
 
-  if(data.achievements)
-    text+="ACHIEVEMENTS\n"+data.achievements+"\n\n";
+ $("analysisResult").innerHTML=`
+ <div class="entry">
+  <h3>ATS Readiness: ${score}%</h3>
+  <ul>
+   ${checks.map(x=>`<li>${x[1]?"✓":"✗"} ${esc(x[0])}</li>`).join("")}
+  </ul>
+  <p class="small">
+   Keep headings clear, avoid unnecessary graphics, use standard job titles,
+   include measurable achievements and tailor your CV to each vacancy.
+  </p>
+ </div>`;
+}
 
-  if(data.referees.length){
-    text+="REFEREES\n";
+function improveCVContent(){
+ const suggestions=[];
 
-    data.referees.forEach(x=>{
-      text+=`${x.name} - ${x.position} - ${x.organization}\n${x.phone} ${x.email}\n`;
-    });
+ if(!$("headline").value)suggestions.push("Add a clear professional headline.");
+ if(!$("summary").value)suggestions.push("Add a 3–5 line professional summary.");
+ if(!experienceData.length)suggestions.push("Add relevant work experience.");
+ if(!skillsData.length)suggestions.push("Add 8–15 relevant skills.");
+ if(!$("achievements").value)suggestions.push("Add measurable achievements.");
+ if(!$("location").value)suggestions.push("Add your current location or county.");
 
-    text+="\n";
-  }
+ $("analysisResult").innerHTML=`
+ <div class="entry">
+  <h3>CV Improvement Suggestions</h3>
+  ${suggestions.length
+    ?"<ul>"+suggestions.map(x=>`<li>${esc(x)}</li>`).join("")+"</ul>"
+    :"<p>Good foundation. Focus next on tailoring your achievements and keywords to the specific job advert.</p>"}
+ </div>`;
+}
 
-  if(data.additional)
-    text+="ADDITIONAL INFORMATION\n"+data.additional+"\n";
-
-  return text;
+function printCV(){
+ updatePreview();
+ window.print();
 }
 
 async function downloadWord(){
+ const d=getCVData();
 
-  showStatus("Preparing Word document...");
+ if(!window.docx){
+  showStatus("Word export library is still loading. Try again.",true);
+  return;
+ }
 
-  try{
+ const {
+  Document,Packer,Paragraph,TextRun,HeadingLevel
+ }=window.docx;
 
-    await loadScript(
-      "https://unpkg.com/docx@9.5.1/build/index.umd.js"
-    );
+ const children=[];
 
-    if(!window.docx){
-      throw new Error("Word export library did not load.");
-    }
+ children.push(new Paragraph({
+  text:d.fullName||"CV",
+  heading:HeadingLevel.TITLE
+ }));
 
-    const d=getData();
+ if(d.headline)
+  children.push(new Paragraph({
+   children:[new TextRun({text:d.headline,bold:true})]
+  }));
 
-    const children=[];
+ const contact=[d.phone,d.email,d.location,d.linkedin,d.website].filter(Boolean).join(" | ");
+ if(contact)children.push(new Paragraph(contact));
 
-    const {
-      Document,
-      Packer,
-      Paragraph,
-      TextRun,
-      HeadingLevel
-    }=window.docx;
+ function heading(text){
+  children.push(new Paragraph({
+   text,
+   heading:HeadingLevel.HEADING_1
+  }));
+ }
 
-    children.push(
-      new Paragraph({
-        text:d.fullName || "Your Name",
-        heading:HeadingLevel.TITLE
-      })
-    );
+ if(d.summary){
+  heading("PROFESSIONAL SUMMARY");
+  children.push(new Paragraph(d.summary));
+ }
 
-    if(d.headline)
-      children.push(new Paragraph({
-        children:[new TextRun({
-          text:d.headline,
-          bold:true
-        })]
-      }));
-
-    const contact=[
-      d.phone,d.email,d.location,d.linkedin
-    ].filter(Boolean).join(" | ");
-
-    if(contact)
-      children.push(new Paragraph(contact));
-
-    function heading(text){
-      children.push(
-        new Paragraph({
-          text,
-          heading:HeadingLevel.HEADING_1
-        })
+ if(d.experienceData.length){
+  heading("WORK EXPERIENCE");
+  d.experienceData.forEach(x=>{
+   if(x.title||x.company){
+    children.push(new Paragraph({
+     children:[new TextRun({text:x.title||"",bold:true})]
+    }));
+    children.push(new Paragraph(
+     [x.company,x.location,[x.start,x.end].filter(Boolean).join(" – ")].filter(Boolean).join(" | ")
+    ));
+    if(x.description)
+      x.description.split(/\n+/).filter(Boolean).forEach(y=>
+       children.push(new Paragraph({text:y.replace(/^[•*-]\s*/,""),bullet:{}}))
       );
-    }
+   }
+  });
+ }
 
-    function body(text){
-      if(!text)return;
+ if(d.educationData.length){
+  heading("EDUCATION");
+  d.educationData.forEach(x=>{
+   children.push(new Paragraph({
+    children:[new TextRun({text:x.qualification||"",bold:true})]
+   }));
+   children.push(new Paragraph(
+    [x.institution,x.location,[x.start,x.end].filter(Boolean).join(" – ")].filter(Boolean).join(" | ")
+   ));
+   if(x.details)children.push(new Paragraph(x.details));
+  });
+ }
 
-      String(text)
-        .split(/\n+/)
-        .filter(Boolean)
-        .forEach(line=>{
-          children.push(
-            new Paragraph({
-              children:[new TextRun({
-                text:line.replace(/^[•\-*]\s*/,"")
-              })]
-            })
-          );
-        });
-    }
+ if(d.skillsData.length){
+  heading("SKILLS");
+  children.push(new Paragraph(d.skillsData.join(" • ")));
+ }
 
-    if(d.summary){
-      heading("PROFESSIONAL SUMMARY");
-      body(d.summary);
-    }
+ if(d.certificationData.length){
+  heading("CERTIFICATIONS & TRAINING");
+  d.certificationData.forEach(x=>{
+   if(x.name)children.push(new Paragraph(x.name));
+  });
+ }
 
-    if(d.experience.length){
-      heading("PROFESSIONAL EXPERIENCE");
+ if(d.languageData.length){
+  heading("LANGUAGES");
+  d.languageData.forEach(x=>{
+   if(x.language)
+    children.push(new Paragraph(
+     x.language+(x.level?" — "+x.level:"")
+    ));
+  });
+ }
 
-      d.experience.forEach(x=>{
-        children.push(
-          new Paragraph({
-            children:[new TextRun({
-              text:x.title||"",
-              bold:true
-            })]
-          })
-        );
+ if(d.projectData.length){
+  heading("PROJECTS");
+  d.projectData.forEach(x=>{
+   if(x.name){
+    children.push(new Paragraph({
+     children:[new TextRun({text:x.name,bold:true})]
+    }));
+    if(x.description)children.push(new Paragraph(x.description));
+   }
+  });
+ }
 
-        body(
-          [x.company,x.location,x.start,x.end]
-            .filter(Boolean).join(" | ")
-        );
+ if(d.achievements){
+  heading("ACHIEVEMENTS");
+  d.achievements.split(/\n+/).filter(Boolean).forEach(x=>
+   children.push(new Paragraph({
+    text:x.replace(/^[•*-]\s*/,""),
+    bullet:{}
+   }))
+  );
+ }
 
-        body(x.description);
-      });
-    }
+ if(d.refereeData.length){
+  heading("REFEREES");
+  d.refereeData.forEach(x=>{
+   if(x.name)
+    children.push(new Paragraph(
+     [x.name,x.position,x.organization,x.phone,x.email].filter(Boolean).join(" | ")
+    ));
+  });
+ }
 
-    if(d.education.length){
-      heading("EDUCATION");
+ if(d.additional){
+  heading("ADDITIONAL INFORMATION");
+  d.additional.split(/\n+/).filter(Boolean).forEach(x=>
+   children.push(new Paragraph({
+    text:x.replace(/^[•*-]\s*/,""),
+    bullet:{}
+   }))
+  );
+ }
 
-      d.education.forEach(x=>{
-        children.push(
-          new Paragraph({
-            children:[new TextRun({
-              text:x.qualification||"",
-              bold:true
-            })]
-          })
-        );
+ const doc=new Document({
+  sections:[{
+   properties:{},
+   children
+  }]
+ });
 
-        body(
-          [x.institution,x.location,x.start]
-            .filter(Boolean).join(" | ")
-        );
-
-        body(x.details);
-      });
-    }
-
-    if(d.skills.length){
-      heading("SKILLS");
-      body(d.skills.join(" • "));
-    }
-
-    if(d.certifications.length){
-      heading("CERTIFICATIONS & TRAINING");
-
-      d.certifications.forEach(x=>{
-        body(
-          [x.name,x.institution,x.year]
-            .filter(Boolean).join(" | ")
-        );
-
-        body(x.details);
-      });
-    }
-
-    if(d.languages.length){
-      heading("LANGUAGES");
-
-      d.languages.forEach(x=>{
-        body(
-          [x.language,x.level]
-            .filter(Boolean).join(" — ")
-        );
-      });
-    }
-
-    if(d.projects.length){
-      heading("PROJECTS");
-
-      d.projects.forEach(x=>{
-        children.push(
-          new Paragraph({
-            children:[new TextRun({
-              text:x.name||"",
-              bold:true
-            })]
-          })
-        );
-
-        body(x.role);
-        body(x.description);
-        body(x.link);
-      });
-    }
-
-    if(d.achievements){
-      heading("ACHIEVEMENTS");
-      body(d.achievements);
-    }
-
-    if(d.referees.length){
-      heading("REFEREES");
-
-      d.referees.forEach(x=>{
-        body(x.name);
-        body(
-          [x.position,x.organization,x.phone,x.email]
-            .filter(Boolean).join(" | ")
-        );
-      });
-    }
-
-    if(d.additional){
-      heading("ADDITIONAL INFORMATION");
-      body(d.additional);
-    }
-
-    const doc=new Document({
-      sections:[{
-        properties:{},
-        children
-      }]
-    });
-
-    const blob=await Packer.toBlob(doc);
-
-    const url=URL.createObjectURL(blob);
-
-    const a=document.createElement("a");
-
-    const safeName=(d.fullName||"KaziNexus-CV")
-      .replace(/[^a-z0-9]+/gi,"-")
-      .replace(/^-|-$/g,"");
-
-    a.href=url;
-    a.download=(safeName||"KaziNexus-CV")+".docx";
-
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    URL.revokeObjectURL(url);
-
-    showStatus("Word CV created successfully.");
-
-  }catch(error){
-
-    console.error(error);
-
-    showStatus(
-      "Word export problem: "+error.message
-    );
-  }
+ const blob=await Packer.toBlob(doc);
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download=(d.fullName||"KaziNexus-CV").replace(/\s+/g,"-")+".docx";
+ a.click();
+ URL.revokeObjectURL(url);
 }
 
-$("cvUpload").addEventListener("change",function(){
-  importFile(this.files[0]);
-});
+async function importCV(event){
+ const file=event.target.files[0];
+ if(!file)return;
 
-[
-  "fullName",
-  "headline",
-  "phone",
-  "email",
-  "location",
-  "linkedin",
-  "summary",
-  "achievements",
-  "additional"
-].forEach(id=>{
-  $(id).addEventListener("input",updatePreview);
-});
+ $("builder").classList.remove("hidden");
+ showStatus("Reading your CV...");
 
-$("skillInput").addEventListener("keydown",function(e){
-  if(e.key==="Enter"){
-    e.preventDefault();
-    addSkill();
+ try{
+  let text="";
+
+  if(file.name.toLowerCase().endsWith(".docx")){
+   if(!window.mammoth){
+    await loadMammoth();
+   }
+
+   const arrayBuffer=await file.arrayBuffer();
+   const result=await window.mammoth.extractRawText({arrayBuffer});
+   text=result.value;
   }
-});
+  else if(file.name.toLowerCase().endsWith(".pdf")){
+   text=await extractPDFText(file);
+  }
+  else if(file.name.toLowerCase().endsWith(".doc")){
+   showStatus("Old .doc files are not supported directly. Save the file as .docx or PDF and import it again.",true);
+   return;
+  }
+  else{
+   showStatus("Please upload a PDF, DOC or DOCX file.",true);
+   return;
+  }
 
-renderVersions();
+  parseImportedCV(text);
 
+ }catch(error){
+  console.error(error);
+  showStatus("The CV could not be read. Try a text-based PDF or DOCX file.",true);
+ }
+}
+
+function loadMammoth(){
+ return new Promise((resolve,reject)=>{
+  const s=document.createElement("script");
+  s.src="https://unpkg.com/mammoth@1.9.0/mammoth.browser.min.js";
+  s.onload=resolve;
+  s.onerror=reject;
+  document.head.appendChild(s);
+ });
+}
+
+function loadPDFJS(){
+ return new Promise((resolve,reject)=>{
+  if(window.pdfjsLib)return resolve();
+
+  const s=document.createElement("script");
+  s.src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+  s.onload=()=>{
+   if(window.pdfjsLib){
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc=
+     "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    resolve();
+   }else reject();
+  };
+  s.onerror=reject;
+  document.head.appendChild(s);
+ });
+}
+
+async function extractPDFText(file){
+ await loadPDFJS();
+
+ const buffer=await file.arrayBuffer();
+ const pdf=await window.pdfjsLib.getDocument({data:buffer}).promise;
+ let text="";
+
+ for(let i=1;i<=pdf.numPages;i++){
+  const page=await pdf.getPage(i);
+  const content=await page.getTextContent();
+  text+=content.items.map(x=>x.str).join(" ")+"\n";
+ }
+
+ return text;
+}
+
+/*
+  IMPORTANT:
+  This importer is deliberately conservative.
+  It extracts information into editable sections but does not invent
+  employment dates, employers, qualifications or achievements.
+*/
+function parseImportedCV(text){
+
+ text=cleanText(text);
+
+ const lines=text
+   .split(/\n/)
+   .map(x=>x.trim())
+   .filter(Boolean);
+
+ if(!lines.length){
+  showStatus("No readable text was found in the CV.",true);
+  return;
+ }
+
+ const emailMatch=text.match(
+  /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i
+ );
+
+ const phoneMatch=text.match(
+  /(?:\+254|0)\s?(?:7|1)\d[\d\s-]{7,}/
+ );
+
+ if(emailMatch)$("email").value=emailMatch[0];
+ if(phoneMatch)$("phone").value=phoneMatch[0].replace(/\s+/g," ").trim();
+
+ let firstIndex=0;
+
+ while(firstIndex<lines.length &&
+       /^(curriculum vitae|curriculum|resume|cv)$/i.test(lines[firstIndex])){
+  firstIndex++;
+ }
+
+ if(firstIndex<lines.length){
+  const candidate=lines[firstIndex];
+
+  if(
+   candidate.length<80 &&
+   !candidate.includes("@") &&
+   !/^(professional summary|profile|summary|work experience|education|skills)$/i.test(candidate)
+  ){
+   $("fullName").value=candidate;
+  }
+ }
+
+ const sections={
+  summary:[
+   "professional summary",
+   "career summary",
+   "professional profile",
+   "personal profile",
+   "profile",
+   "summary"
+  ],
+  experience:[
+   "work experience",
+   "professional experience",
+   "employment history",
+   "career history",
+   "work history",
+   "experience"
+  ],
+  education:[
+   "education",
+   "academic background",
+   "academic qualifications",
+   "educational background",
+   "qualifications"
+  ],
+  skills:[
+   "skills",
+   "key skills",
+   "core skills",
+   "technical skills",
+   "competencies",
+   "areas of expertise"
+  ],
+  certifications:[
+   "certifications",
+   "certificates",
+   "certifications & training",
+   "training",
+   "professional certifications"
+  ],
+  languages:[
+   "languages",
+   "language skills"
+  ],
+  projects:[
+   "projects",
+   "key projects",
+   "professional projects"
+  ],
+  achievements:[
+   "achievements",
+   "key achievements",
+   "accomplishments",
+   "awards"
+  ],
+  referees:[
+   "referees",
+   "references",
+   "professional references"
+  ],
+  additional:[
+   "additional information",
+   "additional details",
+   "other information",
+   "interests",
+   "volunteer experience"
+  ]
+ };
+
+ function normalizeHeading(line){
+  return line
+   .toLowerCase()
+   .replace(/[:\-–—]/g,"")
+   .replace(/\s+/g," ")
+   .trim();
+ }
+
+ const positions=[];
+
+ lines.forEach((line,index)=>{
+  const normalized=normalizeHeading(line);
+
+  for(const key of Object.keys(sections)){
+   if(sections[key].includes(normalized)){
+    positions.push({key,index});
+   }
+  }
+ });
+
+ positions.sort((a,b)=>a.index-b.index);
+
+ function getSection(key){
+  const current=positions.find(x=>x.key===key);
+
+  if(!current)return "";
+
+  const next=positions.find(x=>x.index>current.index);
+
+  return lines
+   .slice(current.index+1,next?next.index:lines.length)
+   .join("\n")
+   .trim();
+ }
+
+ const summary=getSection("summary");
+ if(summary)$("summary").value=summary;
+
+ const skills=getSection("skills");
+
+ if(skills){
+  skillsData=[];
+
+  skills
+   .split(/[,;|•\n]/)
+   .map(x=>x.trim())
+   .filter(x=>x.length>1&&x.length<100)
+   .forEach(x=>{
+    if(!skillsData.includes(x))skillsData.push(x);
+   });
+
+  renderSkills();
+ }
+
+ /*
+  EDUCATION
+  Creates separate entries when qualification-like lines are found.
+ */
+ const education=getSection("education");
+
+ if(education){
+
+  educationData=[];
+
+  const ls=education
+   .split(/\n+/)
+   .map(x=>x.trim())
+   .filter(Boolean);
+
+  let current=null;
+
+  ls.forEach(line=>{
+
+   const qualificationLike=
+    /bachelor|degree|diploma|certificate|kcse|kcpe|master|phd|mba|bsc|b\.a|ba|bed|bcom|higher diploma/i.test(line);
+
+   const institutionLike=
+    /university|college|school|institute|academy/i.test(line);
+
+   if(qualificationLike){
+
+    if(current)educationData.push(current);
+
+    current={
+     qualification:line,
+     institution:"",
+     location:"",
+     start:"",
+     end:"",
+     details:""
+    };
+
+   }else if(!current){
+
+    current={
+     qualification:line,
+     institution:"",
+     location:"",
+     start:"",
+     end:"",
+     details:""
+    };
+
+   }else if(institutionLike&&!current.institution){
+
+    current.institution=line;
+
+   }else if(/\b(19|20)\d{2}\b/.test(line)){
+
+    if(!current.start)current.start=line;
+    else if(!current.end)current.end=line;
+    else current.details+=(current.details?"\n":"")+line;
+
+   }else{
+
+    current.details+=(current.details?"\n":"")+line;
+
+   }
+  });
+
+  if(current)educationData.push(current);
+
+  renderEducation();
+ }
+
+ /*
+  EXPERIENCE
+  This does not fabricate missing details.
+ */
+ const experience=getSection("experience");
+
+ if(experience){
+
+  experienceData=[];
+
+  const ls=experience
+   .split(/\n+/)
+   .map(x=>x.trim())
+   .filter(Boolean);
+
+  let current=null;
+
+  function newExperience(){
+   return{
+    title:"",
+    company:"",
+    location:"",
+    start:"",
+    end:"",
+    description:""
+   };
+  }
+
+  ls.forEach(line=>{
+
+   const dateLike=
+    /\b(19|20)\d{2}\b|present|current|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec/i.test(line);
+
+   const titleLike=
+    /sales|officer|manager|assistant|representative|relationship|loan|enumerator|field|coordinator|consultant|intern|supervisor|clerk|agent|analyst|specialist|executive|developer|teacher|accountant|administrator/i.test(line);
+
+   const employerLike=
+    /bank|capital|limited|\bltd\b|company|organization|organisation|ngo|university|school|agency|group|foundation|microfinance/i.test(line);
+
+   const locationLike=
+    /nairobi|kisumu|eldoret|mombasa|nakuru|kenya|kapsowar|kisii|siaya|kakamega|machakos|nyeri|kiambu/i.test(line);
+
+   if(!current)current=newExperience();
+
+   if(titleLike&&current.title){
+
+    experienceData.push(current);
+    current=newExperience();
+    current.title=line;
+
+   }else if(titleLike&&!current.title){
+
+    current.title=line;
+
+   }else if(employerLike&&!current.company){
+
+    current.company=line;
+
+   }else if(locationLike&&!current.location){
+
+    current.location=line;
+
+   }else if(dateLike){
+
+    if(!current.start)current.start=line;
+    else if(!current.end)current.end=line;
+    else current.description+=(current.description?"\n":"")+line;
+
+   }else{
+
+    current.description+=(current.description?"\n":"")+line;
+
+   }
+  });
+
+  if(current&&(current.title||current.company||current.description)){
+   experienceData.push(current);
+  }
+
+  renderExperience();
+ }
+
+ const certifications=getSection("certifications");
+
+ if(certifications){
+
+  certificationData=[];
+
+  certifications
+   .split(/\n+/)
+   .map(x=>x.trim())
+   .filter(Boolean)
+   .forEach(x=>{
+    certificationData.push({
+     name:x,
+     institution:"",
+     year:"",
+     details:""
+    });
+   });
+
+  renderCertifications();
+ }
+
+ const languages=getSection("languages");
+
+ if(languages){
+
+  languageData=[];
+
+  languages
+   .split(/[,;|•\n]/)
+   .map(x=>x.trim())
+   .filter(Boolean)
+   .forEach(x=>{
+
+    const parts=x.split(/[-–—:]/);
+
+    languageData.push({
+     language:(parts[0]||x).trim(),
+     level:(parts[1]||"").trim()
+    });
+
+   });
+
+  renderLanguages();
+ }
+
+ const projects=getSection("projects");
+
+ if(projects){
+
+  projectData=[];
+
+  projects
+   .split(/\n+/)
+   .map(x=>x.trim())
+   .filter(Boolean)
+   .forEach(x=>{
+    projectData.push({
+     name:x,
+     role:"",
+     description:"",
+     link:""
+    });
+   });
+
+  renderProjects();
+ }
+
+ const achievements=getSection("achievements");
+
+ if(achievements){
+  $("achievements").value=achievements;
+ }
+
+ const referees=getSection("referees");
+
+ if(referees){
+
+  refereeData=[];
+
+  referees
+   .split(/\n+/)
+   .map(x=>x.trim())
+   .filter(Boolean)
+   .forEach(x=>{
+    refereeData.push({
+     name:x,
+     position:"",
+     organization:"",
+     phone:"",
+     email:""
+    });
+   });
+
+  renderReferees();
+ }
+
+ const additional=getSection("additional");
+
+ if(additional){
+  $("additional").value=additional;
+ }
+
+ /*
+  Generate a headline only if the imported CV does not already contain one.
+ */
+ if(
+  !$("headline").value &&
+  experienceData.length &&
+  experienceData[0].title
+ ){
+  $("headline").value=experienceData[0].title;
+ }
+
+ updatePreview();
+
+ showStatus(
+  "CV imported successfully. The information has been restructured into editable sections. Please review every section before using the CV."
+ );
+}
+
+function init(){
+ renderExperience();
+ renderEducation();
+ renderSkills();
+ renderCertifications();
+ renderLanguages();
+ renderProjects();
+ renderReferees();
+ renderVersions();
+ updatePreview();
+}
+
+init();
 </script>
+
 </body>
 </html>
