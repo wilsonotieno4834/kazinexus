@@ -221,130 +221,60 @@ footer a{
 
     <p id="errorMessage" class="error"></p>
 
-    <a
-      class="action-link back-btn"
-      href="/jobs/">
+    <a class="action-link back-btn" href="/jobs/">
       ← Back to Jobs
     </a>
 
   </div>
 
-  <article
-    id="jobCard"
-    class="card"
-    style="display:none">
+  <article id="jobCard" class="card" style="display:none">
 
     <h1 id="title"></h1>
 
-    <div
-      id="company"
-      class="company">
-    </div>
+    <div id="company" class="company"></div>
 
     <div class="meta">
 
       <div class="meta-box">
-
-        <span class="meta-label">
-          Location
-        </span>
-
-        <span
-          id="location"
-          class="meta-value">
-          —
-        </span>
-
+        <span class="meta-label">Location</span>
+        <span id="location" class="meta-value">—</span>
       </div>
 
       <div class="meta-box">
-
-        <span class="meta-label">
-          Job Type
-        </span>
-
-        <span
-          id="jobType"
-          class="meta-value">
-          —
-        </span>
-
+        <span class="meta-label">Job Type</span>
+        <span id="jobType" class="meta-value">—</span>
       </div>
 
       <div class="meta-box">
-
-        <span class="meta-label">
-          Salary
-        </span>
-
-        <span
-          id="salary"
-          class="meta-value">
-          —
-        </span>
-
+        <span class="meta-label">Salary</span>
+        <span id="salary" class="meta-value">—</span>
       </div>
 
       <div class="meta-box">
-
-        <span class="meta-label">
-          Application Deadline
-        </span>
-
-        <span
-          id="deadline"
-          class="meta-value">
-          —
-        </span>
-
+        <span class="meta-label">Application Deadline</span>
+        <span id="deadline" class="meta-value">—</span>
       </div>
 
     </div>
 
     <section>
-
-      <h2>
-        Job Description
-      </h2>
-
-      <div
-        id="description"
-        class="content">
-      </div>
-
+      <h2>Job Description</h2>
+      <div id="description" class="content"></div>
     </section>
 
-    <section>
-
-      <h2>
-        Responsibilities
-      </h2>
-
-      <div
-        id="responsibilities"
-        class="content">
-      </div>
-
+    <section id="responsibilitiesSection">
+      <h2>Responsibilities</h2>
+      <div id="responsibilities" class="content"></div>
     </section>
 
-    <section>
-
-      <h2>
-        Qualifications
-      </h2>
-
-      <div
-        id="qualifications"
-        class="content">
-      </div>
-
+    <section id="qualificationsSection">
+      <h2>Qualifications</h2>
+      <div id="qualifications" class="content"></div>
     </section>
 
     <section id="contactSection">
 
-      <h2>
-        Application Contact
-      </h2>
+      <h2>Application Contact</h2>
 
       <p id="contactPerson"></p>
 
@@ -356,8 +286,6 @@ footer a{
     </section>
 
     <div class="actions">
-
-      <!-- Application button is created dynamically -->
 
       <a
         id="applyBtn"
@@ -401,27 +329,14 @@ footer a{
   <br><br>
 
   <a href="/">Home</a>
-
-  <a href="/jobs/">
-    Find Jobs
-  </a>
-
-  <a href="/post-opportunity.html">
-    Post Opportunity
-  </a>
-
-  <a href="/contact.html">
-    Contact
-  </a>
-
-  <a href="/trust-safety.html">
-    Trust & Safety
-  </a>
+  <a href="/jobs/">Find Jobs</a>
+  <a href="/post-opportunity.html">Post Opportunity</a>
+  <a href="/contact.html">Contact</a>
+  <a href="/trust-safety.html">Trust & Safety</a>
 
   <br><br>
 
   WhatsApp / Phone:
-
   <a href="tel:+254706174379">
     0706174379
   </a>
@@ -486,7 +401,6 @@ function showError(message){
 
   errorMessage.textContent =
     message;
-
 }
 
 
@@ -501,12 +415,16 @@ function safe(value){
          value === ""
     ? "—"
     : String(value);
-
 }
 
 
 /* ================================
    DEADLINE
+   IMPORTANT:
+   Supabase DATE values are YYYY-MM-DD.
+   We deliberately do NOT use new Date()
+   because that can shift the date backward
+   because of UTC/timezone conversion.
 ================================ */
 
 function formatDeadline(value){
@@ -515,26 +433,54 @@ function formatDeadline(value){
     return "—";
   }
 
-  const d =
-    new Date(value);
+  const match =
+    String(value).match(
+      /^(\d{4})-(\d{2})-(\d{2})$/
+    );
 
-  if(
-    Number.isNaN(
-      d.getTime()
-    )
-  ){
-    return value;
+  if(match){
+
+    const year =
+      match[1];
+
+    const month =
+      Number(match[2]);
+
+    const day =
+      Number(match[3]);
+
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+
+    if(
+      month >= 1 &&
+      month <= 12
+    ){
+
+      return (
+        day +
+        " " +
+        months[month - 1] +
+        " " +
+        year
+      );
+
+    }
   }
 
-  return d.toLocaleDateString(
-    "en-GB",
-    {
-      day:"numeric",
-      month:"short",
-      year:"numeric"
-    }
-  );
-
+  return String(value);
 }
 
 
@@ -553,10 +499,7 @@ function setupApplicationButton(job){
       .trim();
 
 
-  /*
-    PRIORITY 1:
-    External application link
-  */
+  /* 1. EMPLOYER WEBSITE */
 
   if(externalLink){
 
@@ -591,14 +534,10 @@ function setupApplicationButton(job){
 
       return;
     }
-
   }
 
 
-  /*
-    PRIORITY 2:
-    Application email
-  */
+  /* 2. EMAIL */
 
   if(email){
 
@@ -638,13 +577,9 @@ function setupApplicationButton(job){
       "&body=" +
       encodeURIComponent(body);
 
-    applyBtn.removeAttribute(
-      "target"
-    );
+    applyBtn.removeAttribute("target");
 
-    applyBtn.removeAttribute(
-      "rel"
-    );
+    applyBtn.removeAttribute("rel");
 
     applyBtn.style.display =
       "inline-block";
@@ -653,10 +588,7 @@ function setupApplicationButton(job){
   }
 
 
-  /*
-    PRIORITY 3:
-    Apply through KaziNexus
-  */
+  /* 3. KAZINEXUS APPLICATION */
 
   applyBtn.textContent =
     "Apply on KaziNexus";
@@ -665,17 +597,12 @@ function setupApplicationButton(job){
     "/kazinexus_apply.html?id=" +
     encodeURIComponent(job.id);
 
-  applyBtn.removeAttribute(
-    "target"
-  );
+  applyBtn.removeAttribute("target");
 
-  applyBtn.removeAttribute(
-    "rel"
-  );
+  applyBtn.removeAttribute("rel");
 
   applyBtn.style.display =
     "inline-block";
-
 }
 
 
@@ -694,7 +621,6 @@ async function loadJob(){
     return;
   }
 
-
   try{
 
     const {
@@ -702,16 +628,11 @@ async function loadJob(){
       error
     } = await db
 
-      .from(
-        "public_active_jobs"
-      )
+      .from("public_active_jobs")
 
       .select("*")
 
-      .eq(
-        "id",
-        jobId
-      )
+      .eq("id",jobId)
 
       .maybeSingle();
 
@@ -817,21 +738,32 @@ async function loadJob(){
       safe(data.application_email);
 
 
-    /*
-      Set correct application
-      method.
-    */
-
     setupApplicationButton(
       data
     );
 
 
-    /*
-      Hide contact section
-      if no contact information
-      exists.
-    */
+    /* Hide empty sections */
+
+    if(!data.responsibilities){
+
+      document.getElementById(
+        "responsibilitiesSection"
+      ).style.display =
+        "none";
+
+    }
+
+
+    if(!data.qualifications){
+
+      document.getElementById(
+        "qualificationsSection"
+      ).style.display =
+        "none";
+
+    }
+
 
     if(
       !data.contact_person &&
@@ -865,7 +797,6 @@ async function loadJob(){
     );
 
   }
-
 }
 
 
@@ -874,9 +805,7 @@ async function loadJob(){
 ================================ */
 
 document
-  .getElementById(
-    "whatsappBtn"
-  )
+  .getElementById("whatsappBtn")
   .addEventListener(
     "click",
     function(){
@@ -920,9 +849,7 @@ document
 ================================ */
 
 document
-  .getElementById(
-    "copyBtn"
-  )
+  .getElementById("copyBtn")
   .addEventListener(
     "click",
     async function(){
