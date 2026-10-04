@@ -1,4 +1,3 @@
-```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,17 +9,20 @@
 
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
   font-family:Arial,Helvetica,sans-serif;
   background:#f5f7fa;
   color:#172033;
 }
+
 header{
   background:#fff;
   border-bottom:1px solid #ddd;
   padding:16px 20px;
 }
+
 .header-inner{
   max-width:1000px;
   margin:auto;
@@ -29,76 +31,92 @@ header{
   align-items:center;
   gap:15px;
 }
+
 .logo{
   font-size:22px;
   font-weight:800;
   color:#1261a0;
   text-decoration:none;
 }
+
 .back{
   color:#1261a0;
   text-decoration:none;
   font-weight:600;
 }
+
 main{
   max-width:900px;
   margin:30px auto;
   padding:0 16px;
 }
+
 .card{
   background:#fff;
   border-radius:14px;
   padding:28px;
   box-shadow:0 3px 15px rgba(0,0,0,.08);
 }
+
 h1{
   margin:0 0 8px;
   font-size:32px;
 }
+
 .company{
   font-size:18px;
   font-weight:700;
   color:#555;
   margin-bottom:22px;
 }
+
 .meta{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
   gap:12px;
   margin-bottom:28px;
 }
+
 .meta-box{
   background:#f5f7fa;
   padding:14px;
   border-radius:9px;
 }
+
 .meta-label{
   display:block;
   font-size:13px;
   color:#666;
   margin-bottom:5px;
 }
+
 .meta-value{
   font-weight:700;
 }
+
 section{
   margin-top:28px;
 }
+
 section h2{
   font-size:20px;
   margin-bottom:10px;
 }
+
 .content{
   white-space:pre-wrap;
   line-height:1.65;
 }
+
 .actions{
   display:flex;
   flex-wrap:wrap;
   gap:10px;
   margin-top:30px;
 }
-button,.action-link{
+
+button,
+.action-link{
   border:0;
   border-radius:8px;
   padding:13px 17px;
@@ -108,52 +126,66 @@ button,.action-link{
   text-decoration:none;
   display:inline-block;
 }
+
 .apply{
   background:#1261a0;
   color:#fff;
 }
+
 .whatsapp{
   background:#168c45;
   color:#fff;
 }
+
 .copy{
   background:#444;
   color:#fff;
 }
+
 .back-btn{
   background:#eee;
   color:#222;
 }
+
 .status{
   text-align:center;
   padding:50px 20px;
 }
+
 .error{
   color:#b42318;
 }
+
 footer{
   text-align:center;
   padding:30px 15px;
   color:#666;
   font-size:14px;
 }
+
 footer a{
   color:#1261a0;
   text-decoration:none;
   margin:0 5px;
 }
+
 @media(max-width:600px){
+
   .header-inner{
     flex-direction:column;
     align-items:flex-start;
   }
+
   h1{
     font-size:26px;
   }
+
   .card{
     padding:20px;
   }
-  button,.action-link{
+
+  button,
+  .action-link{
     width:100%;
     text-align:center;
   }
@@ -165,8 +197,15 @@ footer a{
 
 <header>
   <div class="header-inner">
-    <a class="logo" href="/">KaziNexus</a>
-    <a class="back" href="/jobs/">← Find Jobs</a>
+
+    <a class="logo" href="/">
+      KaziNexus
+    </a>
+
+    <a class="back" href="/jobs/">
+      ← Find Jobs
+    </a>
+
   </div>
 </header>
 
@@ -177,74 +216,156 @@ footer a{
   </div>
 
   <div id="errorBox" class="card status" style="display:none">
+
     <h2>Unable to load job</h2>
+
     <p id="errorMessage" class="error"></p>
-    <a class="action-link back-btn" href="/jobs/">← Back to Jobs</a>
+
+    <a
+      class="action-link back-btn"
+      href="/jobs/">
+      ← Back to Jobs
+    </a>
+
   </div>
 
-  <article id="jobCard" class="card" style="display:none">
+  <article
+    id="jobCard"
+    class="card"
+    style="display:none">
 
     <h1 id="title"></h1>
-    <div id="company" class="company"></div>
+
+    <div
+      id="company"
+      class="company">
+    </div>
 
     <div class="meta">
 
       <div class="meta-box">
-        <span class="meta-label">Location</span>
-        <span id="location" class="meta-value">—</span>
+
+        <span class="meta-label">
+          Location
+        </span>
+
+        <span
+          id="location"
+          class="meta-value">
+          —
+        </span>
+
       </div>
 
       <div class="meta-box">
-        <span class="meta-label">Job Type</span>
-        <span id="jobType" class="meta-value">—</span>
+
+        <span class="meta-label">
+          Job Type
+        </span>
+
+        <span
+          id="jobType"
+          class="meta-value">
+          —
+        </span>
+
       </div>
 
       <div class="meta-box">
-        <span class="meta-label">Salary</span>
-        <span id="salary" class="meta-value">—</span>
+
+        <span class="meta-label">
+          Salary
+        </span>
+
+        <span
+          id="salary"
+          class="meta-value">
+          —
+        </span>
+
       </div>
 
       <div class="meta-box">
-        <span class="meta-label">Application Deadline</span>
-        <span id="deadline" class="meta-value">—</span>
+
+        <span class="meta-label">
+          Application Deadline
+        </span>
+
+        <span
+          id="deadline"
+          class="meta-value">
+          —
+        </span>
+
       </div>
 
     </div>
 
     <section>
-      <h2>Job Description</h2>
-      <div id="description" class="content"></div>
+
+      <h2>
+        Job Description
+      </h2>
+
+      <div
+        id="description"
+        class="content">
+      </div>
+
     </section>
 
     <section>
-      <h2>Responsibilities</h2>
-      <div id="responsibilities" class="content"></div>
+
+      <h2>
+        Responsibilities
+      </h2>
+
+      <div
+        id="responsibilities"
+        class="content">
+      </div>
+
     </section>
 
     <section>
-      <h2>Qualifications</h2>
-      <div id="qualifications" class="content"></div>
+
+      <h2>
+        Qualifications
+      </h2>
+
+      <div
+        id="qualifications"
+        class="content">
+      </div>
+
     </section>
 
     <section id="contactSection">
-      <h2>Application Contact</h2>
+
+      <h2>
+        Application Contact
+      </h2>
 
       <p id="contactPerson"></p>
 
-      <p>
+      <p id="emailRow">
         Email:
         <span id="emailDisplay"></span>
       </p>
+
     </section>
 
     <div class="actions">
 
-      <button
-        id="applyEmailBtn"
-        type="button"
-        class="apply">
-        Apply by Email
-      </button>
+      <!-- Application button is created dynamically -->
+
+      <a
+        id="applyBtn"
+        class="action-link apply"
+        href="#"
+        style="display:none">
+        Apply
+      </a>
 
       <button
         id="whatsappBtn"
@@ -273,19 +394,38 @@ footer a{
 </main>
 
 <footer>
-  <strong>KaziNexus</strong> — Connect Opportunities With the Right Talent
+
+  <strong>KaziNexus</strong>
+  — Connect Opportunities With the Right Talent
+
   <br><br>
 
   <a href="/">Home</a>
-  <a href="/jobs/">Find Jobs</a>
-  <a href="/post-opportunity.html">Post Opportunity</a>
-  <a href="/contact.html">Contact</a>
-  <a href="/trust-safety.html">Trust & Safety</a>
+
+  <a href="/jobs/">
+    Find Jobs
+  </a>
+
+  <a href="/post-opportunity.html">
+    Post Opportunity
+  </a>
+
+  <a href="/contact.html">
+    Contact
+  </a>
+
+  <a href="/trust-safety.html">
+    Trust & Safety
+  </a>
 
   <br><br>
 
   WhatsApp / Phone:
-  <a href="tel:+254706174379">0706174379</a>
+
+  <a href="tel:+254706174379">
+    0706174379
+  </a>
+
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -298,184 +438,435 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   "sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3";
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const db =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
 
-const params = new URLSearchParams(window.location.search);
-const jobId = params.get("id");
 
-const loading = document.getElementById("loading");
-const errorBox = document.getElementById("errorBox");
-const errorMessage = document.getElementById("errorMessage");
-const jobCard = document.getElementById("jobCard");
+const params =
+  new URLSearchParams(
+    window.location.search
+  );
+
+const jobId =
+  params.get("id");
+
+
+const loading =
+  document.getElementById("loading");
+
+const errorBox =
+  document.getElementById("errorBox");
+
+const errorMessage =
+  document.getElementById("errorMessage");
+
+const jobCard =
+  document.getElementById("jobCard");
+
+const applyBtn =
+  document.getElementById("applyBtn");
 
 let currentJob = null;
 
+
+/* ================================
+   ERROR
+================================ */
+
 function showError(message){
+
   loading.style.display = "none";
+
   jobCard.style.display = "none";
+
   errorBox.style.display = "block";
-  errorMessage.textContent = message;
-}
 
-function safe(value){
-  return value === null || value === undefined || value === ""
-    ? "—"
-    : String(value);
-}
+  errorMessage.textContent =
+    message;
 
-function formatDeadline(value){
-  if(!value) return "—";
-
-  const d = new Date(value);
-
-  if(Number.isNaN(d.getTime())){
-    return value;
-  }
-
-  return d.toLocaleDateString("en-GB",{
-    day:"numeric",
-    month:"short",
-    year:"numeric"
-  });
-}
-
-async function loadJob(){
-
-  if(!jobId){
-    showError("No job ID was provided.");
-    return;
-  }
-
-  try{
-
-    const {data,error} = await db
-      .from("public_active_jobs")
-      .select("*")
-      .eq("id",jobId)
-      .maybeSingle();
-
-    if(error){
-      console.error(error);
-      showError("Unable to load this job: " + error.message);
-      return;
-    }
-
-    if(!data){
-      showError("This job could not be found or is no longer active.");
-      return;
-    }
-
-    currentJob = data;
-
-    document.title =
-      safe(data.title) + " | KaziNexus";
-
-    document.getElementById("title").textContent =
-      safe(data.title);
-
-    document.getElementById("company").textContent =
-      safe(data.company);
-
-    document.getElementById("location").textContent =
-      safe(data.location);
-
-    document.getElementById("jobType").textContent =
-      safe(data.job_type);
-
-    document.getElementById("salary").textContent =
-      safe(data.salary);
-
-    document.getElementById("deadline").textContent =
-      formatDeadline(data.deadline);
-
-    document.getElementById("description").textContent =
-      safe(data.description);
-
-    document.getElementById("responsibilities").textContent =
-      safe(data.responsibilities);
-
-    document.getElementById("qualifications").textContent =
-      safe(data.qualifications);
-
-    document.getElementById("contactPerson").textContent =
-      "Contact Person: " + safe(data.contact_person);
-
-    document.getElementById("emailDisplay").textContent =
-      safe(data.application_email);
-
-    loading.style.display = "none";
-    errorBox.style.display = "none";
-    jobCard.style.display = "block";
-
-  }catch(err){
-
-    console.error(err);
-    showError(
-      "Unable to load this job. Please try again."
-    );
-
-  }
 }
 
 
 /* ================================
-   APPLY BY EMAIL
+   SAFE DISPLAY
 ================================ */
 
-document
-  .getElementById("applyEmailBtn")
-  .addEventListener("click",function(){
+function safe(value){
 
-    if(!currentJob){
-      alert("Job information is still loading. Please try again.");
+  return value === null ||
+         value === undefined ||
+         value === ""
+    ? "—"
+    : String(value);
+
+}
+
+
+/* ================================
+   DEADLINE
+================================ */
+
+function formatDeadline(value){
+
+  if(!value){
+    return "—";
+  }
+
+  const d =
+    new Date(value);
+
+  if(
+    Number.isNaN(
+      d.getTime()
+    )
+  ){
+    return value;
+  }
+
+  return d.toLocaleDateString(
+    "en-GB",
+    {
+      day:"numeric",
+      month:"short",
+      year:"numeric"
+    }
+  );
+
+}
+
+
+/* ================================
+   APPLICATION BUTTON
+================================ */
+
+function setupApplicationButton(job){
+
+  const externalLink =
+    (job.application_link || "")
+      .trim();
+
+  const email =
+    (job.application_email || "")
+      .trim();
+
+
+  /*
+    PRIORITY 1:
+    External application link
+  */
+
+  if(externalLink){
+
+    let link =
+      externalLink;
+
+    if(
+      /^www\./i.test(link)
+    ){
+      link =
+        "https://" + link;
+    }
+
+    if(
+      /^https?:\/\//i.test(link)
+    ){
+
+      applyBtn.textContent =
+        "Apply on Employer Website";
+
+      applyBtn.href =
+        link;
+
+      applyBtn.target =
+        "_blank";
+
+      applyBtn.rel =
+        "noopener noreferrer";
+
+      applyBtn.style.display =
+        "inline-block";
+
       return;
     }
 
-    const email =
-      currentJob.application_email;
+  }
 
-    if(!email){
-      alert(
-        "This job does not have an application email. " +
-        "Please contact the employer directly."
-      );
-      return;
-    }
+
+  /*
+    PRIORITY 2:
+    Application email
+  */
+
+  if(email){
 
     const title =
-      currentJob.title || "Job Application";
+      job.title ||
+      "Job Application";
 
     const subject =
-      "Application for " + title;
+      "Application for " +
+      title;
 
     const body =
       "Hello " +
-      (currentJob.contact_person || "Hiring Manager") +
-      ",%0D%0A%0D%0A" +
+      (
+        job.contact_person ||
+        "Hiring Manager"
+      ) +
+      ",\n\n" +
 
       "I would like to apply for the position of " +
       title +
-      " advertised on KaziNexus.%0D%0A%0D%0A" +
+      " advertised on KaziNexus.\n\n" +
 
-      "Please find my application details attached.%0D%0A%0D%0A" +
+      "Please find my application details attached.\n\n" +
 
       "Kind regards";
 
-    const mailto =
+
+    applyBtn.textContent =
+      "Apply by Email";
+
+    applyBtn.href =
       "mailto:" +
       encodeURIComponent(email) +
       "?subject=" +
       encodeURIComponent(subject) +
       "&body=" +
-      body;
+      encodeURIComponent(body);
 
-    /* Directly launch the device email handler */
-    window.location.href = mailto;
+    applyBtn.removeAttribute(
+      "target"
+    );
 
-  });
+    applyBtn.removeAttribute(
+      "rel"
+    );
+
+    applyBtn.style.display =
+      "inline-block";
+
+    return;
+  }
+
+
+  /*
+    PRIORITY 3:
+    Apply through KaziNexus
+  */
+
+  applyBtn.textContent =
+    "Apply on KaziNexus";
+
+  applyBtn.href =
+    "/kazinexus_apply.html?id=" +
+    encodeURIComponent(job.id);
+
+  applyBtn.removeAttribute(
+    "target"
+  );
+
+  applyBtn.removeAttribute(
+    "rel"
+  );
+
+  applyBtn.style.display =
+    "inline-block";
+
+}
+
+
+/* ================================
+   LOAD JOB
+================================ */
+
+async function loadJob(){
+
+  if(!jobId){
+
+    showError(
+      "No job ID was provided."
+    );
+
+    return;
+  }
+
+
+  try{
+
+    const {
+      data,
+      error
+    } = await db
+
+      .from(
+        "public_active_jobs"
+      )
+
+      .select("*")
+
+      .eq(
+        "id",
+        jobId
+      )
+
+      .maybeSingle();
+
+
+    if(error){
+
+      console.error(error);
+
+      showError(
+        "Unable to load this job: " +
+        error.message
+      );
+
+      return;
+    }
+
+
+    if(!data){
+
+      showError(
+        "This job could not be found or is no longer active."
+      );
+
+      return;
+    }
+
+
+    currentJob =
+      data;
+
+
+    document.title =
+      safe(data.title) +
+      " | KaziNexus";
+
+
+    document.getElementById(
+      "title"
+    ).textContent =
+      safe(data.title);
+
+
+    document.getElementById(
+      "company"
+    ).textContent =
+      safe(data.company);
+
+
+    document.getElementById(
+      "location"
+    ).textContent =
+      safe(data.location);
+
+
+    document.getElementById(
+      "jobType"
+    ).textContent =
+      safe(data.job_type);
+
+
+    document.getElementById(
+      "salary"
+    ).textContent =
+      safe(data.salary);
+
+
+    document.getElementById(
+      "deadline"
+    ).textContent =
+      formatDeadline(
+        data.deadline
+      );
+
+
+    document.getElementById(
+      "description"
+    ).textContent =
+      safe(data.description);
+
+
+    document.getElementById(
+      "responsibilities"
+    ).textContent =
+      safe(data.responsibilities);
+
+
+    document.getElementById(
+      "qualifications"
+    ).textContent =
+      safe(data.qualifications);
+
+
+    document.getElementById(
+      "contactPerson"
+    ).textContent =
+      "Contact Person: " +
+      safe(data.contact_person);
+
+
+    document.getElementById(
+      "emailDisplay"
+    ).textContent =
+      safe(data.application_email);
+
+
+    /*
+      Set correct application
+      method.
+    */
+
+    setupApplicationButton(
+      data
+    );
+
+
+    /*
+      Hide contact section
+      if no contact information
+      exists.
+    */
+
+    if(
+      !data.contact_person &&
+      !data.application_email
+    ){
+
+      document.getElementById(
+        "contactSection"
+      ).style.display =
+        "none";
+
+    }
+
+
+    loading.style.display =
+      "none";
+
+    errorBox.style.display =
+      "none";
+
+    jobCard.style.display =
+      "block";
+
+
+  }catch(err){
+
+    console.error(err);
+
+    showError(
+      "Unable to load this job. Please try again."
+    );
+
+  }
+
+}
 
 
 /* ================================
@@ -483,33 +874,45 @@ document
 ================================ */
 
 document
-  .getElementById("whatsappBtn")
-  .addEventListener("click",function(){
+  .getElementById(
+    "whatsappBtn"
+  )
+  .addEventListener(
+    "click",
+    function(){
 
-    const url = window.location.href;
+      const url =
+        window.location.href;
 
-    const title =
-      currentJob && currentJob.title
-        ? currentJob.title
-        : "Job Opportunity";
+      const title =
+        currentJob &&
+        currentJob.title
+          ? currentJob.title
+          : "Job Opportunity";
 
-    const message =
-      "Check out this job opportunity on KaziNexus:\n\n" +
-      title +
-      "\n" +
-      url;
 
-    const whatsapp =
-      "https://wa.me/?text=" +
-      encodeURIComponent(message);
+      const message =
+        "Check out this job opportunity on KaziNexus:\n\n" +
+        title +
+        "\n" +
+        url;
 
-    window.open(
-      whatsapp,
-      "_blank",
-      "noopener,noreferrer"
-    );
 
-  });
+      const whatsapp =
+        "https://wa.me/?text=" +
+        encodeURIComponent(
+          message
+        );
+
+
+      window.open(
+        whatsapp,
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+    }
+  );
 
 
 /* ================================
@@ -517,32 +920,53 @@ document
 ================================ */
 
 document
-  .getElementById("copyBtn")
-  .addEventListener("click",async function(){
+  .getElementById(
+    "copyBtn"
+  )
+  .addEventListener(
+    "click",
+    async function(){
 
-    const url = window.location.href;
+      const url =
+        window.location.href;
 
-    try{
 
-      await navigator.clipboard.writeText(url);
+      try{
 
-      this.textContent = "Copied!";
+        await navigator
+          .clipboard
+          .writeText(url);
 
-      setTimeout(()=>{
-        this.textContent = "Copy Job Link";
-      },2000);
 
-    }catch(error){
+        this.textContent =
+          "Copied!";
 
-      prompt(
-        "Copy this job link:",
-        url
-      );
+
+        setTimeout(
+          ()=>{
+            this.textContent =
+              "Copy Job Link";
+          },
+          2000
+        );
+
+
+      }catch(error){
+
+        prompt(
+          "Copy this job link:",
+          url
+        );
+
+      }
 
     }
+  );
 
-  });
 
+/* ================================
+   START
+================================ */
 
 loadJob();
 
@@ -550,4 +974,3 @@ loadJob();
 
 </body>
 </html>
-```
