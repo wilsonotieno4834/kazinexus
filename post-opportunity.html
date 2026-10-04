@@ -6,7 +6,7 @@
 
 <title>Post an Opportunity | KaziNexus</title>
 
-<meta name="description" content="Submit a legitimate job opportunity to KaziNexus. Paste an advert or upload a job poster and review the extracted details before submission.">
+<meta name="description" content="Submit a legitimate job opportunity to KaziNexus. Anyone can submit a job advert by pasting text or uploading a poster.">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -15,186 +15,186 @@
 *{box-sizing:border-box}
 
 body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#f4f7fb;
-  color:#172033;
+margin:0;
+font-family:Arial,Helvetica,sans-serif;
+background:#f4f7fb;
+color:#172033;
 }
 
 header{
-  background:#075e54;
-  color:white;
-  padding:16px 20px;
+background:#075e54;
+color:white;
+padding:16px 20px;
 }
 
 .header-inner{
-  max-width:1100px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
+max-width:1100px;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:15px;
 }
 
 .logo{
-  font-size:24px;
-  font-weight:800;
+font-size:24px;
+font-weight:800;
 }
 
 header a{
-  color:white;
-  text-decoration:none;
-  background:rgba(255,255,255,.15);
-  padding:9px 14px;
-  border-radius:8px;
+color:white;
+text-decoration:none;
+background:rgba(255,255,255,.15);
+padding:9px 14px;
+border-radius:8px;
 }
 
 .container{
-  max-width:1000px;
-  margin:25px auto;
-  padding:0 15px;
+max-width:1000px;
+margin:25px auto;
+padding:0 15px;
 }
 
 .card{
-  background:white;
-  border-radius:14px;
-  padding:22px;
-  margin-bottom:20px;
-  box-shadow:0 3px 15px rgba(0,0,0,.07);
+background:white;
+border-radius:14px;
+padding:22px;
+margin-bottom:20px;
+box-shadow:0 3px 15px rgba(0,0,0,.07);
 }
 
 h1{
-  margin-top:0;
-  color:#075e54;
+margin-top:0;
+color:#075e54;
 }
 
 h2{
-  color:#075e54;
-  font-size:20px;
+color:#075e54;
+font-size:20px;
 }
 
 .notice{
-  background:#e9f8f4;
-  border-left:5px solid #075e54;
-  padding:14px;
-  border-radius:8px;
-  margin-bottom:20px;
-  line-height:1.5;
+background:#e9f8f4;
+border-left:5px solid #075e54;
+padding:14px;
+border-radius:8px;
+margin-bottom:20px;
+line-height:1.5;
 }
 
 label{
-  display:block;
-  font-weight:700;
-  margin:15px 0 7px;
+display:block;
+font-weight:700;
+margin:15px 0 7px;
 }
 
 input,textarea,select{
-  width:100%;
-  padding:12px;
-  border:1px solid #ccd3dc;
-  border-radius:8px;
-  font-size:15px;
-  background:white;
+width:100%;
+padding:12px;
+border:1px solid #ccd3dc;
+border-radius:8px;
+font-size:15px;
+background:white;
 }
 
 textarea{
-  min-height:130px;
-  resize:vertical;
+min-height:130px;
+resize:vertical;
 }
 
 .grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
 }
 
 button{
-  border:0;
-  border-radius:8px;
-  padding:13px 18px;
-  font-size:15px;
-  font-weight:700;
-  cursor:pointer;
+border:0;
+border-radius:8px;
+padding:13px 18px;
+font-size:15px;
+font-weight:700;
+cursor:pointer;
 }
 
 .primary{
-  background:#075e54;
-  color:white;
+background:#075e54;
+color:white;
 }
 
 .secondary{
-  background:#e8eef3;
-  color:#172033;
+background:#e8eef3;
+color:#172033;
 }
 
 button:disabled{
-  opacity:.6;
-  cursor:not-allowed;
+opacity:.6;
+cursor:not-allowed;
 }
 
 .actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-top:18px;
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-top:18px;
 }
 
 #statusMessage{
-  display:none;
-  padding:13px;
-  margin-top:15px;
-  border-radius:8px;
+display:none;
+padding:13px;
+margin-top:15px;
+border-radius:8px;
 }
 
 .success{
-  background:#dff5e8;
-  color:#126333;
+background:#dff5e8;
+color:#126333;
 }
 
 .error{
-  background:#fde5e5;
-  color:#9b1c1c;
+background:#fde5e5;
+color:#9b1c1c;
 }
 
 .warning{
-  background:#fff4d6;
-  color:#765500;
+background:#fff4d6;
+color:#765500;
 }
 
 #reviewSection{
-  display:none;
+display:none;
 }
 
 .small{
-  color:#667085;
-  font-size:13px;
-  line-height:1.5;
+color:#667085;
+font-size:13px;
+line-height:1.5;
 }
 
 .file-box{
-  border:2px dashed #b8c4d1;
-  border-radius:10px;
-  padding:18px;
-  text-align:center;
-  background:#fafcff;
+border:2px dashed #b8c4d1;
+border-radius:10px;
+padding:18px;
+text-align:center;
+background:#fafcff;
 }
 
 footer{
-  text-align:center;
-  padding:30px 15px;
-  color:#667085;
-  font-size:13px;
+text-align:center;
+padding:30px 15px;
+color:#667085;
+font-size:13px;
 }
 
 @media(max-width:700px){
-  .grid{
-    grid-template-columns:1fr;
-  }
+.grid{
+grid-template-columns:1fr;
+}
 
-  .header-inner{
-    flex-direction:column;
-    align-items:flex-start;
-  }
+.header-inner{
+flex-direction:column;
+align-items:flex-start;
+}
 }
 </style>
 </head>
@@ -202,863 +202,1041 @@ footer{
 <body>
 
 <header>
-  <div class="header-inner">
-    <div class="logo">KaziNexus</div>
-    <a href="index.html">Home</a>
-  </div>
+<div class="header-inner">
+<div class="logo">KaziNexus</div>
+<a href="index.html">Home</a>
+</div>
 </header>
 
 <div class="container">
 
-  <div class="card">
-    <h1>Post an Opportunity</h1>
+<div class="card">
 
-    <div class="notice">
-      <strong>Anyone can submit a legitimate opportunity.</strong><br>
-      You do not need to be an employer or have an account to submit a job.
-      Unverified submissions are reviewed by KaziNexus before they are published.
-    </div>
+<h1>Post an Opportunity</h1>
 
-    <h2>Option 1: Paste a Job Advert</h2>
+<div class="notice">
 
-    <label for="pasteText">Paste the complete job advert</label>
+<strong>Anyone can submit a legitimate opportunity — FREE.</strong>
 
-    <textarea
-      id="pasteText"
-      placeholder="Paste the job advert here..."></textarea>
+<br><br>
 
-    <div class="actions">
-      <button type="button" class="primary" id="extractTextBtn">
-        Extract Job Details
-      </button>
-    </div>
+You do not need to be an employer or have an account.
 
-    <h2>Option 2: Upload a Job Poster</h2>
+You can:
 
-    <div class="file-box">
+<ul>
+<li>Paste a complete job advert</li>
+<li>Upload a job poster/image</li>
+<li>Review the information extracted</li>
+<li>Submit it to KaziNexus</li>
+</ul>
 
-      <p><strong>Upload JPG, PNG or WebP</strong></p>
+<strong>
+Unverified submissions are reviewed before publication.
+</strong>
 
-      <input
-        type="file"
-        id="jobImage"
-        accept="image/jpeg,image/png,image/webp">
+</div>
 
-      <p class="small">
-        KaziNexus will read the text from the image and place the information
-        into the form for you to review.
-      </p>
+<h2>Option 1: Paste a Job Advert</h2>
 
-    </div>
+<label for="pasteText">
+Paste the complete job advert
+</label>
 
-    <div class="actions">
-      <button type="button" class="primary" id="ocrBtn">
-        Read Job Poster
-      </button>
-    </div>
+<textarea
+id="pasteText"
+placeholder="Paste the job advert here..."></textarea>
 
-    <div id="statusMessage"></div>
+<div class="actions">
 
-  </div>
+<button
+type="button"
+class="primary"
+id="extractTextBtn">
+Extract Job Details
+</button>
 
+</div>
 
-  <div class="card" id="reviewSection">
+<h2>Option 2: Upload a Job Poster</h2>
 
-    <h2>Review Opportunity</h2>
+<div class="file-box">
 
-    <p class="small">
-      Please check and correct the extracted information before submitting.
-      Fields marked * are required.
-    </p>
+<p>
+<strong>Upload JPG, PNG or WebP</strong>
+</p>
 
-    <form id="jobForm">
+<input
+type="file"
+id="jobImage"
+accept="image/jpeg,image/png,image/webp">
 
-      <div class="grid">
+<p class="small">
+KaziNexus will use OCR to read the text from the poster and place it into the form for review.
+</p>
 
-        <div>
-          <label for="title">Job Title *</label>
-          <input id="title" required>
-        </div>
+</div>
 
-        <div>
-          <label for="company">Company / Organization *</label>
-          <input id="company" required>
-        </div>
+<div class="actions">
 
-        <div>
-          <label for="location">Location *</label>
-          <input id="location" required>
-        </div>
+<button
+type="button"
+class="primary"
+id="ocrBtn">
+Read Job Poster
+</button>
 
-        <div>
-          <label for="jobType">Job Type *</label>
+</div>
 
-          <select id="jobType" required>
-            <option value="">Select job type</option>
-            <option>Full-time</option>
-            <option>Part-time</option>
-            <option>Contract</option>
-            <option>Temporary</option>
-            <option>Internship</option>
-            <option>Attachment</option>
-            <option>Volunteer</option>
-            <option>Commission</option>
-            <option>Remote</option>
-            <option>Other</option>
-          </select>
-        </div>
+<div id="statusMessage"></div>
 
-        <div>
-          <label for="salary">Salary</label>
-          <input id="salary" placeholder="e.g. KSh 30,000 per month">
-        </div>
-
-        <div>
-          <label for="deadline">Application Deadline</label>
-          <input type="date" id="deadline">
-        </div>
-
-        <div>
-          <label for="applicationEmail">Application Email</label>
-          <input
-            type="email"
-            id="applicationEmail"
-            placeholder="example@email.com">
-        </div>
-
-        <div>
-          <label for="applicationLink">Application Link</label>
-          <input
-            type="url"
-            id="applicationLink"
-            placeholder="https://...">
-        </div>
-
-        <div>
-          <label for="contactPerson">Contact Person</label>
-          <input id="contactPerson">
-        </div>
-
-        <div>
-          <label for="categoryId">Category ID</label>
-          <input
-            id="categoryId"
-            type="number"
-            placeholder="Optional">
-        </div>
-
-      </div>
+</div>
 
 
-      <label for="description">Job Description *</label>
+<div class="card" id="reviewSection">
 
-      <textarea
-        id="description"
-        required
-        placeholder="Describe the opportunity"></textarea>
+<h2>Review Opportunity</h2>
+
+<p class="small">
+Check and correct the information before submitting.
+Fields marked * are required.
+</p>
+
+<form id="jobForm">
+
+<div class="grid">
+
+<div>
+<label for="title">Job Title *</label>
+<input id="title" required>
+</div>
+
+<div>
+<label for="company">Company / Organization *</label>
+<input id="company" required>
+</div>
+
+<div>
+<label for="location">Location *</label>
+<input id="location" required>
+</div>
+
+<div>
+<label for="jobType">Job Type *</label>
+
+<select id="jobType" required>
+
+<option value="">Select job type</option>
+<option>Full-time</option>
+<option>Part-time</option>
+<option>Contract</option>
+<option>Temporary</option>
+<option>Internship</option>
+<option>Attachment</option>
+<option>Volunteer</option>
+<option>Commission</option>
+<option>Remote</option>
+<option>Other</option>
+
+</select>
+
+</div>
+
+<div>
+<label for="salary">Salary</label>
+<input
+id="salary"
+placeholder="e.g. KSh 30,000 per month">
+</div>
+
+<div>
+<label for="deadline">Application Deadline</label>
+<input
+type="date"
+id="deadline">
+</div>
+
+<div>
+<label for="applicationEmail">
+Application Email
+</label>
+
+<input
+type="email"
+id="applicationEmail"
+placeholder="example@email.com">
+</div>
+
+<div>
+<label for="applicationLink">
+Application Link
+</label>
+
+<input
+type="url"
+id="applicationLink"
+placeholder="https://...">
+</div>
+
+<div>
+<label for="contactPerson">
+Contact Person
+</label>
+
+<input id="contactPerson">
+</div>
+
+</div>
 
 
-      <label for="responsibilities">Responsibilities</label>
+<label for="description">
+Job Description *
+</label>
 
-      <textarea
-        id="responsibilities"
-        placeholder="Main responsibilities"></textarea>
-
-
-      <label for="qualifications">Qualifications</label>
-
-      <textarea
-        id="qualifications"
-        placeholder="Required qualifications and experience"></textarea>
+<textarea
+id="description"
+required
+placeholder="Describe the opportunity"></textarea>
 
 
-      <div class="actions">
+<label for="responsibilities">
+Responsibilities
+</label>
 
-        <button
-          type="submit"
-          class="primary"
-          id="submitBtn">
-          Submit Opportunity
-        </button>
+<textarea
+id="responsibilities"
+placeholder="Main responsibilities"></textarea>
 
-        <button
-          type="button"
-          class="secondary"
-          id="clearBtn">
-          Clear
-        </button>
 
-      </div>
+<label for="qualifications">
+Qualifications
+</label>
 
-    </form>
+<textarea
+id="qualifications"
+placeholder="Required qualifications and experience"></textarea>
 
-  </div>
+
+<div class="actions">
+
+<button
+type="submit"
+class="primary"
+id="submitBtn">
+Submit Opportunity
+</button>
+
+<button
+type="button"
+class="secondary"
+id="clearBtn">
+Clear
+</button>
+
+</div>
+
+</form>
+
+</div>
 
 </div>
 
 <footer>
-  KaziNexus — Connect Opportunities With the Right Talent.
+KaziNexus — Connect Opportunities With the Right Talent.
 </footer>
 
 
 <script>
 
+/* ==============================
+   KAZINEXUS SUPABASE CONNECTION
+================================ */
+
 const SUPABASE_URL =
-  "https://vljehlfeglstpgphzebj.supabase.co";
+"https://vljehlfeglstpgphzebj.supabase.co";
 
 const SUPABASE_ANON_KEY =
-  "PASTE_YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY_HERE";
+"sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3";
 
-const db = supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
+const db =
+supabase.createClient(
+SUPABASE_URL,
+SUPABASE_ANON_KEY
 );
 
 
-const $ = id => document.getElementById(id);
+/* ==============================
+   HELPERS
+================================ */
+
+const $ = id =>
+document.getElementById(id);
 
 
 function message(text,type){
 
-  const box = $("statusMessage");
+const box =
+$("statusMessage");
 
-  box.textContent = text;
+box.textContent =
+text;
 
-  box.className = "";
+box.className =
+"";
 
-  box.id = "statusMessage";
+box.id =
+"statusMessage";
 
-  box.classList.add(type);
+box.classList.add(type);
 
-  box.style.display = "block";
+box.style.display =
+"block";
 
-  box.scrollIntoView({
-    behavior:"smooth",
-    block:"center"
-  });
+box.scrollIntoView({
+behavior:"smooth",
+block:"center"
+});
+
 }
 
+
+/* ==============================
+   TEXT CLEANING
+================================ */
 
 function cleanText(text){
 
-  return (text || "")
-    .replace(/\r/g,"")
-    .replace(/[ \t]+/g," ")
-    .trim();
+return (text || "")
+.replace(/\r/g,"")
+.replace(/[ \t]+/g," ")
+.trim();
+
 }
 
+
+/* ==============================
+   EMAIL
+================================ */
 
 function extractEmail(text){
 
-  const match = text.match(
-    /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/ig
-  );
+const match =
+text.match(
+/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/ig
+);
 
-  return match ? match[0] : "";
+return match
+? match[0]
+: "";
+
 }
 
+
+/* ==============================
+   URL
+================================ */
 
 function extractUrl(text){
 
-  const match = text.match(
-    /(https?:\/\/[^\s]+)/i
-  );
+const match =
+text.match(
+/https?:\/\/[^\s]+/i
+);
 
-  return match ? match[1].replace(/[),.;]+$/,"") : "";
+return match
+? match[0].replace(/[),.;]+$/,"")
+: "";
+
 }
 
+
+/* ==============================
+   SALARY
+================================ */
 
 function extractSalary(text){
 
-  const match = text.match(
-    /(?:KSh|KES|Ksh|Kes|Salary)[\s.]?[\d,]+(?:\s*(?:per|\/)\s*(?:month|week|day|annum|year))?/i
-  );
+const match =
+text.match(
+/(?:KSh|KES|Ksh|Kes|Salary)[\s.]?[\d,]+(?:\s*(?:per|\/)\s*(?:month|week|day|annum|year))?/i
+);
 
-  return match ? match[0] : "";
+return match
+? match[0]
+: "";
+
 }
 
+
+/* ==============================
+   DEADLINE
+================================ */
 
 function extractDeadline(text){
 
-  const patterns = [
+const patterns = [
 
-    /(?:deadline|closing date|application closes|apply before)[^\n:]*[:\-]?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i,
+/(?:deadline|closing date|application closes|apply before)[^\n:]*[:\-]?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i,
 
-    /(?:deadline|closing date|application closes|apply before)[^\n:]*[:\-]?\s*(\d{1,2}\s+(?:Jan|January|Feb|February|Mar|March|Apr|April|May|Jun|June|Jul|July|Aug|August|Sep|September|Oct|October|Nov|November|Dec|December)\s+\d{4})/i
+/(?:deadline|closing date|application closes|apply before)[^\n:]*[:\-]?\s*(\d{1,2}\s+(?:Jan|January|Feb|February|Mar|March|Apr|April|May|Jun|June|Jul|July|Aug|August|Sep|September|Oct|October|Nov|November|Dec|December)\s+\d{4})/i
 
-  ];
+];
 
-  for(const p of patterns){
+for(const pattern of patterns){
 
-    const m = text.match(p);
+const match =
+text.match(pattern);
 
-    if(m){
+if(match){
 
-      const d = new Date(m[1]);
+const date =
+new Date(match[1]);
 
-      if(!isNaN(d.getTime())){
+if(!isNaN(date.getTime())){
 
-        return d.toISOString().slice(0,10);
+return date
+.toISOString()
+.slice(0,10);
 
-      }
-
-    }
-
-  }
-
-  return "";
 }
 
+}
+
+}
+
+return "";
+
+}
+
+
+/* ==============================
+   JOB TYPE
+================================ */
 
 function extractJobType(text){
 
-  const types = [
+const types = [
 
-    "Full-time",
-    "Part-time",
-    "Contract",
-    "Temporary",
-    "Internship",
-    "Attachment",
-    "Volunteer",
-    "Commission",
-    "Remote"
+"Full-time",
+"Part-time",
+"Contract",
+"Temporary",
+"Internship",
+"Attachment",
+"Volunteer",
+"Commission",
+"Remote"
 
-  ];
+];
 
-  const lower = text.toLowerCase();
+const lower =
+text.toLowerCase();
 
-  for(const type of types){
+for(const type of types){
 
-    if(lower.includes(type.toLowerCase())){
+if(
+lower.includes(
+type.toLowerCase()
+)
+){
 
-      return type;
+return type;
 
-    }
-
-  }
-
-  return "";
 }
 
+}
+
+return "";
+
+}
+
+
+/* ==============================
+   TITLE
+================================ */
 
 function extractTitle(text){
 
-  const lines = text
-    .split("\n")
-    .map(x => x.trim())
-    .filter(Boolean);
+const lines =
+text
+.split("\n")
+.map(x => x.trim())
+.filter(Boolean);
 
-  const titleWords =
-    /(manager|officer|assistant|representative|agent|driver|teacher|accountant|intern|supervisor|coordinator|developer|engineer|sales|marketing|clerk|cashier|consultant|administrator|recruiter|enumerator|field officer|security|nurse|doctor|attendant)/i;
+const titleWords =
+/(manager|officer|assistant|representative|agent|driver|teacher|accountant|intern|supervisor|coordinator|developer|engineer|sales|marketing|clerk|cashier|consultant|administrator|recruiter|enumerator|field officer|security|nurse|doctor|attendant)/i;
 
-  for(const line of lines.slice(0,20)){
+for(
+const line of lines.slice(0,20)
+){
 
-    if(
-      line.length > 3 &&
-      line.length < 100 &&
-      titleWords.test(line)
-    ){
+if(
+line.length > 3 &&
+line.length < 100 &&
+titleWords.test(line)
+){
 
-      return line.replace(/^job title\s*[:\-]\s*/i,"");
+return line
+.replace(
+/^job title\s*[:\-]\s*/i,
+""
+);
 
-    }
-
-  }
-
-  return lines[0] || "";
 }
 
+}
+
+return lines[0] || "";
+
+}
+
+
+/* ==============================
+   COMPANY
+================================ */
 
 function extractCompany(text){
 
-  const match = text.match(
-    /(?:company|organization|employer|posted by)\s*[:\-]\s*([^\n]+)/i
-  );
+const match =
+text.match(
+/(?:company|organization|employer|posted by)\s*[:\-]\s*([^\n]+)/i
+);
 
-  if(match){
+return match
+? match[1].trim()
+: "";
 
-    return match[1].trim();
-
-  }
-
-  return "";
 }
 
+
+/* ==============================
+   LOCATION
+================================ */
 
 function extractLocation(text){
 
-  const match = text.match(
-    /(?:location|duty station|work location|based in)\s*[:\-]\s*([^\n]+)/i
-  );
+const match =
+text.match(
+/(?:location|duty station|work location|based in)\s*[:\-]\s*([^\n]+)/i
+);
 
-  if(match){
-
-    return match[1].trim();
-
-  }
-
-  return "";
-}
-
-
-function extractSection(text,names){
-
-  const lines = text.split("\n");
-
-  let collecting = false;
-
-  const output = [];
-
-  for(let line of lines){
-
-    const clean = line.trim();
-
-    if(!clean) continue;
-
-    if(
-      names.some(n =>
-        new RegExp("^"+n+"\\s*[:\\-]?$","i").test(clean)
-      )
-    ){
-
-      collecting = true;
-      continue;
-
-    }
-
-    if(
-      collecting &&
-      /^(requirements|qualifications|responsibilities|duties|how to apply|application|job description|about the role|deadline|closing date)\s*[:\-]?$/i.test(clean)
-    ){
-
-      break;
-
-    }
-
-    if(collecting){
-
-      output.push(clean);
-
-    }
-
-  }
-
-  return output.join("\n");
+return match
+? match[1].trim()
+: "";
 
 }
 
 
-function fillForm(text,source){
+/* ==============================
+   SECTIONS
+================================ */
 
-  text = cleanText(text);
+function extractSection(
+text,
+names
+){
 
-  const title =
-    extractTitle(text);
+const lines =
+text.split("\n");
 
-  const company =
-    extractCompany(text);
+let collecting =
+false;
 
-  const location =
-    extractLocation(text);
+const output =
+[];
 
-  const type =
-    extractJobType(text);
+for(
+let line of lines
+){
 
-  const salary =
-    extractSalary(text);
+const clean =
+line.trim();
 
-  const email =
-    extractEmail(text);
+if(!clean)
+continue;
 
-  const url =
-    extractUrl(text);
+if(
+names.some(
+n =>
+new RegExp(
+"^"+n+"\\s*[:\\-]?$",
+"i"
+).test(clean)
+)
+){
 
-  const deadline =
-    extractDeadline(text);
+collecting =
+true;
 
-  $("title").value = title;
+continue;
 
-  $("company").value = company;
+}
 
-  $("location").value = location;
+if(
+collecting &&
+/^(requirements|qualifications|responsibilities|duties|how to apply|application|job description|about the role|deadline|closing date)\s*[:\-]?$/i.test(clean)
+){
 
-  $("jobType").value = type;
+break;
 
-  $("salary").value = salary;
+}
 
-  $("applicationEmail").value = email;
+if(collecting){
 
-  $("applicationLink").value = url;
+output.push(clean);
 
-  $("deadline").value = deadline;
+}
 
-  $("description").value = text;
+}
 
-  $("responsibilities").value =
-    extractSection(
-      text,
-      ["responsibilities","duties","key responsibilities"]
-    );
-
-  $("qualifications").value =
-    extractSection(
-      text,
-      ["qualifications","requirements","education","experience"]
-    );
-
-  $("reviewSection").style.display = "block";
-
-  $("reviewSection").scrollIntoView({
-    behavior:"smooth"
-  });
-
-  message(
-    source === "image"
-      ? "Job poster read successfully. Please review the extracted information."
-      : "Job advert extracted. Please review the information before submitting.",
-    "success"
-  );
+return output.join("\n");
 
 }
 
 
-$("extractTextBtn").addEventListener(
-  "click",
-  () => {
+/* ==============================
+   FILL FORM
+================================ */
 
-    const text =
-      $("pasteText").value.trim();
+function fillForm(
+text,
+source
+){
 
-    if(!text){
+text =
+cleanText(text);
 
-      message(
-        "Please paste a job advert first.",
-        "error"
-      );
+$("title").value =
+extractTitle(text);
 
-      return;
+$("company").value =
+extractCompany(text);
 
-    }
+$("location").value =
+extractLocation(text);
 
-    fillForm(
-      text,
-      "text"
-    );
+$("jobType").value =
+extractJobType(text);
 
-  }
+$("salary").value =
+extractSalary(text);
+
+$("applicationEmail").value =
+extractEmail(text);
+
+$("applicationLink").value =
+extractUrl(text);
+
+$("deadline").value =
+extractDeadline(text);
+
+$("description").value =
+text;
+
+$("responsibilities").value =
+extractSection(
+text,
+[
+"responsibilities",
+"duties",
+"key responsibilities"
+]
+);
+
+$("qualifications").value =
+extractSection(
+text,
+[
+"qualifications",
+"requirements",
+"education",
+"experience"
+]
+);
+
+$("reviewSection")
+.style.display =
+"block";
+
+$("reviewSection")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+message(
+source === "image"
+?
+"Job poster read successfully. Please review the extracted information."
+:
+"Job advert extracted. Please review the information before submitting.",
+"success"
+);
+
+}
+
+
+/* ==============================
+   PASTE EXTRACTION
+================================ */
+
+$("extractTextBtn")
+.addEventListener(
+"click",
+function(){
+
+const text =
+$("pasteText")
+.value
+.trim();
+
+if(!text){
+
+message(
+"Please paste a job advert first.",
+"error"
+);
+
+return;
+
+}
+
+fillForm(
+text,
+"text"
+);
+
+}
 );
 
 
-$("ocrBtn").addEventListener(
-  "click",
-  async () => {
+/* ==============================
+   OCR
+================================ */
 
-    const file =
-      $("jobImage").files[0];
+$("ocrBtn")
+.addEventListener(
+"click",
+async function(){
 
-    if(!file){
+const file =
+$("jobImage")
+.files[0];
 
-      message(
-        "Please select a job poster image first.",
-        "error"
-      );
+if(!file){
 
-      return;
+message(
+"Please select a job poster image first.",
+"error"
+);
 
-    }
+return;
 
-    try{
+}
 
-      $("ocrBtn").disabled = true;
+try{
 
-      $("ocrBtn").textContent =
-        "Reading Poster...";
+$("ocrBtn")
+.disabled =
+true;
 
-      message(
-        "Reading the job poster. Please wait...",
-        "warning"
-      );
+$("ocrBtn")
+.textContent =
+"Reading Poster...";
 
-      const result =
-        await Tesseract.recognize(
-          file,
-          "eng"
-        );
+message(
+"Reading the job poster. Please wait...",
+"warning"
+);
 
-      const text =
-        result.data.text;
+const result =
+await Tesseract.recognize(
+file,
+"eng"
+);
 
-      if(!text.trim()){
+const text =
+result.data.text;
 
-        throw new Error(
-          "No readable text was found in the image."
-        );
+if(!text.trim()){
 
-      }
+throw new Error(
+"No readable text was found in the image."
+);
 
-      $("pasteText").value =
-        text;
+}
 
-      fillForm(
-        text,
-        "image"
-      );
+$("pasteText")
+.value =
+text;
 
-    }catch(error){
+fillForm(
+text,
+"image"
+);
 
-      message(
-        error.message ||
-        "Unable to read the image.",
-        "error"
-      );
+}catch(error){
 
-    }finally{
+console.error(error);
 
-      $("ocrBtn").disabled = false;
+message(
+error.message ||
+"Unable to read the image.",
+"error"
+);
 
-      $("ocrBtn").textContent =
-        "Read Job Poster";
+}finally{
 
-    }
+$("ocrBtn")
+.disabled =
+false;
 
-  }
+$("ocrBtn")
+.textContent =
+"Read Job Poster";
+
+}
+
+}
 );
 
 
-$("clearBtn").addEventListener(
-  "click",
-  () => {
+/* ==============================
+   CLEAR
+================================ */
 
-    $("jobForm").reset();
+$("clearBtn")
+.addEventListener(
+"click",
+function(){
 
-    $("pasteText").value = "";
+$("jobForm")
+.reset();
 
-    $("jobImage").value = "";
+$("pasteText")
+.value =
+"";
 
-    $("reviewSection").style.display =
-      "none";
+$("jobImage")
+.value =
+"";
 
-    $("statusMessage").style.display =
-      "none";
+$("reviewSection")
+.style.display =
+"none";
 
-  }
+$("statusMessage")
+.style.display =
+"none";
+
+}
 );
 
 
-$("jobForm").addEventListener(
-  "submit",
-  async event => {
+/* ==============================
+   SUBMIT OPPORTUNITY
+================================ */
 
-    event.preventDefault();
+$("jobForm")
+.addEventListener(
+"submit",
+async function(event){
 
-    const submitBtn =
-      $("submitBtn");
+event.preventDefault();
 
-    submitBtn.disabled = true;
+const submitBtn =
+$("submitBtn");
 
-    submitBtn.textContent =
-      "Submitting...";
+submitBtn.disabled =
+true;
 
-    try{
+submitBtn.textContent =
+"Submitting...";
 
-      const {
-        data:{session}
-      } = await db.auth.getSession();
+try{
 
+/*
+Anyone can submit.
 
-      let verified = false;
+All public submissions are
+sent to moderation.
 
-      let employerId = null;
+This prevents anonymous users
+from directly publishing jobs.
+*/
 
+const categoryValue =
+$("categoryId")
+? $("categoryId").value.trim()
+: "";
 
-      /*
-       * Anyone may submit.
-       *
-       * If the person is logged in and is
-       * a verified employer, the existing
-       * employer verification workflow can
-       * identify them.
-       */
+let categoryId =
+null;
 
-      if(session){
+if(categoryValue){
 
-        employerId =
-          session.user.id;
+categoryId =
+parseInt(
+categoryValue,
+10
+);
 
-        const {
-          data:emp
-        } = await db
-          .from("employers")
-          .select(
-            "verified,verification_status"
-          )
-          .eq(
-            "id",
-            session.user.id
-          )
-          .maybeSingle();
+}
 
-        verified = !!(
-          emp &&
-          (
-            emp.verified === true ||
-            emp.verification_status ===
-            "verified"
-          )
-        );
 
-      }
+/* Determine source */
 
+let sourceType =
+"manual";
 
-      /*
-       * Anonymous and unverified submissions
-       * are sent to moderation.
-       */
+if(
+$("jobImage").files.length
+){
 
-      const status =
-        verified
-          ? "active"
-          : "pending";
+sourceType =
+"image_ocr";
 
+}else if(
+$("pasteText").value.trim()
+){
 
-      let categoryId = null;
+sourceType =
+"pasted_advert";
 
-      const categoryValue =
-        $("categoryId").value.trim();
+}
 
-      if(categoryValue){
 
-        categoryId =
-          parseInt(
-            categoryValue,
-            10
-          );
+/* Payload */
 
-      }
+const payload = {
 
+employer_id:null,
 
-      const sourceType =
-        $("jobImage").files.length
-          ? "image_ocr"
-          : (
-              $("pasteText").value.trim()
-                ? "pasted_advert"
-                : "manual"
-            );
+title:
+$("title").value.trim(),
 
+company:
+$("company").value.trim(),
 
-      const payload = {
+location:
+$("location").value.trim(),
 
-        employer_id:
-          employerId,
+job_type:
+$("jobType").value.trim(),
 
-        title:
-          $("title").value.trim(),
+salary:
+$("salary").value.trim()
+|| null,
 
-        company:
-          $("company").value.trim(),
+category_id:
+categoryId,
 
-        location:
-          $("location").value.trim(),
+description:
+$("description").value.trim(),
 
-        job_type:
-          $("jobType").value.trim(),
+responsibilities:
+$("responsibilities").value.trim()
+|| null,
 
-        salary:
-          $("salary").value.trim() || null,
+qualifications:
+$("qualifications").value.trim()
+|| null,
 
-        category_id:
-          categoryId,
+application_email:
+$("applicationEmail").value.trim()
+|| null,
 
-        description:
-          $("description").value.trim(),
+application_link:
+$("applicationLink").value.trim()
+|| null,
 
-        responsibilities:
-          $("responsibilities").value.trim() || null,
+contact_person:
+$("contactPerson").value.trim()
+|| null,
 
-        qualifications:
-          $("qualifications").value.trim() || null,
+deadline:
+$("deadline").value
+|| null,
 
-        application_email:
-          $("applicationEmail").value.trim() || null,
+status:
+"pending",
 
-        application_link:
-          $("applicationLink").value.trim() || null,
+source_type:
+sourceType
 
-        contact_person:
-          $("contactPerson").value.trim() || null,
+};
 
-        deadline:
-          $("deadline").value || null,
 
-        status:
-          status,
+/* Basic validation */
 
-        source_type:
-          sourceType
+if(
+!payload.title ||
+!payload.company ||
+!payload.location ||
+!payload.job_type ||
+!payload.description
+){
 
-      };
+throw new Error(
+"Please complete all required fields."
+);
 
+}
 
-      const {
-        error
-      } = await db
-        .from("jobs")
-        .insert(payload);
 
+/* Insert */
 
-      if(error){
+const result =
+await db
+.from("jobs")
+.insert(payload);
 
-        throw error;
+if(result.error){
 
-      }
+throw result.error;
 
+}
 
-      if(status === "pending"){
 
-        message(
-          "Opportunity submitted successfully. It has been sent for KaziNexus moderation before publication.",
-          "success"
-        );
+/* Success */
 
-      }else{
+message(
+"Opportunity submitted successfully. It has been sent to KaziNexus moderation and will be reviewed before publication.",
+"success"
+);
 
-        message(
-          "Opportunity submitted successfully and published according to your verified employer status.",
-          "success"
-        );
+$("jobForm")
+.reset();
 
-      }
+$("pasteText")
+.value =
+"";
 
+$("jobImage")
+.value =
+"";
 
-      $("jobForm").reset();
 
-      $("pasteText").value = "";
+}catch(error){
 
-      $("jobImage").value = "";
+console.error(error);
 
+message(
+error.message ||
+"Unable to submit the opportunity.",
+"error"
+);
 
-    }catch(error){
+}finally{
 
-      console.error(error);
+submitBtn.disabled =
+false;
 
-      message(
-        error.message ||
-        "Unable to submit the opportunity.",
-        "error"
-      );
+submitBtn.textContent =
+"Submit Opportunity";
 
-    }finally{
+}
 
-      submitBtn.disabled = false;
-
-      submitBtn.textContent =
-        "Submit Opportunity";
-
-    }
-
-  }
+}
 );
 
 </script>
