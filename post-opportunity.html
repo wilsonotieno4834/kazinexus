@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>Post an Opportunity | KaziNexus</title>
+
 <meta name="description" content="Post a job or legitimate opportunity on KaziNexus. Use Smart Post to quickly create an opportunity from an existing job advert.">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -273,6 +274,7 @@ footer a{
 }
 
 @media(max-width:700px){
+
   .form-grid{
     grid-template-columns:1fr;
   }
@@ -297,199 +299,393 @@ footer a{
 <body>
 
 <header>
-  <div class="header-inner">
-    <a class="logo" href="/">KaziNexus</a>
 
-    <nav>
-      <a href="/">Home</a>
-      <a href="/jobs/">Find Jobs</a>
-      <a href="/post-opportunity.html">Post Opportunity</a>
-      <a href="/jobseekers/auth.html">Jobseekers</a>
-      <a href="/employers/auth.html">Employers</a>
-      <a href="/admin.html">Admin</a>
-    </nav>
-  </div>
+<div class="header-inner">
+
+<a class="logo" href="/">
+KaziNexus
+</a>
+
+<nav>
+
+<a href="/">Home</a>
+
+<a href="/jobs/">
+Find Jobs
+</a>
+
+<a href="/post-opportunity.html">
+Post Opportunity
+</a>
+
+<a href="/jobseekers/auth.html">
+Jobseekers
+</a>
+
+<a href="/employers/auth.html">
+Employers
+</a>
+
+<a href="/admin.html">
+Admin
+</a>
+
+</nav>
+
+</div>
+
 </header>
+
 
 <main>
 
 <section class="hero">
-  <h1>Post an Opportunity</h1>
-  <p>
-    Share a legitimate job or opportunity with jobseekers across Kenya.
-    Use Smart Post to save time when you already have a complete job advert.
-  </p>
+
+<h1>
+Post an Opportunity
+</h1>
+
+<p>
+Share a legitimate job or opportunity with jobseekers across Kenya.
+Use Smart Post to save time when you already have a complete job advert.
+</p>
+
 </section>
+
 
 <section class="smart-box">
 
-  <h2>⚡ KaziNexus Smart Post</h2>
+<h2>
+⚡ KaziNexus Smart Post
+</h2>
 
-  <p>
-    Already have a job advert? Paste it below and KaziNexus will
-    identify the important details and place them into the posting form.
-  </p>
+<p>
+Already have a job advert? Paste it below and KaziNexus will
+identify the important details and place them into the posting form.
+</p>
 
-  <div class="smart-buttons">
 
-    <button
-      type="button"
-      class="smart-btn"
-      id="pasteBtn">
-      📋 Paste Job Advert
-    </button>
+<div class="smart-buttons">
 
-    <button
-      type="button"
-      class="poster-btn"
-      id="posterBtn">
-      📷 Upload Job Poster
-    </button>
+<button
+type="button"
+class="smart-btn"
+id="pasteBtn">
 
-  </div>
+📋 Paste Job Advert
 
-  <div class="paste-panel" id="pastePanel">
+</button>
 
-    <label for="advertText">Paste the complete job advert</label>
 
-    <textarea
-      id="advertText"
-      placeholder="Paste the job advert here..."></textarea>
+<button
+type="button"
+class="poster-btn"
+id="posterBtn">
 
-    <button
-      type="button"
-      class="extract-btn"
-      id="extractBtn">
-      ⚡ Extract Details
-    </button>
+📷 Upload Job Poster
 
-    <p class="note">
-      Smart Post will try to identify the title, company, location,
-      job type, salary, deadline, email, application link and other
-      information. Always review the information before submitting.
-    </p>
+</button>
 
-  </div>
+</div>
 
-  <div class="poster-panel" id="posterPanel">
 
-    <label for="posterFile">Select a job poster</label>
+<div
+class="paste-panel"
+id="pastePanel">
 
-    <input
-      type="file"
-      id="posterFile"
-      accept="image/*">
+<label for="advertText">
+Paste the complete job advert
+</label>
 
-    <img
-      id="posterPreview"
-      class="poster-preview"
-      alt="Job poster preview">
+<textarea
+id="advertText"
+placeholder="Paste the job advert here..."></textarea>
 
-    <p class="note">
-      The poster can be previewed here. Image-text extraction/OCR
-      will be added as a future Smart Post upgrade.
-    </p>
 
-  </div>
+<button
+type="button"
+class="extract-btn"
+id="extractBtn">
+
+⚡ Extract Details
+
+</button>
+
+
+<p class="note">
+
+Smart Post will try to identify the title, company, location,
+job type, salary, deadline, contact person, email, application link
+and other information. Always review the information before submitting.
+
+</p>
+
+</div>
+
+
+<div
+class="poster-panel"
+id="posterPanel">
+
+<label for="posterFile">
+Select a job poster
+</label>
+
+<input
+type="file"
+id="posterFile"
+accept="image/*">
+
+
+<img
+id="posterPreview"
+class="poster-preview"
+alt="Job poster preview">
+
+
+<p class="note">
+
+The poster can be previewed here. Image-text extraction/OCR
+will be added as a future Smart Post upgrade.
+
+</p>
+
+</div>
 
 </section>
 
+
 <section class="form-box">
 
-<h2>Opportunity Details</h2>
+<h2>
+Opportunity Details
+</h2>
+
 
 <form id="postingForm">
 
+
 <div class="form-grid">
 
+
 <div class="field">
+
 <label for="poster_name">
-Your Name <span class="required">*</span>
+
+Your Name
+<span class="required">*</span>
+
 </label>
-<input id="poster_name" required>
+
+<input
+id="poster_name"
+required>
+
 </div>
 
+
 <div class="field">
+
 <label for="poster_email">
-Your Email <span class="required">*</span>
+
+Your Email
+<span class="required">*</span>
+
 </label>
-<input id="poster_email" type="email" required>
+
+<input
+id="poster_email"
+type="email"
+required>
+
 </div>
 
+
 <div class="field">
+
 <label for="poster_phone">
 Your Phone
 </label>
-<input id="poster_phone" type="tel">
+
+<input
+id="poster_phone"
+type="tel">
+
 </div>
 
+
 <div class="field">
+
 <label for="company">
-Company / Organization <span class="required">*</span>
+
+Company / Organization
+<span class="required">*</span>
+
 </label>
-<input id="company" required>
+
+<input
+id="company"
+required>
+
 </div>
 
+
 <div class="field">
+
 <label for="title">
-Job / Opportunity Title <span class="required">*</span>
+
+Job / Opportunity Title
+<span class="required">*</span>
+
 </label>
-<input id="title" required>
+
+<input
+id="title"
+required>
+
 </div>
 
+
 <div class="field">
+
 <label for="location">
-Location <span class="required">*</span>
+
+Location
+<span class="required">*</span>
+
 </label>
-<input id="location" required>
+
+<input
+id="location"
+required>
+
 </div>
 
+
 <div class="field">
+
 <label for="job_type">
-Job Type <span class="required">*</span>
+
+Job Type
+<span class="required">*</span>
+
 </label>
 
-<select id="job_type" required>
-<option value="">Select job type</option>
-<option>Full-time</option>
-<option>Part-time</option>
-<option>Contract</option>
-<option>Temporary</option>
-<option>Internship</option>
-<option>Volunteer</option>
-<option>Remote</option>
+
+<select
+id="job_type"
+required>
+
+<option value="">
+Select job type
+</option>
+
+<option>
+Full-time
+</option>
+
+<option>
+Part-time
+</option>
+
+<option>
+Contract
+</option>
+
+<option>
+Temporary
+</option>
+
+<option>
+Internship
+</option>
+
+<option>
+Volunteer
+</option>
+
+<option>
+Remote
+</option>
+
 </select>
 
 </div>
 
-<div class="field">
-<label for="salary">Salary</label>
-<input id="salary" placeholder="e.g. KSh 30,000 per month">
-</div>
 
 <div class="field">
-<label for="deadline">Application Deadline</label>
-<input id="deadline" type="date">
+
+<label for="salary">
+Salary
+</label>
+
+<input
+id="salary"
+placeholder="e.g. KSh 30,000 per month">
+
 </div>
 
-<div class="field">
-<label for="application_email">Application Email</label>
-<input id="application_email" type="email">
-</div>
 
 <div class="field">
-<label for="application_link">Application Link</label>
-<input id="application_link" type="url" placeholder="https://...">
+
+<label for="deadline">
+Application Deadline
+</label>
+
+<input
+id="deadline"
+type="date">
+
 </div>
 
+
 <div class="field">
-<label for="contact_person">Contact Person</label>
-<input id="contact_person">
+
+<label for="application_email">
+Application Email
+</label>
+
+<input
+id="application_email"
+type="email">
+
 </div>
+
+
+<div class="field">
+
+<label for="application_link">
+Application Link
+</label>
+
+<input
+id="application_link"
+type="url"
+placeholder="https://...">
+
+</div>
+
+
+<div class="field">
+
+<label for="contact_person">
+Contact Person
+</label>
+
+<input
+id="contact_person"
+placeholder="e.g. HR Manager">
+
+</div>
+
 
 <div class="field full">
+
 <label for="description">
-Description <span class="required">*</span>
+
+Description
+<span class="required">*</span>
+
 </label>
 
 <textarea
@@ -497,9 +693,12 @@ id="description"
 rows="6"
 required
 placeholder="Describe the opportunity..."></textarea>
+
 </div>
 
+
 <div class="field full">
+
 <label for="responsibilities">
 Responsibilities
 </label>
@@ -508,9 +707,12 @@ Responsibilities
 id="responsibilities"
 rows="6"
 placeholder="List the main responsibilities..."></textarea>
+
 </div>
 
+
 <div class="field full">
+
 <label for="qualifications">
 Qualifications
 </label>
@@ -519,18 +721,28 @@ Qualifications
 id="qualifications"
 rows="6"
 placeholder="List the required qualifications..."></textarea>
-</div>
 
 </div>
+
+
+</div>
+
 
 <button
 type="submit"
 class="submit-btn"
 id="submitBtn">
+
 Submit Opportunity
+
 </button>
 
-<div id="status" class="status"></div>
+
+<div
+id="status"
+class="status">
+</div>
+
 
 </form>
 
@@ -538,632 +750,1106 @@ Submit Opportunity
 
 </main>
 
+
 <footer>
 
 <p>
-<strong>KaziNexus</strong> —
+
+<strong>KaziNexus</strong>
+—
 Connect Opportunities With the Right Talent
+
 </p>
 
 <p>
+
 Need help? WhatsApp/Call
-<a href="https://wa.me/254706174379">0706174379</a>
+
+<a href="https://wa.me/254706174379">
+0706174379
+</a>
+
 </p>
 
 </footer>
+
 
 <script>
 
 const SUPABASE_URL =
 "https://vljehlfeglstpgphzebj.supabase.co";
 
+
 const SUPABASE_KEY =
 "sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3";
 
+
 const supabaseClient =
 window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+SUPABASE_URL,
+SUPABASE_KEY
 );
+
 
 const form =
 document.getElementById("postingForm");
 
+
 const statusBox =
 document.getElementById("status");
+
 
 const submitBtn =
 document.getElementById("submitBtn");
 
+
 function value(id){
-  return document.getElementById(id).value.trim();
+
+return document
+  .getElementById(id)
+  .value
+  .trim();
+
 }
 
+
 function setValue(id,val){
-  if(val !== null && val !== undefined && String(val).trim()){
-    document.getElementById(id).value = String(val).trim();
-  }
+
+if(
+val !== null &&
+val !== undefined &&
+String(val).trim()
+){
+
+document
+  .getElementById(id)
+  .value =
+  String(val).trim();
+
 }
+
+}
+
 
 function showStatus(message,type){
 
-  statusBox.style.display = "block";
+statusBox.style.display =
+"block";
 
-  statusBox.className =
-    "status " + type;
+statusBox.className =
+"status " + type;
 
-  statusBox.textContent =
-    message;
+statusBox.textContent =
+message;
 
-  statusBox.scrollIntoView({
-    behavior:"smooth",
-    block:"center"
-  });
+statusBox.scrollIntoView({
+
+behavior:"smooth",
+
+block:"center"
+
+});
+
 }
+
 
 function cleanText(text){
 
-  return String(text || "")
-    .replace(/\r/g,"")
-    .replace(/[ \t]+/g," ")
-    .replace(/\n{3,}/g,"\n\n")
-    .trim();
+return String(text || "")
+
+.replace(/\r/g,"")
+
+.replace(/[ \t]+/g," ")
+
+.replace(/\n{3,}/g,"\n\n")
+
+.trim();
+
 }
+
+
+/* ============================
+   EMAIL
+============================ */
 
 function extractEmail(text){
 
-  const match =
-    text.match(
-      /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i
-    );
+const match =
+text.match(
+/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i
+);
 
-  return match ? match[0] : "";
+return match
+? match[0]
+: "";
+
 }
+
+
+/* ============================
+   URL
+============================ */
 
 function extractURL(text){
 
-  const match =
-    text.match(
-      /https?:\/\/[^\s<>"']+/i
-    );
+const match =
+text.match(
+/https?:\/\/[^\s<>"']+/i
+);
 
-  return match ? match[0].replace(/[),.;]+$/,"") : "";
+return match
+? match[0].replace(/[),.;]+$/,"")
+: "";
+
 }
+
+
+/* ============================
+   SALARY
+============================ */
 
 function extractSalary(text){
 
-  const lines =
-    text.split("\n");
+const lines =
+text.split("\n");
 
-  const line =
-    lines.find(line =>
-      /salary|pay|remuneration|gross|ksh|kes/i.test(line)
-    );
+const line =
+lines.find(line =>
+/salary|pay|remuneration|gross|ksh|kes/i.test(line)
+);
 
-  if(!line) return "";
+if(!line){
 
-  return line
-    .replace(/^(salary|pay|remuneration)\s*[:\-]?\s*/i,"")
-    .trim();
+return "";
+
 }
+
+return line
+.replace(
+/^(salary|pay|remuneration)\s*[:\-]?\s*/i,
+""
+)
+.trim();
+
+}
+
+
+/* ============================
+   DEADLINE
+============================ */
 
 function extractDeadline(text){
 
-  const patterns = [
+const patterns = [
 
-    /(?:deadline|closing date|application deadline|applications close)\s*[:\-]?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i,
+/(?:deadline|closing date|application deadline|applications close)\s*[:\-]?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/i,
 
-    /(?:deadline|closing date|application deadline|applications close)\s*[:\-]?\s*(\d{1,2}\s+(?:jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|sept|september|oct|october|nov|november|dec|december)\s+\d{4})/i,
+/(?:deadline|closing date|application deadline|applications close)\s*[:\-]?\s*(\d{1,2}\s+(?:jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|sept|september|oct|october|nov|november|dec|december)\s+\d{4})/i,
 
-    /(?:deadline|closing date|application deadline|applications close)\s*[:\-]?\s*((?:jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|sept|september|oct|october|nov|november|dec|december)\s+\d{1,2},?\s+\d{4})/i
+/(?:deadline|closing date|application deadline|applications close)\s*[:\-]?\s*((?:jan|january|feb|february|mar|march|apr|april|may|jun|june|jul|july|aug|august|sep|sept|september|oct|october|nov|november|dec|december)\s+\d{1,2},?\s+\d{4})/i
 
-  ];
+];
 
-  for(const pattern of patterns){
 
-    const match =
-      text.match(pattern);
+for(const pattern of patterns){
 
-    if(match){
+const match =
+text.match(pattern);
 
-      const parsed =
-        new Date(match[1]);
+if(match){
 
-      if(!Number.isNaN(parsed.getTime())){
+const parsed =
+new Date(match[1]);
 
-        const year =
-          parsed.getFullYear();
 
-        const month =
-          String(parsed.getMonth()+1)
-            .padStart(2,"0");
+if(!Number.isNaN(
+parsed.getTime()
+)){
 
-        const day =
-          String(parsed.getDate())
-            .padStart(2,"0");
+const year =
+parsed.getFullYear();
 
-        return `${year}-${month}-${day}`;
-      }
+const month =
+String(
+parsed.getMonth()+1
+)
+.padStart(2,"0");
 
-      const parts =
-        match[1].split(/[\/\-]/);
+const day =
+String(
+parsed.getDate()
+)
+.padStart(2,"0");
 
-      if(parts.length === 3){
+return `${year}-${month}-${day}`;
 
-        let [d,m,y] = parts;
-
-        if(y.length === 2){
-          y = "20" + y;
-        }
-
-        return `${y}-${m.padStart(2,"0")}-${d.padStart(2,"0")}`;
-      }
-    }
-  }
-
-  return "";
 }
+
+
+const parts =
+match[1].split(/[\/\-]/);
+
+
+if(parts.length === 3){
+
+let [d,m,y] =
+parts;
+
+if(y.length === 2){
+
+y =
+"20" + y;
+
+}
+
+return `${y}-${m.padStart(2,"0")}-${d.padStart(2,"0")}`;
+
+}
+
+}
+
+}
+
+return "";
+
+}
+
+
+/* ============================
+   COMPANY
+============================ */
 
 function extractCompany(text){
 
-  const lines =
-    text.split("\n")
-      .map(x => x.trim())
-      .filter(Boolean);
+const lines =
+text.split("\n")
+.map(x => x.trim())
+.filter(Boolean);
 
-  for(const line of lines){
 
-    const match =
-      line.match(
-        /^(?:company|organization|organisation|employer)\s*[:\-]\s*(.+)$/i
-      );
+for(const line of lines){
 
-    if(match){
-      return match[1].trim();
-    }
-  }
+const match =
+line.match(
+/^(?:company|organization|organisation|employer)\s*[:\-]\s*(.+)$/i
+);
 
-  return "";
+if(match){
+
+return match[1].trim();
+
 }
+
+}
+
+return "";
+
+}
+
+
+/* ============================
+   TITLE
+============================ */
 
 function extractTitle(text){
 
-  const lines =
-    text.split("\n")
-      .map(x => x.trim())
-      .filter(Boolean);
+const lines =
+text.split("\n")
+.map(x => x.trim())
+.filter(Boolean);
 
-  for(const line of lines){
 
-    const match =
-      line.match(
-        /^(?:job title|position|role|vacancy|job)\s*[:\-]\s*(.+)$/i
-      );
+for(const line of lines){
 
-    if(match){
-      return match[1].trim();
-    }
-  }
+const match =
+line.match(
+/^(?:job title|position|role|vacancy|job)\s*[:\-]\s*(.+)$/i
+);
 
-  const firstUseful =
-    lines.find(line =>
-      line.length > 3 &&
-      line.length < 100 &&
-      !/@/.test(line) &&
-      !/https?:\/\//i.test(line)
-    );
+if(match){
 
-  return firstUseful || "";
+return match[1].trim();
+
 }
+
+}
+
+
+const firstUseful =
+lines.find(line =>
+
+line.length > 3 &&
+line.length < 100 &&
+!/@/.test(line) &&
+!/https?:\/\//i.test(line)
+
+);
+
+
+return firstUseful || "";
+
+}
+
+
+/* ============================
+   LOCATION
+============================ */
 
 function extractLocation(text){
 
-  const match =
-    text.match(
-      /(?:location|duty station|based in|work location)\s*[:\-]\s*([^\n]+)/i
-    );
+const match =
+text.match(
+/(?:location|duty station|based in|work location)\s*[:\-]\s*([^\n]+)/i
+);
 
-  return match ? match[1].trim() : "";
+return match
+? match[1].trim()
+: "";
+
 }
+
+
+/* ============================
+   JOB TYPE
+============================ */
 
 function extractJobType(text){
 
-  const types = [
-    "Full-time",
-    "Part-time",
-    "Contract",
-    "Temporary",
-    "Internship",
-    "Volunteer",
-    "Remote"
-  ];
+const types = [
 
-  for(const type of types){
+"Full-time",
+"Part-time",
+"Contract",
+"Temporary",
+"Internship",
+"Volunteer",
+"Remote"
 
-    if(
-      new RegExp(
-        type.replace("-","[- ]"),
-        "i"
-      ).test(text)
-    ){
-      return type;
-    }
-  }
+];
 
-  return "";
+
+for(const type of types){
+
+if(
+
+new RegExp(
+type.replace("-","[- ]"),
+"i"
+).test(text)
+
+){
+
+return type;
+
 }
+
+}
+
+return "";
+
+}
+
+
+/* ============================
+   CONTACT PERSON
+============================ */
+
+function extractContactPerson(text){
+
+const lines =
+text.split("\n")
+.map(x => x.trim())
+.filter(Boolean);
+
+
+for(const line of lines){
+
+const match =
+line.match(
+/^(?:contact person|contact|hr manager|hiring manager|recruitment contact|contact name)\s*[:\-]\s*(.+)$/i
+);
+
+if(match){
+
+let person =
+match[1].trim();
+
+
+person =
+person
+.replace(/\s+(?:email|phone|tel|telephone)\s*:.*$/i,"")
+.trim();
+
+
+if(person){
+
+return person;
+
+}
+
+}
+
+}
+
+
+/* Handle adverts such as:
+   Contact Person: HR Manager
+*/
+
+const fallback =
+text.match(
+/(?:contact person|contact name|hiring manager|hr manager)\s*[:\-]?\s*([A-Za-z][A-Za-z .'-]{1,80})/i
+);
+
+
+if(fallback){
+
+return fallback[1]
+.trim()
+.replace(/[.,;]+$/,"");
+
+}
+
+
+return "";
+
+}
+
+
+/* ============================
+   SECTION EXTRACTION
+============================ */
 
 function extractSection(text,names){
 
-  const escaped =
-    names.map(
-      x => x.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")
-    ).join("|");
+const escaped =
+names.map(
+x =>
+x.replace(
+/[.*+?^${}()|[\]\\]/g,
+"\\$&"
+)
+).join("|");
 
-  const regex =
-    new RegExp(
-      `(?:${escaped})\\s*[:\\-]?\\s*([\\s\\S]*?)(?=\\n\\s*(?:responsibilities|duties|qualifications|requirements|requirements and qualifications|how to apply|application|deadline|closing date)\\s*[:\\-]?|$)`,
-      "i"
-    );
 
-  const match =
-    text.match(regex);
+const regex =
+new RegExp(
 
-  return match
-    ? match[1].trim()
-    : "";
+`(?:${escaped})\\s*[:\\-]?\\s*([\\s\\S]*?)(?=\\n\\s*(?:responsibilities|duties|qualifications|requirements|requirements and qualifications|how to apply|application|deadline|closing date|contact person|contact)\\s*[:\\-]?|$)`,
+
+"i"
+
+);
+
+
+const match =
+text.match(regex);
+
+
+return match
+? match[1].trim()
+: "";
+
 }
+
+
+/* ============================
+   SMART POST
+============================ */
 
 function extractAdvert(){
 
-  const raw =
-    document.getElementById("advertText").value;
+const raw =
+document
+.getElementById("advertText")
+.value;
 
-  const text =
-    cleanText(raw);
 
-  if(!text){
+const text =
+cleanText(raw);
 
-    showStatus(
-      "Please paste a job advert first.",
-      "error"
-    );
 
-    return;
-  }
+if(!text){
 
-  const title =
-    extractTitle(text);
+showStatus(
+"Please paste a job advert first.",
+"error"
+);
 
-  const company =
-    extractCompany(text);
+return;
 
-  const location =
-    extractLocation(text);
-
-  const jobType =
-    extractJobType(text);
-
-  const salary =
-    extractSalary(text);
-
-  const deadline =
-    extractDeadline(text);
-
-  const email =
-    extractEmail(text);
-
-  const link =
-    extractURL(text);
-
-  const responsibilities =
-    extractSection(
-      text,
-      ["responsibilities","duties","key responsibilities"]
-    );
-
-  const qualifications =
-    extractSection(
-      text,
-      ["qualifications","requirements","requirements and qualifications"]
-    );
-
-  const description =
-    text
-      .replace(
-        new RegExp(
-          `(?:responsibilities|duties|qualifications|requirements|how to apply|application|deadline|closing date)\\s*[:\\-]?[\\s\\S]*$`,
-          "i"
-        ),
-        ""
-      )
-      .trim();
-
-  setValue("title",title);
-  setValue("company",company);
-  setValue("location",location);
-  setValue("job_type",jobType);
-  setValue("salary",salary);
-  setValue("deadline",deadline);
-  setValue("application_email",email);
-  setValue("application_link",link);
-  setValue("responsibilities",responsibilities);
-  setValue("qualifications",qualifications);
-  setValue("description",description || text);
-
-  showStatus(
-    "Smart Post has extracted the available details. Please review and correct them before submitting.",
-    "success"
-  );
-
-  document
-    .querySelector(".form-box")
-    .scrollIntoView({
-      behavior:"smooth",
-      block:"start"
-    });
 }
 
+
+/* Extract fields */
+
+const title =
+extractTitle(text);
+
+
+const company =
+extractCompany(text);
+
+
+const location =
+extractLocation(text);
+
+
+const jobType =
+extractJobType(text);
+
+
+const salary =
+extractSalary(text);
+
+
+const deadline =
+extractDeadline(text);
+
+
+const email =
+extractEmail(text);
+
+
+const link =
+extractURL(text);
+
+
+const contactPerson =
+extractContactPerson(text);
+
+
+const responsibilities =
+extractSection(
+text,
+[
+"responsibilities",
+"duties",
+"key responsibilities"
+]
+);
+
+
+const qualifications =
+extractSection(
+text,
+[
+"qualifications",
+"requirements",
+"requirements and qualifications"
+]
+);
+
+
+/* ============================
+   DESCRIPTION
+============================ */
+
+const description =
+text
+.replace(
+
+new RegExp(
+
+`(?:responsibilities|duties|qualifications|requirements|how to apply|application|deadline|closing date|contact person|contact)\\s*[:\\-]?[\\s\\S]*$`,
+
+"i"
+
+),
+
+""
+
+)
+
+.trim();
+
+
+/* ============================
+   PUT INTO FORM
+============================ */
+
+setValue(
+"title",
+title
+);
+
+
+setValue(
+"company",
+company
+);
+
+
+setValue(
+"location",
+location
+);
+
+
+setValue(
+"job_type",
+jobType
+);
+
+
+setValue(
+"salary",
+salary
+);
+
+
+setValue(
+"deadline",
+deadline
+);
+
+
+setValue(
+"application_email",
+email
+);
+
+
+setValue(
+"application_link",
+link
+);
+
+
+/* THIS IS THE IMPORTANT FIX */
+
+setValue(
+"contact_person",
+contactPerson
+);
+
+
+setValue(
+"responsibilities",
+responsibilities
+);
+
+
+setValue(
+"qualifications",
+qualifications
+);
+
+
+setValue(
+"description",
+description || text
+);
+
+
+showStatus(
+
+"Smart Post has extracted the available details, including Contact Person where provided. Please review and correct everything before submitting.",
+
+"success"
+
+);
+
+
 document
-  .getElementById("pasteBtn")
-  .addEventListener("click",()=>{
+.querySelector(".form-box")
+.scrollIntoView({
 
-    const panel =
-      document.getElementById("pastePanel");
+behavior:"smooth",
 
-    panel.style.display =
-      panel.style.display === "block"
-        ? "none"
-        : "block";
+block:"start"
 
-    document
-      .getElementById("posterPanel")
-      .style.display = "none";
+});
 
-  });
+}
 
-document
-  .getElementById("posterBtn")
-  .addEventListener("click",()=>{
 
-    const panel =
-      document.getElementById("posterPanel");
-
-    panel.style.display =
-      panel.style.display === "block"
-        ? "none"
-        : "block";
-
-    document
-      .getElementById("pastePanel")
-      .style.display = "none";
-
-  });
+/* ============================
+   PASTE BUTTON
+============================ */
 
 document
-  .getElementById("extractBtn")
-  .addEventListener(
-    "click",
-    extractAdvert
-  );
+.getElementById("pasteBtn")
+.addEventListener(
+"click",
+()=>{
+
+const panel =
+document.getElementById(
+"pastePanel"
+);
+
+
+panel.style.display =
+panel.style.display === "block"
+? "none"
+: "block";
+
 
 document
-  .getElementById("posterFile")
-  .addEventListener("change",function(){
+.getElementById("posterPanel")
+.style.display =
+"none";
 
-    const file =
-      this.files[0];
+}
+);
 
-    const preview =
-      document.getElementById("posterPreview");
 
-    if(!file){
+/* ============================
+   POSTER BUTTON
+============================ */
 
-      preview.style.display = "none";
-      preview.src = "";
+document
+.getElementById("posterBtn")
+.addEventListener(
+"click",
+()=>{
 
-      return;
-    }
+const panel =
+document.getElementById(
+"posterPanel"
+);
 
-    if(!file.type.startsWith("image/")){
 
-      showStatus(
-        "Please select an image file.",
-        "error"
-      );
+panel.style.display =
+panel.style.display === "block"
+? "none"
+: "block";
 
-      this.value = "";
 
-      return;
-    }
+document
+.getElementById("pastePanel")
+.style.display =
+"none";
 
-    const reader =
-      new FileReader();
+}
+);
 
-    reader.onload =
-      function(event){
 
-        preview.src =
-          event.target.result;
+/* ============================
+   EXTRACT BUTTON
+============================ */
 
-        preview.style.display =
-          "block";
-      };
+document
+.getElementById("extractBtn")
+.addEventListener(
+"click",
+extractAdvert
+);
 
-    reader.readAsDataURL(file);
 
-  });
+/* ============================
+   POSTER PREVIEW
+============================ */
+
+document
+.getElementById("posterFile")
+.addEventListener(
+"change",
+function(){
+
+const file =
+this.files[0];
+
+
+const preview =
+document.getElementById(
+"posterPreview"
+);
+
+
+if(!file){
+
+preview.style.display =
+"none";
+
+preview.src =
+"";
+
+return;
+
+}
+
+
+if(
+!file.type.startsWith("image/")
+){
+
+showStatus(
+"Please select an image file.",
+"error"
+);
+
+this.value =
+"";
+
+return;
+
+}
+
+
+const reader =
+new FileReader();
+
+
+reader.onload =
+function(event){
+
+preview.src =
+event.target.result;
+
+preview.style.display =
+"block";
+
+};
+
+
+reader.readAsDataURL(file);
+
+}
+);
+
+
+/* ============================
+   LOAD SESSION
+============================ */
 
 async function loadSession(){
 
-  try{
+try{
 
-    const {
-      data,
-      error
-    } =
-      await supabaseClient
-        .auth
-        .getSession();
+const {
+data,
+error
+} =
+await supabaseClient
+.auth
+.getSession();
 
-    if(error) return;
 
-    const session =
-      data.session;
+if(error){
 
-    if(!session) return;
+return;
 
-    const user =
-      session.user;
-
-    const metadata =
-      user.user_metadata || {};
-
-    setValue(
-      "poster_name",
-      metadata.full_name ||
-      metadata.name ||
-      ""
-    );
-
-    setValue(
-      "poster_email",
-      user.email || ""
-    );
-
-    setValue(
-      "poster_phone",
-      metadata.phone || ""
-    );
-
-  }catch(err){
-
-    console.error(
-      "Session loading error:",
-      err
-    );
-  }
 }
 
-form.addEventListener(
-  "submit",
-  async function(event){
 
-    event.preventDefault();
+const session =
+data.session;
 
-    statusBox.style.display =
-      "none";
 
-    submitBtn.disabled =
-      true;
+if(!session){
 
-    submitBtn.textContent =
-      "Submitting...";
+return;
 
-    try{
+}
 
-      const payload = {
 
-        poster_name:
-          value("poster_name"),
+const user =
+session.user;
 
-        poster_email:
-          value("poster_email"),
 
-        poster_phone:
-          value("poster_phone"),
+const metadata =
+user.user_metadata || {};
 
-        company:
-          value("company"),
 
-        title:
-          value("title"),
-
-        location:
-          value("location"),
-
-        job_type:
-          value("job_type"),
-
-        salary:
-          value("salary") || null,
-
-        deadline:
-          value("deadline") || null,
-
-        application_email:
-          value("application_email") || null,
-
-        application_link:
-          value("application_link") || null,
-
-        contact_person:
-          value("contact_person") || null,
-
-        description:
-          value("description"),
-
-        responsibilities:
-          value("responsibilities") || null,
-
-        qualifications:
-          value("qualifications") || null
-      };
-
-      const {
-        data,
-        error
-      } =
-        await supabaseClient.rpc(
-          "submit_job_opportunity",
-          {
-            payload
-          }
-        );
-
-      if(error){
-
-        console.error(
-          "Submit error:",
-          error
-        );
-
-        throw error;
-      }
-
-      showStatus(
-        "Opportunity submitted successfully. It will follow the KaziNexus approval process where required.",
-        "success"
-      );
-
-      form.reset();
-
-      await loadSession();
-
-    }catch(err){
-
-      console.error(
-        "KaziNexus posting error:",
-        err
-      );
-
-      showStatus(
-        err.message ||
-        "We could not submit the opportunity. Please check the information and try again.",
-        "error"
-      );
-
-    }finally{
-
-      submitBtn.disabled =
-        false;
-
-      submitBtn.textContent =
-        "Submit Opportunity";
-    }
-
-  }
+setValue(
+"poster_name",
+metadata.full_name ||
+metadata.name ||
+""
 );
+
+
+setValue(
+"poster_email",
+user.email ||
+""
+);
+
+
+setValue(
+"poster_phone",
+metadata.phone ||
+""
+);
+
+
+}
+catch(err){
+
+console.error(
+"Session loading error:",
+err
+);
+
+}
+
+}
+
+
+/* ============================
+   SUBMIT
+============================ */
+
+form.addEventListener(
+"submit",
+async function(event){
+
+event.preventDefault();
+
+
+statusBox.style.display =
+"none";
+
+
+submitBtn.disabled =
+true;
+
+
+submitBtn.textContent =
+"Submitting...";
+
+
+try{
+
+
+const payload = {
+
+poster_name:
+value("poster_name"),
+
+poster_email:
+value("poster_email"),
+
+poster_phone:
+value("poster_phone"),
+
+company:
+value("company"),
+
+title:
+value("title"),
+
+location:
+value("location"),
+
+job_type:
+value("job_type"),
+
+salary:
+value("salary") ||
+null,
+
+deadline:
+value("deadline") ||
+null,
+
+application_email:
+value("application_email") ||
+null,
+
+application_link:
+value("application_link") ||
+null,
+
+contact_person:
+value("contact_person") ||
+null,
+
+description:
+value("description"),
+
+responsibilities:
+value("responsibilities") ||
+null,
+
+qualifications:
+value("qualifications") ||
+null
+
+};
+
+
+const {
+data,
+error
+} =
+await supabaseClient.rpc(
+
+"submit_job_opportunity",
+
+{
+payload
+}
+
+);
+
+
+if(error){
+
+console.error(
+"Submit error:",
+error
+);
+
+throw error;
+
+}
+
+
+showStatus(
+
+"Opportunity submitted successfully. It will follow the KaziNexus approval process where required.",
+
+"success"
+
+);
+
+
+form.reset();
+
+
+await loadSession();
+
+
+}
+catch(err){
+
+console.error(
+"KaziNexus posting error:",
+err
+);
+
+
+showStatus(
+
+err.message ||
+"We could not submit the opportunity. Please check the information and try again.",
+
+"error"
+
+);
+
+}
+finally{
+
+submitBtn.disabled =
+false;
+
+
+submitBtn.textContent =
+"Submit Opportunity";
+
+}
+
+}
+);
+
+
+/* ============================
+   START
+============================ */
 
 loadSession();
 
