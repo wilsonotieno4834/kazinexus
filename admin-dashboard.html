@@ -236,15 +236,10 @@ a{
   color:#fff;
 }
 
-.btn-red{
-  background:#fff0f0;
-  color:var(--danger);
-}
-
 .stats{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:16px;
+  grid-template-columns:repeat(6,1fr);
+  gap:14px;
   margin-bottom:25px;
 }
 
@@ -252,7 +247,7 @@ a{
   background:#fff;
   border:1px solid var(--border);
   border-radius:16px;
-  padding:20px;
+  padding:18px;
   box-shadow:var(--shadow);
 }
 
@@ -260,21 +255,22 @@ a{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:8px;
 }
 
 .stat-icon{
-  width:43px;
-  height:43px;
+  width:40px;
+  height:40px;
   border-radius:12px;
   background:#eef8f3;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:20px;
+  font-size:19px;
 }
 
 .stat-number{
-  font-size:30px;
+  font-size:28px;
   font-weight:900;
   color:var(--navy);
   margin-top:12px;
@@ -282,7 +278,7 @@ a{
 
 .stat-label{
   color:var(--muted);
-  font-size:13px;
+  font-size:12px;
   font-weight:700;
 }
 
@@ -320,6 +316,28 @@ a{
   font-size:12px;
 }
 
+.moderation-tools{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+}
+
+.moderation-tools input,
+.moderation-tools select{
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:10px 12px;
+  background:#fff;
+  color:var(--text);
+  font:inherit;
+  min-width:180px;
+}
+
+.moderation-tools input{
+  flex:1;
+}
+
 .table-wrap{
   overflow-x:auto;
 }
@@ -344,6 +362,7 @@ td{
   padding:14px 12px;
   border-bottom:1px solid var(--border);
   font-size:13px;
+  vertical-align:middle;
 }
 
 .title{
@@ -355,6 +374,17 @@ td{
   color:var(--muted);
   font-size:12px;
   margin-top:4px;
+}
+
+.location-cell{
+  max-width:220px;
+}
+
+.location-text{
+  display:block;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .status{
@@ -376,6 +406,11 @@ td{
 .status.pending{
   background:#fff5df;
   color:var(--warning);
+}
+
+.status.closed{
+  background:#eef1f4;
+  color:#596579;
 }
 
 .status.rejected,
@@ -452,26 +487,6 @@ td{
   margin-top:4px;
 }
 
-.message{
-  display:none;
-  padding:13px 16px;
-  border-radius:10px;
-  margin-bottom:20px;
-  font-weight:700;
-}
-
-.message.success{
-  display:block;
-  background:#e8f7ef;
-  color:var(--green);
-}
-
-.message.error{
-  display:block;
-  background:#fff0f0;
-  color:var(--danger);
-}
-
 .admin-tools{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -495,6 +510,34 @@ td{
   margin-top:4px;
   color:var(--muted);
   font-size:12px;
+}
+
+.message{
+  display:none;
+  padding:13px 16px;
+  border-radius:10px;
+  margin-bottom:20px;
+  font-weight:700;
+}
+
+.message.success{
+  display:block;
+  background:#e8f7ef;
+  color:var(--green);
+}
+
+.message.error{
+  display:block;
+  background:#fff0f0;
+  color:var(--danger);
+}
+
+@media(max-width:1250px){
+
+  .stats{
+    grid-template-columns:repeat(3,1fr);
+  }
+
 }
 
 @media(max-width:1050px){
@@ -715,20 +758,11 @@ td{
   <div class="stat">
 
     <div class="stat-top">
-
-      <div class="stat-label">
-        Total Jobs
-      </div>
-
-      <div class="stat-icon">
-        💼
-      </div>
-
+      <div class="stat-label">Total Jobs</div>
+      <div class="stat-icon">💼</div>
     </div>
 
-    <div class="stat-number" id="totalJobs">
-      0
-    </div>
+    <div class="stat-number" id="totalJobs">0</div>
 
   </div>
 
@@ -736,20 +770,11 @@ td{
   <div class="stat">
 
     <div class="stat-top">
-
-      <div class="stat-label">
-        Active Jobs
-      </div>
-
-      <div class="stat-icon">
-        🟢
-      </div>
-
+      <div class="stat-label">Active Jobs</div>
+      <div class="stat-icon">🟢</div>
     </div>
 
-    <div class="stat-number" id="activeJobs">
-      0
-    </div>
+    <div class="stat-number" id="activeJobs">0</div>
 
   </div>
 
@@ -757,20 +782,11 @@ td{
   <div class="stat">
 
     <div class="stat-top">
-
-      <div class="stat-label">
-        Employers
-      </div>
-
-      <div class="stat-icon">
-        🏢
-      </div>
-
+      <div class="stat-label">Pending Review</div>
+      <div class="stat-icon">🟠</div>
     </div>
 
-    <div class="stat-number" id="employerCount">
-      0
-    </div>
+    <div class="stat-number" id="pendingJobs">0</div>
 
   </div>
 
@@ -778,20 +794,35 @@ td{
   <div class="stat">
 
     <div class="stat-top">
-
-      <div class="stat-label">
-        Applications
-      </div>
-
-      <div class="stat-icon">
-        👥
-      </div>
-
+      <div class="stat-label">Employers</div>
+      <div class="stat-icon">🏢</div>
     </div>
 
-    <div class="stat-number" id="applicationCount">
-      0
+    <div class="stat-number" id="employerCount">0</div>
+
+  </div>
+
+
+  <div class="stat">
+
+    <div class="stat-top">
+      <div class="stat-label">Jobseekers</div>
+      <div class="stat-icon">🧑‍💼</div>
     </div>
+
+    <div class="stat-number" id="jobseekerCount">0</div>
+
+  </div>
+
+
+  <div class="stat">
+
+    <div class="stat-top">
+      <div class="stat-label">Applications</div>
+      <div class="stat-icon">👥</div>
+    </div>
+
+    <div class="stat-number" id="applicationCount">0</div>
 
   </div>
 
@@ -809,12 +840,35 @@ td{
 
     <div>
       <h2>🛡️ Job Moderation</h2>
-      <p>Review recently submitted opportunities.</p>
+      <p>Review and manage submitted opportunities.</p>
     </div>
 
     <a href="admin.html" class="btn btn-green">
       + Post Job
     </a>
+
+  </div>
+
+
+  <div class="moderation-tools">
+
+    <input
+      id="jobSearch"
+      type="search"
+      placeholder="Search jobs, companies or locations..."
+      oninput="filterJobs()">
+
+    <select
+      id="jobStatusFilter"
+      onchange="filterJobs()">
+
+      <option value="all">All statuses</option>
+      <option value="pending">Pending review</option>
+      <option value="active">Active</option>
+      <option value="closed">Closed</option>
+      <option value="rejected">Rejected</option>
+
+    </select>
 
   </div>
 
@@ -1048,6 +1102,7 @@ window.supabase.createClient(
 );
 
 let session = null;
+let allJobs = [];
 
 
 const esc = value =>
@@ -1115,10 +1170,16 @@ async function loadStats(){
   const jobs =
   await db
   .from('jobs')
-  .select('id,status',{
+  .select('id,status');
+
+  const pending =
+  await db
+  .from('jobs')
+  .select('id',{
     count:'exact',
-    head:false
-  });
+    head:true
+  })
+  .eq('status','pending');
 
   const employers =
   await db
@@ -1136,13 +1197,36 @@ async function loadStats(){
     head:true
   });
 
+  const jobseekers =
+  await db
+  .from('job_seekers')
+  .select('id',{
+    count:'exact',
+    head:true
+  });
+
+
+  if(jobs.error){
+
+    showMessage(
+      jobs.error.message,
+      'error'
+    );
+
+    return;
+
+  }
+
+
   const jobData =
   jobs.data || [];
+
 
   document
   .getElementById('totalJobs')
   .textContent =
-  jobs.count ?? jobData.length;
+  jobData.length;
+
 
   document
   .getElementById('activeJobs')
@@ -1151,10 +1235,24 @@ async function loadStats(){
     j => j.status === 'active'
   ).length;
 
+
+  document
+  .getElementById('pendingJobs')
+  .textContent =
+  pending.count ?? 0;
+
+
   document
   .getElementById('employerCount')
   .textContent =
   employers.count ?? 0;
+
+
+  document
+  .getElementById('jobseekerCount')
+  .textContent =
+  jobseekers.count ?? 0;
+
 
   document
   .getElementById('applicationCount')
@@ -1180,7 +1278,8 @@ async function loadJobs(){
   .order('created_at',{
     ascending:false
   })
-  .limit(25);
+  .limit(100);
+
 
   if(result.error){
 
@@ -1193,8 +1292,65 @@ async function loadJobs(){
 
   }
 
-  const jobs =
+
+  allJobs =
   result.data || [];
+
+
+  filterJobs();
+
+}
+
+
+function filterJobs(){
+
+  const search =
+  (
+    document
+    .getElementById('jobSearch')
+    ?.value || ''
+  )
+  .trim()
+  .toLowerCase();
+
+
+  const status =
+  document
+  .getElementById('jobStatusFilter')
+  ?.value || 'all';
+
+
+  const jobs =
+  allJobs.filter(j=>{
+
+    const matchesSearch =
+      !search ||
+      String(j.title || '')
+      .toLowerCase()
+      .includes(search) ||
+
+      String(j.company || '')
+      .toLowerCase()
+      .includes(search) ||
+
+      String(j.location || '')
+      .toLowerCase()
+      .includes(search);
+
+
+    const matchesStatus =
+      status === 'all' ||
+      String(j.status || '')
+      .toLowerCase() === status;
+
+
+    return (
+      matchesSearch &&
+      matchesStatus
+    );
+
+  });
+
 
   if(!jobs.length){
 
@@ -1203,7 +1359,7 @@ async function loadJobs(){
     .innerHTML = `
       <tr>
         <td colspan="6" class="empty">
-          No jobs found.
+          No jobs match your search.
         </td>
       </tr>
     `;
@@ -1221,20 +1377,44 @@ async function loadJobs(){
     <tr>
 
       <td>
+
         <div class="title">
           ${esc(j.title)}
         </div>
+
       </td>
 
+
       <td>
+
         <div class="company">
-          ${esc(j.company || 'Not specified')}
+          ${esc(
+            j.company ||
+            'Not specified'
+          )}
         </div>
+
       </td>
 
-      <td>
-        ${esc(j.location || 'Kenya')}
+
+      <td class="location-cell">
+
+        <span
+          class="location-text"
+          title="${esc(
+            j.location ||
+            'Kenya'
+          )}">
+
+          ${esc(
+            j.location ||
+            'Kenya'
+          )}
+
+        </span>
+
       </td>
+
 
       <td>
 
@@ -1243,46 +1423,74 @@ async function loadJobs(){
           ? 'active'
           : j.status === 'pending'
           ? 'pending'
+          : j.status === 'closed'
+          ? 'closed'
           : j.status === 'rejected'
           ? 'rejected'
           : ''
         }">
 
-          ${esc(j.status || 'unknown')}
+          ${esc(
+            j.status ||
+            'unknown'
+          )}
 
         </span>
 
       </td>
 
+
       <td>
-        ${j.created_at
-          ? new Date(j.created_at)
-            .toLocaleDateString()
-          : '-'}
+
+        ${
+          j.created_at
+          ? new Date(
+              j.created_at
+            ).toLocaleDateString()
+          : '-'
+        }
+
       </td>
+
 
       <td>
 
         <button
           class="action view"
           onclick="viewJob('${j.id}')">
+
           View
+
         </button>
+
 
         ${
           j.status === 'pending'
           ? `
+
             <button
               class="action approve"
-              onclick="updateJob('${j.id}','active')">
+              onclick="updateJob(
+                '${j.id}',
+                'active'
+              )">
+
               Approve
+
             </button>
+
 
             <button
               class="action reject"
-              onclick="updateJob('${j.id}','rejected')">
+              onclick="updateJob(
+                '${j.id}',
+                'rejected'
+              )">
+
               Reject
+
             </button>
+
           `
           : ''
         }
@@ -1296,17 +1504,23 @@ async function loadJobs(){
 }
 
 
-async function updateJob(id,status){
+async function updateJob(
+  id,
+  status
+){
 
   const result =
   await db
   .from('jobs')
   .update({
     status:status,
-    reviewed_at:new Date().toISOString(),
-    reviewed_by:session.user.id
+    reviewed_at:
+      new Date().toISOString(),
+    reviewed_by:
+      session.user.id
   })
   .eq('id',id);
+
 
   if(result.error){
 
@@ -1319,12 +1533,14 @@ async function updateJob(id,status){
 
   }
 
+
   showMessage(
     status === 'active'
       ? 'Job approved successfully.'
       : 'Job rejected successfully.',
     'success'
   );
+
 
   await loadStats();
   await loadJobs();
@@ -1335,7 +1551,9 @@ async function updateJob(id,status){
 function viewJob(id){
 
   location.href =
-  `jobs/detail.html?id=${encodeURIComponent(id)}`;
+  `jobs/detail.html?id=${
+    encodeURIComponent(id)
+  }`;
 
 }
 
@@ -1358,6 +1576,7 @@ async function loadEmployers(){
   })
   .limit(20);
 
+
   if(result.error){
 
     document
@@ -1374,8 +1593,10 @@ async function loadEmployers(){
 
   }
 
+
   const employers =
   result.data || [];
+
 
   if(!employers.length){
 
@@ -1401,8 +1622,12 @@ async function loadEmployers(){
 
     const verified =
       e.verified === true ||
-      String(e.verification_status || '')
-      .toLowerCase() === 'verified';
+      String(
+        e.verification_status || ''
+      )
+      .toLowerCase() ===
+      'verified';
+
 
     return `
 
@@ -1418,11 +1643,17 @@ async function loadEmployers(){
         </td>
 
         <td>
-          ${esc(e.industry || 'Not specified')}
+          ${esc(
+            e.industry ||
+            'Not specified'
+          )}
         </td>
 
         <td>
-          ${esc(e.location || 'Kenya')}
+          ${esc(
+            e.location ||
+            'Kenya'
+          )}
         </td>
 
         <td>
@@ -1469,6 +1700,7 @@ async function loadApplications(){
   })
   .limit(10);
 
+
   if(result.error){
 
     document
@@ -1483,8 +1715,10 @@ async function loadApplications(){
 
   }
 
+
   const apps =
   result.data || [];
+
 
   if(!apps.length){
 
@@ -1517,22 +1751,29 @@ async function loadApplications(){
       </strong>
 
       <small>
+
         ${esc(
           a.applicant_email ||
           ''
         )}
+
         ·
+
         ${esc(
           a.status ||
           'Submitted'
         )}
+
         ·
+
         ${
           a.created_at
-          ? new Date(a.created_at)
-            .toLocaleDateString()
+          ? new Date(
+              a.created_at
+            ).toLocaleDateString()
           : ''
         }
+
       </small>
 
     </div>
