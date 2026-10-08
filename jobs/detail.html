@@ -1,19 +1,27 @@
-```html
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>KaziNexus Job Details</title>
+<title>KaziNexus | Job Details</title>
 
-<meta name="description"
-content="View this job opportunity on KaziNexus.">
-
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="KaziNexus">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
+:root{
+  --navy:#102a43;
+  --green:#126b48;
+  --green2:#16865a;
+  --bg:#f4f7f9;
+  --white:#ffffff;
+  --text:#172033;
+  --muted:#667085;
+  --border:#dfe5eb;
+  --danger:#a12b2b;
+  --shadow:0 8px 28px rgba(16,42,67,.08);
+}
 
 *{
   box-sizing:border-box;
@@ -22,236 +30,303 @@ content="View this job opportunity on KaziNexus.">
 body{
   margin:0;
   font-family:Arial,Helvetica,sans-serif;
-  background:#f4f7fb;
-  color:#172033;
+  background:var(--bg);
+  color:var(--text);
 }
 
-header{
-  background:#ffffff;
-  border-bottom:1px solid #e2e8f0;
-  padding:15px 20px;
-}
-
-.header-inner{
-  max-width:1050px;
-  margin:auto;
+.header{
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  padding:15px 6%;
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  gap:15px;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:20;
 }
 
 .logo{
-  color:#1261a0;
+  font-size:27px;
+  font-weight:900;
+  color:var(--navy);
+}
+
+.logo span{
+  color:var(--green);
+}
+
+.nav{
+  display:flex;
+  gap:18px;
+  align-items:center;
+}
+
+.nav a{
   text-decoration:none;
-  font-size:24px;
+  color:var(--green);
   font-weight:800;
 }
 
-.nav-link{
-  color:#1261a0;
-  text-decoration:none;
-  font-weight:700;
+.container{
+  max-width:1050px;
+  margin:30px auto;
+  padding:0 18px;
 }
 
-main{
-  max-width:950px;
-  margin:30px auto;
-  padding:0 16px;
+.back{
+  display:inline-block;
+  margin-bottom:18px;
+  color:var(--green);
+  text-decoration:none;
+  font-weight:800;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:minmax(0,2fr) minmax(260px,1fr);
+  gap:22px;
 }
 
 .card{
-  background:#ffffff;
-  border-radius:15px;
-  padding:28px;
-  box-shadow:0 4px 18px rgba(0,0,0,.08);
+  background:#fff;
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:26px;
+  margin-bottom:20px;
 }
 
-.loading{
-  text-align:center;
-  padding:60px 20px;
-  font-weight:700;
+.hero{
+  position:relative;
 }
 
-.error{
-  text-align:center;
-  padding:50px 20px;
+.badge{
+  display:inline-block;
+  background:#eaf6ef;
+  color:var(--green);
+  padding:7px 11px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:900;
+  margin-bottom:12px;
 }
 
-.error h2{
-  margin-top:0;
-}
-
-.error-message{
-  color:#b42318;
-  margin-bottom:25px;
-}
-
-.job-title{
-  margin:0 0 8px;
-  font-size:34px;
+h1{
+  margin:0 0 10px;
+  color:var(--navy);
+  font-size:32px;
   line-height:1.2;
 }
 
 .company{
-  font-size:19px;
-  color:#4b5563;
-  font-weight:700;
-  margin-bottom:25px;
+  font-size:17px;
+  font-weight:800;
+  color:var(--green);
+  margin-bottom:18px;
 }
 
-.meta-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  margin-bottom:30px;
+.meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:15px;
 }
 
-.meta-box{
-  background:#f5f7fa;
-  border-radius:10px;
+.meta span{
+  background:#f5f7f9;
+  border:1px solid var(--border);
+  padding:9px 12px;
+  border-radius:8px;
+  font-size:13px;
+  color:#344054;
+}
+
+.verified{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  color:var(--green);
+  font-weight:800;
+  font-size:13px;
+  margin-left:7px;
+}
+
+.poster-card{
+  display:none;
   padding:15px;
 }
 
-.meta-label{
+.poster-card h2{
+  margin:0 0 13px;
+  color:var(--navy);
+  font-size:20px;
+}
+
+.poster{
+  width:100%;
+  max-height:650px;
+  object-fit:contain;
   display:block;
-  color:#6b7280;
-  font-size:13px;
-  margin-bottom:6px;
+  border-radius:10px;
+  background:#f7f8fa;
+  border:1px solid var(--border);
 }
 
-.meta-value{
-  font-weight:700;
-  color:#172033;
+.section{
+  margin-top:25px;
 }
 
-section{
-  margin-top:30px;
-}
-
-section h2{
-  font-size:21px;
+.section h2{
+  color:var(--navy);
   margin:0 0 12px;
+  font-size:21px;
 }
 
-.content{
-  white-space:pre-wrap;
+.section-content{
   line-height:1.7;
-  color:#374151;
+  color:#344054;
+  white-space:pre-wrap;
 }
 
-.application-box{
-  margin-top:32px;
-  padding:22px;
-  background:#f0f8f4;
-  border:1px solid #d5e8dd;
-  border-radius:12px;
-}
-
-.application-box h2{
+.side h2{
   margin-top:0;
+  color:var(--navy);
 }
 
-.application-note{
-  color:#5b6470;
-  line-height:1.5;
+.info{
+  border-bottom:1px solid #edf0f2;
+  padding:12px 0;
 }
 
-.actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:11px;
-  margin-top:18px;
+.info:last-child{
+  border-bottom:0;
 }
 
-.btn{
-  display:inline-block;
-  border:0;
-  border-radius:9px;
-  padding:13px 18px;
-  font-size:15px;
-  font-weight:700;
-  text-decoration:none;
-  cursor:pointer;
+.info-label{
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:4px;
+}
+
+.info-value{
+  font-weight:800;
+  word-break:break-word;
+}
+
+.apply{
+  width:100%;
+  display:block;
   text-align:center;
-}
-
-.email-btn{
-  background:#1261a0;
+  background:var(--green);
   color:#fff;
+  padding:14px 18px;
+  border-radius:9px;
+  text-decoration:none;
+  font-weight:900;
+  border:0;
+  cursor:pointer;
+  font-size:16px;
+  margin-bottom:10px;
 }
 
-.website-btn{
-  background:#087443;
-  color:#fff;
+.apply:hover{
+  background:var(--green2);
 }
 
-.internal-btn{
-  background:#1261a0;
-  color:#fff;
+.secondary{
+  width:100%;
+  display:block;
+  text-align:center;
+  background:#edf4f1;
+  color:var(--green);
+  padding:12px 18px;
+  border-radius:9px;
+  text-decoration:none;
+  font-weight:800;
+  border:0;
+  cursor:pointer;
+  font-size:14px;
+  margin-bottom:10px;
 }
 
-.whatsapp-btn{
-  background:#168c45;
-  color:#fff;
+.share-row{
+  display:flex;
+  gap:9px;
 }
 
-.copy-btn{
-  background:#4b5563;
-  color:#fff;
+.share-row button{
+  flex:1;
+  padding:10px;
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:800;
+  color:var(--navy);
 }
 
-.back-btn{
-  background:#e5e7eb;
-  color:#172033;
+.loading{
+  text-align:center;
+  padding:70px 20px;
+  color:var(--muted);
 }
 
-.contact-line{
-  margin:7px 0;
+.error{
+  background:#fff0f0;
+  color:var(--danger);
+  padding:18px;
+  border-radius:10px;
+  font-weight:700;
+}
+
+.empty{
+  display:none;
+}
+
+.small{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.5;
 }
 
 footer{
   text-align:center;
-  color:#667085;
-  font-size:14px;
-  padding:35px 15px;
+  padding:35px 20px;
+  color:var(--muted);
+  font-size:13px;
 }
 
 footer a{
-  color:#1261a0;
+  color:var(--green);
   text-decoration:none;
-  margin:0 5px;
+  font-weight:700;
 }
 
-@media(max-width:800px){
+@media(max-width:760px){
 
-  .meta-grid{
-    grid-template-columns:repeat(2,1fr);
+  .header{
+    padding:14px 18px;
   }
 
-}
-
-@media(max-width:600px){
-
-  .header-inner{
-    flex-direction:column;
-    align-items:flex-start;
+  .nav a:last-child{
+    display:none;
   }
 
-  .job-title{
-    font-size:27px;
+  .container{
+    margin:20px auto;
+    padding:0 12px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
   }
 
   .card{
     padding:20px;
   }
 
-  .meta-grid{
-    grid-template-columns:1fr;
-  }
-
-  .btn{
-    width:100%;
+  h1{
+    font-size:27px;
   }
 
 }
@@ -261,981 +336,1105 @@ footer a{
 
 <body>
 
-<header>
+<header class="header">
 
-<div class="header-inner">
+  <div class="logo">
+    Kazi<span>Nexus</span>
+  </div>
 
-<a href="/" class="logo">
-KaziNexus
-</a>
+  <nav class="nav">
 
-<a href="/jobs/" class="nav-link">
-← Find Jobs
-</a>
+    <a href="../index.html">
+      🌐 Marketplace
+    </a>
 
-</div>
+    <a href="../public-jobs.html">
+      🔎 Find Jobs
+    </a>
+
+    <a href="../dashboard.html">
+      📊 Dashboard
+    </a>
+
+  </nav>
 
 </header>
 
 
-<main>
-
-<div id="loading" class="card loading">
-Loading job opportunity...
-</div>
-
-
-<div id="errorBox" class="card error" style="display:none">
-
-<h2>Unable to load job</h2>
-
-<p id="errorMessage" class="error-message"></p>
-
-<a href="/jobs/" class="btn back-btn">
-← Back to Jobs
-</a>
-
-</div>
-
-
-<article id="jobCard" class="card" style="display:none">
-
-
-<h1 id="title" class="job-title"></h1>
-
-<div id="company" class="company"></div>
-
-
-<div class="meta-grid">
-
-
-<div class="meta-box">
-
-<span class="meta-label">
-Location
-</span>
-
-<span id="location" class="meta-value">
-—
-</span>
-
-</div>
-
-
-<div class="meta-box">
-
-<span class="meta-label">
-Job Type
-</span>
-
-<span id="jobType" class="meta-value">
-—
-</span>
-
-</div>
-
-
-<div class="meta-box">
-
-<span class="meta-label">
-Salary
-</span>
-
-<span id="salary" class="meta-value">
-—
-</span>
-
-</div>
-
-
-<div class="meta-box">
-
-<span class="meta-label">
-Application Deadline
-</span>
-
-<span id="deadline" class="meta-value">
-—
-</span>
-
-</div>
-
-
-</div>
-
-
-<section>
-
-<h2>
-Job Description
-</h2>
-
-<div id="description" class="content">
-</div>
-
-</section>
-
-
-<section id="responsibilitiesSection">
-
-<h2>
-Responsibilities
-</h2>
-
-<div id="responsibilities" class="content">
-</div>
-
-</section>
-
-
-<section id="qualificationsSection">
-
-<h2>
-Qualifications
-</h2>
-
-<div id="qualifications" class="content">
-</div>
-
-</section>
-
-
-<section id="contactSection">
-
-<h2>
-Application Contact
-</h2>
-
-<p id="contactPerson" class="contact-line">
-Contact Person: —
-</p>
-
-<p id="emailRow" class="contact-line">
-Email:
-<span id="emailDisplay">—</span>
-</p>
-
-</section>
-
-
-<section
-id="applicationSection"
-class="application-box">
-
-<h2>
-How to Apply
-</h2>
-
-<p
-id="applicationNote"
-class="application-note">
-
-Choose the application method provided by the employer.
-
-</p>
-
-
-<div class="actions">
-
+<div class="container">
 
 <a
-id="emailApplyBtn"
-class="btn email-btn"
-href="#"
-style="display:none">
+  href="../public-jobs.html"
+  class="back">
 
-📧 Apply by Email
+  ← Back to Jobs
 
 </a>
 
 
-<a
-id="websiteApplyBtn"
-class="btn website-btn"
-href="#"
-target="_blank"
-rel="noopener noreferrer"
-style="display:none">
+<div id="loading" class="loading">
 
-🌐 Apply on Employer Website
-
-</a>
-
-
-<a
-id="internalApplyBtn"
-class="btn internal-btn"
-href="#"
-style="display:none">
-
-Apply on KaziNexus
-
-</a>
-
-
-</div>
-
-</section>
-
-
-<div class="actions">
-
-
-<button
-id="whatsappBtn"
-class="btn whatsapp-btn"
-type="button">
-
-Share on WhatsApp
-
-</button>
-
-
-<button
-id="copyBtn"
-class="btn copy-btn"
-type="button">
-
-Copy Job Link
-
-</button>
-
-
-<a
-href="/jobs/"
-class="btn back-btn">
-
-← Back to Jobs
-
-</a>
-
+  Loading job details...
 
 </div>
 
 
-</article>
+<div id="errorBox" class="error" style="display:none;"></div>
 
-</main>
+
+<div id="jobContent" style="display:none;">
+
+<div class="grid">
+
+
+<!-- MAIN JOB INFORMATION -->
+
+<div>
+
+<div class="card hero">
+
+  <div id="jobStatus" class="badge">
+    Job Opportunity
+  </div>
+
+  <h1 id="jobTitle">
+    Job Title
+  </h1>
+
+  <div class="company">
+
+    <span id="companyName">
+      Company
+    </span>
+
+    <span
+      id="verifiedBadge"
+      class="verified"
+      style="display:none;">
+
+      ✓ Verified Employer
+
+    </span>
+
+  </div>
+
+
+  <div class="meta">
+
+    <span id="locationMeta">
+      📍 Location
+    </span>
+
+    <span id="typeMeta">
+      💼 Job Type
+    </span>
+
+    <span
+      id="salaryMeta"
+      style="display:none;">
+
+      💰 Salary
+
+    </span>
+
+    <span
+      id="deadlineMeta"
+      style="display:none;">
+
+      📅 Deadline
+
+    </span>
+
+  </div>
+
+</div>
+
+
+<!-- POSTER -->
+
+<div
+  id="posterCard"
+  class="card poster-card">
+
+  <h2>
+    🖼️ Job Poster
+  </h2>
+
+  <img
+    id="jobPoster"
+    class="poster"
+    alt="Job poster">
+
+</div>
+
+
+<!-- DESCRIPTION -->
+
+<div class="card">
+
+  <div class="section">
+
+    <h2>
+      Job Description
+    </h2>
+
+    <div
+      id="description"
+      class="section-content">
+    </div>
+
+  </div>
+
+
+  <div
+    id="responsibilitiesSection"
+    class="section"
+    style="display:none;">
+
+    <h2>
+      Key Responsibilities
+    </h2>
+
+    <div
+      id="responsibilities"
+      class="section-content">
+    </div>
+
+  </div>
+
+
+  <div
+    id="qualificationsSection"
+    class="section"
+    style="display:none;">
+
+    <h2>
+      Qualifications & Requirements
+    </h2>
+
+    <div
+      id="qualifications"
+      class="section-content">
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+
+
+<!-- SIDEBAR -->
+
+<aside>
+
+<div class="card side">
+
+  <h2>
+    Apply for this Job
+  </h2>
+
+
+  <a
+    id="applyButton"
+    class="apply"
+    href="#"
+    target="_blank"
+    rel="noopener">
+
+    Apply Now
+
+  </a>
+
+
+  <button
+    id="emailButton"
+    class="secondary"
+    style="display:none;">
+
+    ✉️ Apply by Email
+
+  </button>
+
+
+  <div class="share-row">
+
+    <button
+      type="button"
+      onclick="shareJob()">
+
+      🔗 Share
+
+    </button>
+
+    <button
+      type="button"
+      onclick="copyJobLink()">
+
+      📋 Copy Link
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<div class="card side">
+
+  <h2>
+    Job Information
+  </h2>
+
+
+  <div class="info">
+
+    <div class="info-label">
+      Company
+    </div>
+
+    <div
+      id="sideCompany"
+      class="info-value">
+    </div>
+
+  </div>
+
+
+  <div class="info">
+
+    <div class="info-label">
+      Location
+    </div>
+
+    <div
+      id="sideLocation"
+      class="info-value">
+    </div>
+
+  </div>
+
+
+  <div class="info">
+
+    <div class="info-label">
+      Job Type
+    </div>
+
+    <div
+      id="sideType"
+      class="info-value">
+    </div>
+
+  </div>
+
+
+  <div
+    id="sideSalaryInfo"
+    class="info"
+    style="display:none;">
+
+    <div class="info-label">
+      Salary / Compensation
+    </div>
+
+    <div
+      id="sideSalary"
+      class="info-value">
+    </div>
+
+  </div>
+
+
+  <div
+    id="sideDeadlineInfo"
+    class="info"
+    style="display:none;">
+
+    <div class="info-label">
+      Application Deadline
+    </div>
+
+    <div
+      id="sideDeadline"
+      class="info-value">
+    </div>
+
+  </div>
+
+
+  <div
+    id="sideContactInfo"
+    class="info"
+    style="display:none;">
+
+    <div class="info-label">
+      Contact Person
+    </div>
+
+    <div
+      id="sideContact"
+      class="info-value">
+    </div>
+
+  </div>
+
+</div>
+
+
+<div
+  id="applicationCard"
+  class="card side"
+  style="display:none;">
+
+  <h2>
+    Application Details
+  </h2>
+
+  <p
+    id="applicationText"
+    class="small">
+  </p>
+
+</div>
+
+</aside>
+
+</div>
+
+</div>
+
+</div>
 
 
 <footer>
 
-<strong>KaziNexus</strong>
-<br>
+  © 2026 KaziNexus —
+  Connect Opportunities With the Right Talent.
 
-Connect Opportunities With the Right Talent.
+  <br><br>
 
-<br><br>
+  <a href="../about.html">
+    About
+  </a>
+  &nbsp; • &nbsp;
 
-<a href="/">
-Home
-</a>
+  <a href="../trust-safety.html">
+    Trust & Safety
+  </a>
+  &nbsp; • &nbsp;
 
-<a href="/jobs/">
-Find Jobs
-</a>
-
-<a href="/post-opportunity.html">
-Post Opportunity
-</a>
-
-<a href="/contact.html">
-Contact
-</a>
-
-<a href="/trust-safety.html">
-Trust & Safety
-</a>
-
-<br><br>
-
-WhatsApp / Phone:
-<a href="tel:+254706174379">
-0706174379
-</a>
+  <a href="../contact.html">
+    Contact
+  </a>
 
 </footer>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
 <script>
 
-
 const SUPABASE_URL =
-"https://vljehlfeglstpgphzebj.supabase.co";
-
+'https://vljehlfeglstpgphzebj.supabase.co';
 
 const SUPABASE_KEY =
-"sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3";
-
+'sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3';
 
 const db =
 window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
+  SUPABASE_URL,
+  SUPABASE_KEY
 );
 
+
+/*
+  Get job ID from URL.
+
+  Example:
+  /jobs/detail.html?id=123
+*/
 
 const params =
 new URLSearchParams(
-window.location.search
+  window.location.search
 );
-
 
 const jobId =
-params.get("id");
+params.get('id');
 
 
-let currentJob = null;
+let currentJob =
+null;
 
-
-/* ================================
-   ELEMENTS
-================================ */
-
-const loading =
-document.getElementById("loading");
-
-const errorBox =
-document.getElementById("errorBox");
-
-const errorMessage =
-document.getElementById("errorMessage");
-
-const jobCard =
-document.getElementById("jobCard");
-
-const emailApplyBtn =
-document.getElementById("emailApplyBtn");
-
-const websiteApplyBtn =
-document.getElementById("websiteApplyBtn");
-
-const internalApplyBtn =
-document.getElementById("internalApplyBtn");
-
-
-/* ================================
-   ERROR
-================================ */
-
-function showError(message){
-
-loading.style.display =
-"none";
-
-jobCard.style.display =
-"none";
-
-errorBox.style.display =
-"block";
-
-errorMessage.textContent =
-message;
-
-}
-
-
-/* ================================
-   SAFE VALUE
-================================ */
-
-function safe(value){
-
-if(
-value === null ||
-value === undefined ||
-value === ""
-){
-
-return "—";
-
-}
-
-return String(value);
-
-}
-
-
-/* ================================
-   DEADLINE
-================================ */
-
-function formatDeadline(value){
-
-if(!value){
-
-return "—";
-
-}
-
-const match =
-String(value).match(
-/^(\d{4})-(\d{2})-(\d{2})$/
-);
-
-if(match){
-
-const year =
-match[1];
-
-const month =
-Number(match[2]);
-
-const day =
-Number(match[3]);
-
-const months = [
-
-"Jan",
-"Feb",
-"Mar",
-"Apr",
-"May",
-"Jun",
-"Jul",
-"Aug",
-"Sep",
-"Oct",
-"Nov",
-"Dec"
-
-];
-
-if(
-month >= 1 &&
-month <= 12
-){
-
-return (
-day +
-" " +
-months[month - 1] +
-" " +
-year
-);
-
-}
-
-}
-
-return String(value);
-
-}
-
-
-/* ================================
-   APPLICATION METHODS
-================================ */
 
 /*
-
-IMPORTANT:
-
-Email and website are treated
-as separate application methods.
-
-If BOTH are supplied:
-
-SHOW BOTH.
-
-If ONLY email exists:
-
-SHOW EMAIL.
-
-If ONLY website exists:
-
-SHOW WEBSITE.
-
-If neither exists:
-
-SHOW KaziNexus application.
-
+  BASIC ESCAPE
 */
 
-function setupApplicationMethods(job){
+function escapeHtml(value){
 
-
-const email =
-(job.application_email || "")
-.trim();
-
-
-let website =
-(job.application_link || "")
-.trim();
-
-
-emailApplyBtn.style.display =
-"none";
-
-websiteApplyBtn.style.display =
-"none";
-
-internalApplyBtn.style.display =
-"none";
-
-
-let methodCount = 0;
-
-
-/* ================================
-   EMAIL
-================================ */
-
-if(email){
-
-const title =
-job.title ||
-"Job Application";
-
-
-const subject =
-"Application for " +
-title;
-
-
-const greeting =
-job.contact_person ||
-"Hiring Manager";
-
-
-const body =
-"Hello " +
-greeting +
-",\n\n" +
-
-"I would like to apply for the position of " +
-title +
-" advertised on KaziNexus.\n\n" +
-
-"Please find my CV/application attached.\n\n" +
-
-"Kind regards";
-
-
-emailApplyBtn.href =
-"mailto:" +
-email +
-"?subject=" +
-encodeURIComponent(subject) +
-"&body=" +
-encodeURIComponent(body);
-
-
-emailApplyBtn.style.display =
-"inline-block";
-
-
-methodCount++;
+  return String(value ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
 
 }
 
 
-/* ================================
-   WEBSITE
-================================ */
+/*
+  FORMAT DATE
+*/
 
-if(website){
+function formatDate(value){
 
-if(
-website.toLowerCase()
-.startsWith("www.")
-){
+  if(!value){
+    return '';
+  }
 
-website =
-"https://" +
-website;
+  const date =
+    new Date(value + 'T00:00:00');
 
-}
+  if(Number.isNaN(date.getTime())){
+    return value;
+  }
 
-
-if(
-website.startsWith("http://") ||
-website.startsWith("https://")
-){
-
-websiteApplyBtn.href =
-website;
-
-websiteApplyBtn.style.display =
-"inline-block";
-
-methodCount++;
-
-}
+  return date.toLocaleDateString(
+    'en-KE',
+    {
+      day:'numeric',
+      month:'long',
+      year:'numeric'
+    }
+  );
 
 }
 
 
-/* ================================
-   INTERNAL KAZINEXUS
-================================ */
-
-if(methodCount === 0){
-
-internalApplyBtn.href =
-"/kazinexus_apply.html?id=" +
-encodeURIComponent(job.id);
-
-internalApplyBtn.style.display =
-"inline-block";
-
-
-document.getElementById(
-"applicationNote"
-).textContent =
-"No external application method was provided. You can apply through KaziNexus.";
-
-}
-
-}
-
-
-/* ================================
-   LOAD JOB
-================================ */
+/*
+  LOAD JOB
+*/
 
 async function loadJob(){
 
+  const loading =
+    document.getElementById(
+      'loading'
+    );
 
-if(!jobId){
+  const errorBox =
+    document.getElementById(
+      'errorBox'
+    );
 
-showError(
-"No job ID was provided."
-);
-
-return;
-
-}
-
-
-try{
-
-
-const result =
-await db
-.from("public_active_jobs")
-.select("*")
-.eq("id",jobId)
-.maybeSingle();
+  const content =
+    document.getElementById(
+      'jobContent'
+    );
 
 
-const data =
-result.data;
+  if(!jobId){
 
-const error =
-result.error;
+    loading.style.display =
+      'none';
 
+    errorBox.style.display =
+      'block';
 
-if(error){
+    errorBox.textContent =
+      'No job was selected. Please return to the jobs page and choose a job.';
 
-console.error(error);
+    return;
 
-showError(
-"Unable to load this job: " +
-error.message
-);
-
-return;
-
-}
+  }
 
 
-if(!data){
+  try{
 
-showError(
-"This job could not be found or is no longer active."
-);
+    /*
+      First try the public_active_jobs view.
+      This keeps the public job-detail page
+      consistent with the marketplace.
+    */
 
-return;
-
-}
-
-
-currentJob =
-data;
-
-
-/* ================================
-   PAGE TITLE
-================================ */
-
-document.title =
-safe(data.title) +
-" | KaziNexus";
+    let {
+      data,
+      error
+    } =
+    await db
+      .from('public_active_jobs')
+      .select('*')
+      .eq('id',jobId)
+      .maybeSingle();
 
 
-/* ================================
-   BASIC INFORMATION
-================================ */
+    /*
+      If the view does not return the job,
+      try the jobs table directly.
+    */
 
-document.getElementById(
-"title"
-).textContent =
-safe(data.title);
+    if(
+      !data &&
+      !error
+    ){
 
+      const result =
+        await db
+          .from('jobs')
+          .select('*')
+          .eq('id',jobId)
+          .maybeSingle();
 
-document.getElementById(
-"company"
-).textContent =
-safe(data.company);
+      data =
+        result.data;
 
+      error =
+        result.error;
 
-document.getElementById(
-"location"
-).textContent =
-safe(data.location);
-
-
-document.getElementById(
-"jobType"
-).textContent =
-safe(data.job_type);
+    }
 
 
-document.getElementById(
-"salary"
-).textContent =
-safe(data.salary);
+    if(error){
+
+      throw error;
+
+    }
 
 
-document.getElementById(
-"deadline"
-).textContent =
-formatDeadline(
-data.deadline
-);
+    if(!data){
+
+      throw new Error(
+        'This job could not be found or is no longer available.'
+      );
+
+    }
 
 
-/* ================================
-   DESCRIPTION
-================================ */
-
-document.getElementById(
-"description"
-).textContent =
-safe(data.description);
+    currentJob =
+      data;
 
 
-/* ================================
-   RESPONSIBILITIES
-================================ */
-
-document.getElementById(
-"responsibilities"
-).textContent =
-safe(data.responsibilities);
+    renderJob(data);
 
 
-if(!data.responsibilities){
+    loading.style.display =
+      'none';
 
-document.getElementById(
-"responsibilitiesSection"
-).style.display =
-"none";
+    content.style.display =
+      'block';
+
+
+  }catch(error){
+
+    console.error(
+      'Job detail error:',
+      error
+    );
+
+
+    loading.style.display =
+      'none';
+
+    errorBox.style.display =
+      'block';
+
+    errorBox.textContent =
+      error.message ||
+      'Unable to load job details.';
+
+  }
 
 }
 
 
-/* ================================
-   QUALIFICATIONS
-================================ */
+/*
+  RENDER JOB
+*/
 
-document.getElementById(
-"qualifications"
-).textContent =
-safe(data.qualifications);
+function renderJob(job){
+
+  /*
+    Title
+  */
+
+  document.title =
+    (job.title || 'Job Details') +
+    ' | KaziNexus';
 
 
-if(!data.qualifications){
+  document.getElementById(
+    'jobTitle'
+  ).textContent =
+    job.title ||
+    'Job Opportunity';
 
-document.getElementById(
-"qualificationsSection"
-).style.display =
-"none";
+
+  document.getElementById(
+    'companyName'
+  ).textContent =
+    job.company ||
+    'Company not specified';
+
+
+  /*
+    Verification
+  */
+
+  const verified =
+    job.employer_verified === true ||
+    job.verified === true;
+
+
+  if(verified){
+
+    document.getElementById(
+      'verifiedBadge'
+    ).style.display =
+      'inline-flex';
+
+  }
+
+
+  /*
+    Meta
+  */
+
+  document.getElementById(
+    'locationMeta'
+  ).textContent =
+    '📍 ' +
+    (job.location || 'Location not specified');
+
+
+  document.getElementById(
+    'typeMeta'
+  ).textContent =
+    '💼 ' +
+    (job.job_type || 'Job');
+
+
+  /*
+    Salary
+  */
+
+  if(job.salary){
+
+    const salary =
+      document.getElementById(
+        'salaryMeta'
+      );
+
+    salary.textContent =
+      '💰 ' +
+      job.salary;
+
+    salary.style.display =
+      'inline-block';
+
+    document.getElementById(
+      'sideSalary'
+    ).textContent =
+      job.salary;
+
+    document.getElementById(
+      'sideSalaryInfo'
+    ).style.display =
+      'block';
+
+  }
+
+
+  /*
+    Deadline
+  */
+
+  if(job.deadline){
+
+    const deadline =
+      formatDate(
+        job.deadline
+      );
+
+
+    document.getElementById(
+      'deadlineMeta'
+    ).textContent =
+      '📅 ' +
+      deadline;
+
+
+    document.getElementById(
+      'deadlineMeta'
+    ).style.display =
+      'inline-block';
+
+
+    document.getElementById(
+      'sideDeadline'
+    ).textContent =
+      deadline;
+
+
+    document.getElementById(
+      'sideDeadlineInfo'
+    ).style.display =
+      'block';
+
+  }
+
+
+  /*
+    Sidebar
+  */
+
+  document.getElementById(
+    'sideCompany'
+  ).textContent =
+    job.company ||
+    'Not specified';
+
+
+  document.getElementById(
+    'sideLocation'
+  ).textContent =
+    job.location ||
+    'Not specified';
+
+
+  document.getElementById(
+    'sideType'
+  ).textContent =
+    job.job_type ||
+    'Not specified';
+
+
+  /*
+    Contact
+  */
+
+  if(job.contact_person){
+
+    document.getElementById(
+      'sideContact'
+    ).textContent =
+      job.contact_person;
+
+
+    document.getElementById(
+      'sideContactInfo'
+    ).style.display =
+      'block';
+
+  }
+
+
+  /*
+    Description
+  */
+
+  document.getElementById(
+    'description'
+  ).textContent =
+    job.description ||
+    'No job description was provided.';
+
+
+  /*
+    Responsibilities
+  */
+
+  if(job.responsibilities){
+
+    document.getElementById(
+      'responsibilities'
+    ).textContent =
+      job.responsibilities;
+
+
+    document.getElementById(
+      'responsibilitiesSection'
+    ).style.display =
+      'block';
+
+  }
+
+
+  /*
+    Qualifications
+  */
+
+  if(job.qualifications){
+
+    document.getElementById(
+      'qualifications'
+    ).textContent =
+      job.qualifications;
+
+
+    document.getElementById(
+      'qualificationsSection'
+    ).style.display =
+      'block';
+
+  }
+
+
+  /*
+    JOB POSTER
+
+    This is the new part.
+
+    post-job.html saves the public
+    Supabase Storage URL into:
+
+      jobs.poster_url
+  */
+
+  if(job.poster_url){
+
+    const posterCard =
+      document.getElementById(
+        'posterCard'
+      );
+
+    const poster =
+      document.getElementById(
+        'jobPoster'
+      );
+
+
+    poster.src =
+      job.poster_url;
+
+
+    poster.alt =
+      (job.title || 'Job') +
+      ' poster';
+
+
+    posterCard.style.display =
+      'block';
+
+
+    poster.onerror =
+      function(){
+
+        posterCard.style.display =
+          'none';
+
+      };
+
+  }
+
+
+  /*
+    APPLICATION
+  */
+
+  const applyButton =
+    document.getElementById(
+      'applyButton'
+    );
+
+
+  const emailButton =
+    document.getElementById(
+      'emailButton'
+    );
+
+
+  /*
+    Application link
+  */
+
+  if(job.application_link){
+
+    let link =
+      job.application_link.trim();
+
+
+    if(
+      !/^https?:\/\//i.test(link)
+    ){
+
+      link =
+        'https://' +
+        link;
+
+    }
+
+
+    applyButton.href =
+      link;
+
+
+  }else if(job.application_email){
+
+    const subject =
+      encodeURIComponent(
+        'Application for ' +
+        (job.title || 'Job Opportunity')
+      );
+
+
+    const body =
+      encodeURIComponent(
+        'Hello ' +
+        (job.company || '') +
+        ',\n\nI would like to apply for the ' +
+        (job.title || 'position') +
+        ' position advertised on KaziNexus.\n\nKind regards'
+      );
+
+
+    applyButton.href =
+      'mailto:' +
+      job.application_email +
+      '?subject=' +
+      subject +
+      '&body=' +
+      body;
+
+
+  }else{
+
+    applyButton.href =
+      '#';
+
+
+    applyButton.textContent =
+      'Application Details Below';
+
+  }
+
+
+  /*
+    Email application
+  */
+
+  if(job.application_email){
+
+    emailButton.style.display =
+      'block';
+
+
+    emailButton.onclick =
+      function(){
+
+        const subject =
+          encodeURIComponent(
+            'Application for ' +
+            (job.title || 'Job Opportunity')
+          );
+
+
+        window.location.href =
+          'mailto:' +
+          job.application_email +
+          '?subject=' +
+          subject;
+
+      };
+
+
+    document.getElementById(
+      'applicationCard'
+    ).style.display =
+      'block';
+
+
+    document.getElementById(
+      'applicationText'
+    ).textContent =
+      'Send your application to ' +
+      job.application_email +
+      '. Please follow any instructions provided by the employer.';
+
+  }
+
 
 }
 
 
-/* ================================
-   CONTACT PERSON
-================================ */
+/*
+  SHARE JOB
+*/
 
-document.getElementById(
-"contactPerson"
-).textContent =
-"Contact Person: " +
-safe(data.contact_person);
+async function shareJob(){
 
-
-/* ================================
-   EMAIL DISPLAY
-================================ */
-
-document.getElementById(
-"emailDisplay"
-).textContent =
-safe(data.application_email);
+  const url =
+    window.location.href;
 
 
-/* ================================
-   HIDE CONTACT SECTION IF EMPTY
-================================ */
+  if(
+    navigator.share
+  ){
 
-if(
-!data.contact_person &&
-!data.application_email
-){
+    try{
 
-document.getElementById(
-"contactSection"
-).style.display =
-"none";
+      await navigator.share({
 
-}
+        title:
+          currentJob?.title ||
+          'KaziNexus Job',
 
+        text:
+          'Check out this job opportunity on KaziNexus.',
 
-/* ================================
-   APPLICATION METHODS
-================================ */
+        url:url
 
-setupApplicationMethods(data);
+      });
 
+    }catch(error){
 
-/* ================================
-   DISPLAY PAGE
-================================ */
+      console.log(
+        'Share cancelled.'
+      );
 
-loading.style.display =
-"none";
+    }
 
-errorBox.style.display =
-"none";
+  }else{
 
-jobCard.style.display =
-"block";
+    await copyJobLink();
 
-
-}
-catch(error){
-
-console.error(error);
-
-showError(
-"Unable to load this job. Please try again."
-);
-
-}
+  }
 
 }
 
 
-/* ================================
-   WHATSAPP
-================================ */
+/*
+  COPY LINK
+*/
 
-document
-.getElementById("whatsappBtn")
-.addEventListener(
-"click",
-function(){
+async function copyJobLink(){
 
-const url =
-window.location.href;
+  try{
 
-
-const title =
-currentJob &&
-currentJob.title
-? currentJob.title
-: "Job Opportunity";
+    await navigator.clipboard.writeText(
+      window.location.href
+    );
 
 
-const company =
-currentJob &&
-currentJob.company
-? currentJob.company
-: "";
+    alert(
+      '✅ Job link copied.'
+    );
 
 
-const message =
-"Check out this job opportunity on KaziNexus:\n\n" +
-title +
-(company ? " - " + company : "") +
-"\n\n" +
-url;
+  }catch(error){
 
+    prompt(
+      'Copy this job link:',
+      window.location.href
+    );
 
-const whatsappUrl =
-"https://wa.me/?text=" +
-encodeURIComponent(message);
-
-
-window.open(
-whatsappUrl,
-"_blank",
-"noopener,noreferrer"
-);
-
-}
-);
-
-
-/* ================================
-   COPY LINK
-================================ */
-
-document
-.getElementById("copyBtn")
-.addEventListener(
-"click",
-async function(){
-
-const url =
-window.location.href;
-
-
-try{
-
-await navigator.clipboard
-.writeText(url);
-
-
-this.textContent =
-"Copied!";
-
-
-setTimeout(
-()=>{
-
-this.textContent =
-"Copy Job Link";
-
-},
-2000
-);
-
-
-}
-catch(error){
-
-prompt(
-"Copy this job link:",
-url
-);
+  }
 
 }
 
-}
-);
 
-
-/* ================================
-   START
-================================ */
+/*
+  START
+*/
 
 loadJob();
 
@@ -1243,4 +1442,3 @@ loadJob();
 
 </body>
 </html>
-```
