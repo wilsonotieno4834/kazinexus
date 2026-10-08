@@ -1,1 +1,597 @@
-<!doctype html><html><head><meta charset='utf-8'><meta http-equiv='refresh' content='0;url=/employers/dashboard.html'><script>location.replace('/employers/dashboard.html')</script><title>KaziNexus Employer Dashboard</title></head><body>Opening employer dashboard…</body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KaziNexus | Employer Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root{
+  --navy:#102a43;
+  --green:#126b48;
+  --green2:#16865a;
+  --gold:#f2a900;
+  --bg:#f4f7f9;
+  --white:#fff;
+  --text:#172033;
+  --muted:#667085;
+  --border:#e5e7eb;
+  --danger:#c62828;
+  --shadow:0 10px 30px rgba(16,42,67,.08);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+a{text-decoration:none;color:inherit}
+
+.header{
+  height:72px;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  position:sticky;
+  top:0;
+  z-index:50;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.brand-mark{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--navy),var(--green));
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:17px;
+}
+
+.brand-text strong{
+  display:block;
+  font-size:21px;
+  color:var(--navy);
+}
+
+.brand-text span{
+  display:block;
+  font-size:10px;
+  font-weight:800;
+  color:var(--green);
+  letter-spacing:.7px;
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.view-site{
+  color:var(--green);
+  font-weight:800;
+  font-size:14px;
+}
+
+.logout{
+  border:0;
+  background:#fff1f1;
+  color:var(--danger);
+  padding:10px 15px;
+  border-radius:9px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.layout{
+  display:flex;
+  min-height:calc(100vh - 72px);
+}
+
+.sidebar{
+  width:245px;
+  background:var(--navy);
+  color:#fff;
+  padding:24px 15px;
+  flex-shrink:0;
+}
+
+.sidebar-title{
+  padding:8px 12px 15px;
+  color:#9fb3c8;
+  font-size:11px;
+  text-transform:uppercase;
+  font-weight:800;
+  letter-spacing:1px;
+}
+
+.nav-link{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px 14px;
+  margin:4px 0;
+  border-radius:10px;
+  color:#d9e2ec;
+  font-weight:700;
+  font-size:14px;
+}
+
+.nav-link:hover,
+.nav-link.active{
+  background:rgba(255,255,255,.12);
+  color:#fff;
+}
+
+.nav-icon{
+  width:25px;
+  text-align:center;
+  font-size:18px;
+}
+
+.sidebar-bottom{
+  margin-top:35px;
+  padding:14px;
+  border-top:1px solid rgba(255,255,255,.12);
+}
+
+.sidebar-bottom p{
+  color:#9fb3c8;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.main{
+  flex:1;
+  padding:28px;
+  min-width:0;
+}
+
+.welcome{
+  background:linear-gradient(135deg,var(--navy),#174e69 55%,var(--green));
+  color:#fff;
+  border-radius:20px;
+  padding:30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:25px;
+  margin-bottom:25px;
+  box-shadow:var(--shadow);
+}
+
+.welcome h1{
+  margin:0 0 8px;
+  font-size:30px;
+}
+
+.welcome p{
+  margin:0;
+  color:#dbe7ef;
+}
+
+.welcome-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:12px 17px;
+  border-radius:10px;
+  border:0;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.btn-primary{
+  background:#fff;
+  color:var(--green);
+}
+
+.btn-green{
+  background:var(--green);
+  color:#fff;
+}
+
+.btn-light{
+  background:#eef8f3;
+  color:var(--green);
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:25px;
+}
+
+.stat{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  box-shadow:var(--shadow);
+}
+
+.stat-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.stat-icon{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:#eef8f3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+}
+
+.stat-number{
+  font-size:30px;
+  font-weight:900;
+  margin-top:13px;
+  color:var(--navy);
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:20px;
+}
+
+.card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:22px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
+
+.card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin-bottom:18px;
+}
+
+.card-header h2{
+  margin:0;
+  font-size:19px;
+}
+
+.card-header span{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
+}
+
+th{
+  text-align:left;
+  padding:12px;
+  background:#f8fafb;
+  color:var(--muted);
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.4px;
+}
+
+td{
+  padding:15px 12px;
+  border-bottom:1px solid var(--border);
+  font-size:14px;
+}
+
+.job-title{
+  font-weight:800;
+  color:var(--navy);
+}
+
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:800;
+  text-transform:capitalize;
+}
+
+.status.active{
+  background:#e8f7ef;
+  color:#126b48;
+}
+
+.status.closed{
+  background:#f1f3f5;
+  color:#667085;
+}
+
+.action-btn{
+  border:0;
+  background:#eef8f3;
+  color:var(--green);
+  padding:7px 10px;
+  border-radius:7px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.quick-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.quick{
+  border:1px solid var(--border);
+  padding:15px;
+  border-radius:11px;
+  font-weight:800;
+  color:var(--navy);
+  transition:.2s;
+}
+
+.quick:hover{
+  border-color:var(--green);
+  background:#f5fbf8;
+}
+
+.applicant{
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.applicant:last-child{
+  border-bottom:0;
+}
+
+.applicant-name{
+  font-weight:800;
+  color:var(--navy);
+}
+
+.applicant-info{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+}
+
+.profile-item{
+  padding:13px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.profile-item:last-child{
+  border-bottom:0;
+}
+
+.profile-label{
+  font-size:11px;
+  color:var(--muted);
+  text-transform:uppercase;
+  font-weight:800;
+  letter-spacing:.5px;
+  margin-bottom:4px;
+}
+
+.profile-value{
+  font-weight:700;
+}
+
+.verification{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:13px;
+  background:#f5fbf8;
+  border:1px solid #d8eee3;
+  border-radius:10px;
+  margin-top:15px;
+}
+
+.verification-icon{
+  font-size:22px;
+}
+
+.empty{
+  text-align:center;
+  padding:35px 15px;
+  color:var(--muted);
+}
+
+.message{
+  display:none;
+  padding:13px 16px;
+  border-radius:10px;
+  margin-bottom:20px;
+  font-weight:700;
+}
+
+.message.success{
+  display:block;
+  background:#e8f7ef;
+  color:#126b48;
+}
+
+.message.error{
+  display:block;
+  background:#fff0f0;
+  color:#a12b2b;
+}
+
+.mobile-menu{
+  display:none;
+  border:0;
+  background:#eef8f3;
+  color:var(--green);
+  width:40px;
+  height:40px;
+  border-radius:9px;
+  font-size:20px;
+  cursor:pointer;
+}
+
+@media(max-width:1050px){
+  .sidebar{width:215px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .grid{grid-template-columns:1fr}
+}
+
+@media(max-width:750px){
+  .header{padding:0 15px}
+  .view-site{display:none}
+  .mobile-menu{display:block}
+  .sidebar{
+    position:fixed;
+    left:-260px;
+    top:72px;
+    bottom:0;
+    z-index:40;
+    transition:.25s;
+  }
+  .sidebar.open{left:0}
+  .main{padding:17px}
+  .welcome{
+    padding:22px;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .welcome h1{font-size:25px}
+}
+
+@media(max-width:520px){
+  .brand-text span{display:none}
+  .brand-text strong{font-size:18px}
+  .header-right .logout{padding:8px 10px;font-size:12px}
+  .stats{grid-template-columns:1fr 1fr;gap:10px}
+  .stat{padding:15px}
+  .stat-number{font-size:24px}
+  .stat-icon{width:36px;height:36px}
+  .card{padding:16px}
+  .quick-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+  <div class="brand">
+    <div class="brand-mark">KN</div>
+    <div class="brand-text">
+      <strong>KaziNexus</strong>
+      <span>CONNECT OPPORTUNITIES WITH THE RIGHT TALENT</span>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+    <a class="view-site" href="index.html">🌐 View KaziNexus</a>
+    <button class="logout" onclick="logout()">Log Out</button>
+  </div>
+
+</header>
+
+<div class="layout">
+
+<aside class="sidebar" id="sidebar">
+
+  <div class="sidebar-title">Employer Centre</div>
+
+  <a class="nav-link active" href="#dashboard">
+    <span class="nav-icon">📊</span>
+    Dashboard
+  </a>
+
+  <a class="nav-link" href="#jobs">
+    <span class="nav-icon">💼</span>
+    My Jobs
+  </a>
+
+  <a class="nav-link" href="post-job.html">
+    <span class="nav-icon">➕</span>
+    Post a Job
+  </a>
+
+  <a class="nav-link" href="#applications">
+    <span class="nav-icon">👥</span>
+    Applicants
+  </a>
+
+  <a class="nav-link" href="#profile">
+    <span class="nav-icon">🏢</span>
+    Company Profile
+  </a>
+
+  <a class="nav-link" href="cv-builder.html">
+    <span class="nav-icon">📄</span>
+    Career Builder
+  </a>
+
+  <a class="nav-link" href="trust-safety.html">
+    <span class="nav-icon">🛡️</span>
+    Trust & Safety
+  </a>
+
+  <a class="nav-link" href="contact.html">
+    <span class="nav-icon">💬</span>
+    Support
+  </a>
+
+  <div class="sidebar-bottom">
+    <strong>🇰🇪 KaziNexus Kenya</strong>
+    <p>Connect with qualified talent across all 47 counties.</p>
+  </div>
+
+</aside>
+
+<main class="main">
+
+<div id="message" class="message"></div>
+
+<section class="welcome" id="dashboard">
+
+  <div>
+    <
