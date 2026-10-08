@@ -594,4 +594,590 @@ td{
 <section class="welcome" id="dashboard">
 
   <div>
-    <
+    <h1>Employer Dashboard 👋</h1>
+    <p id="welcomeText">
+      Manage your vacancies, applicants and company profile from one place.
+    </p>
+  </div>
+
+  <div class="welcome-actions">
+    <a href="post-job.html" class="btn btn-primary">
+      ➕ Post Opportunity
+    </a>
+
+    <a href="index.html" class="btn btn-primary">
+      🔎 View Marketplace
+    </a>
+  </div>
+
+</section>
+
+<section class="stats">
+
+  <div class="stat">
+    <div class="stat-top">
+      <div class="stat-label">Active Jobs</div>
+      <div class="stat-icon">💼</div>
+    </div>
+    <div class="stat-number" id="activeJobs">0</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-top">
+      <div class="stat-label">Total Jobs</div>
+      <div class="stat-icon">📋</div>
+    </div>
+    <div class="stat-number" id="totalJobs">0</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-top">
+      <div class="stat-label">Applications</div>
+      <div class="stat-icon">👥</div>
+    </div>
+    <div class="stat-number" id="applicationsCount">0</div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-top">
+      <div class="stat-label">Closing Soon</div>
+      <div class="stat-icon">⏰</div>
+    </div>
+    <div class="stat-number" id="closingSoon">0</div>
+  </div>
+
+</section>
+
+<div class="grid">
+
+<div>
+
+<section class="card" id="jobs">
+
+  <div class="card-header">
+    <div>
+      <h2>💼 My Job Opportunities</h2>
+      <span>Manage vacancies posted by your organisation</span>
+    </div>
+
+    <a href="post-job.html" class="btn btn-green">
+      + Post Job
+    </a>
+  </div>
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Opportunity</th>
+          <th>Location</th>
+          <th>Type</th>
+          <th>Deadline</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="jobRows">
+        <tr>
+          <td colspan="6" class="empty">Loading your jobs...</td>
+        </tr>
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>
+
+<section class="card" id="applications">
+
+  <div class="card-header">
+    <div>
+      <h2>👥 Recent Applicants</h2>
+      <span>Latest applications received</span>
+    </div>
+  </div>
+
+  <div id="applicants">
+    <div class="empty">Loading applicants...</div>
+  </div>
+
+</section>
+
+</div>
+
+<div>
+
+<section class="card">
+
+  <div class="card-header">
+    <div>
+      <h2>⚡ Quick Actions</h2>
+      <span>Common employer tasks</span>
+    </div>
+  </div>
+
+  <div class="quick-grid">
+
+    <a class="quick" href="post-job.html">
+      ➕ Post Job
+    </a>
+
+    <a class="quick" href="#jobs">
+      💼 Manage Jobs
+    </a>
+
+    <a class="quick" href="#applications">
+      👥 Applicants
+    </a>
+
+    <a class="quick" href="#profile">
+      🏢 Company Profile
+    </a>
+
+    <a class="quick" href="trust-safety.html">
+      🛡️ Safety
+    </a>
+
+    <a class="quick" href="contact.html">
+      💬 Support
+    </a>
+
+  </div>
+
+</section>
+
+<section class="card" id="profile">
+
+  <div class="card-header">
+    <div>
+      <h2>🏢 Company Profile</h2>
+      <span>Your employer information</span>
+    </div>
+  </div>
+
+  <div id="profileGrid">
+
+    <div class="empty">
+      Loading company profile...
+    </div>
+
+  </div>
+
+</section>
+
+<section class="card">
+
+  <h2 style="margin-top:0">✅ Employer Verification</h2>
+
+  <div class="verification">
+
+    <div class="verification-icon">🛡️</div>
+
+    <div>
+      <strong id="verificationTitle">
+        Checking verification...
+      </strong>
+
+      <div class="muted" id="verificationText">
+        Your employer verification status will appear here.
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+</div>
+
+</div>
+
+</main>
+
+</div>
+
+<script>
+
+const SUPABASE_URL =
+'https://vljehlfeglstpgphzebj.supabase.co';
+
+const SUPABASE_KEY =
+'sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3';
+
+const db =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let session = null;
+
+const esc = value =>
+String(value ?? '')
+.replace(/[&<>"']/g, c => ({
+  '&':'&amp;',
+  '<':'&lt;',
+  '>':'&gt;',
+  '"':'&quot;',
+  "'":'&#39;'
+}[c]));
+
+function showMessage(text,type){
+
+  const el =
+  document.getElementById('message');
+
+  el.textContent = text;
+
+  el.className =
+  'message ' + type;
+
+}
+
+function toggleSidebar(){
+
+  document
+  .getElementById('sidebar')
+  .classList.toggle('open');
+
+}
+
+async function init(){
+
+  const result =
+  await db.auth.getSession();
+
+  session =
+  result.data.session;
+
+  if(!session){
+
+    location.href =
+    'auth.html';
+
+    return;
+
+  }
+
+  document.getElementById('welcomeText')
+  .textContent =
+  `Welcome back. Manage your vacancies and connect with qualified talent across Kenya.`;
+
+  await Promise.all([
+    loadProfile(),
+    loadJobs(),
+    loadApplications()
+  ]);
+
+}
+
+async function loadProfile(){
+
+  const result =
+  await db
+  .from('employers')
+  .select(`
+    organization_name,
+    industry,
+    location,
+    contact_person,
+    phone,
+    website,
+    verified,
+    verification_status
+  `)
+  .eq('id',session.user.id)
+  .maybeSingle();
+
+  if(result.error){
+
+    showMessage(
+      result.error.message,
+      'error'
+    );
+
+    return;
+
+  }
+
+  const p =
+  result.data || {};
+
+  document
+  .getElementById('profileGrid')
+  .innerHTML = `
+
+    <div class="profile-item">
+      <div class="profile-label">
+        Organisation
+      </div>
+      <div class="profile-value">
+        ${esc(p.organization_name || 'Not set')}
+      </div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">
+        Industry
+      </div>
+      <div class="profile-value">
+        ${esc(p.industry || 'Not set')}
+      </div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">
+        Location
+      </div>
+      <div class="profile-value">
+        ${esc(p.location || 'Not set')}
+      </div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">
+        Contact Person
+      </div>
+      <div class="profile-value">
+        ${esc(p.contact_person || 'Not set')}
+      </div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">
+        Phone
+      </div>
+      <div class="profile-value">
+        ${esc(p.phone || 'Not set')}
+      </div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">
+        Website
+      </div>
+      <div class="profile-value">
+        ${esc(p.website || 'Not set')}
+      </div>
+    </div>
+
+  `;
+
+  const verified =
+  p.verified === true ||
+  String(p.verification_status || '')
+  .toLowerCase() === 'verified';
+
+  if(verified){
+
+    document
+    .getElementById('verificationTitle')
+    .textContent =
+    'Verified Employer';
+
+    document
+    .getElementById('verificationText')
+    .textContent =
+    'Your organisation has been verified by KaziNexus.';
+
+  }else{
+
+    document
+    .getElementById('verificationTitle')
+    .textContent =
+    'Verification Required';
+
+    document
+    .getElementById('verificationText')
+    .textContent =
+    'Complete employer verification to build greater trust with jobseekers.';
+
+  }
+
+}
+
+async function loadJobs(){
+
+  const result =
+  await db
+  .from('jobs')
+  .select(`
+    id,
+    title,
+    location,
+    job_type,
+    deadline,
+    status
+  `)
+  .eq('employer_id',session.user.id)
+  .order('created_at',{
+    ascending:false
+  });
+
+  if(result.error){
+
+    showMessage(
+      result.error.message,
+      'error'
+    );
+
+    return;
+
+  }
+
+  const jobs =
+  result.data || [];
+
+  const active =
+  jobs.filter(
+    j => j.status === 'active'
+  );
+
+  const now =
+  new Date();
+
+  const closingSoon =
+  jobs.filter(j => {
+
+    if(j.status !== 'active' || !j.deadline)
+      return false;
+
+    const days =
+    (new Date(j.deadline) - now) /
+    86400000;
+
+    return days >= 0 && days <= 7;
+
+  });
+
+  document
+  .getElementById('activeJobs')
+  .textContent =
+  active.length;
+
+  document
+  .getElementById('totalJobs')
+  .textContent =
+  jobs.length;
+
+  document
+  .getElementById('closingSoon')
+  .textContent =
+  closingSoon.length;
+
+  if(!jobs.length){
+
+    document
+    .getElementById('jobRows')
+    .innerHTML = `
+      <tr>
+        <td colspan="6" class="empty">
+          <div style="font-size:35px">💼</div>
+          <strong>No jobs posted yet.</strong>
+          <br><br>
+          <a class="btn btn-green"
+             href="post-job.html">
+             + Post Your First Job
+          </a>
+        </td>
+      </tr>
+    `;
+
+    return;
+
+  }
+
+  document
+  .getElementById('jobRows')
+  .innerHTML =
+  jobs.map(j => `
+
+    <tr>
+
+      <td>
+        <div class="job-title">
+          ${esc(j.title)}
+        </div>
+      </td>
+
+      <td>
+        ${esc(j.location || 'Kenya')}
+      </td>
+
+      <td>
+        ${esc(j.job_type || 'Not specified')}
+      </td>
+
+      <td>
+        ${esc(j.deadline || 'Open')}
+      </td>
+
+      <td>
+        <span class="status ${
+          j.status === 'closed'
+          ? 'closed'
+          : 'active'
+        }">
+          ${esc(j.status || 'active')}
+        </span>
+      </td>
+
+      <td>
+
+        <button
+          class="action-btn"
+          onclick="toggleJob('${j.id}','${j.status}')">
+
+          ${
+            j.status === 'closed'
+            ? 'Reopen'
+            : 'Close'
+          }
+
+        </button>
+
+      </td>
+
+    </tr>
+
+  `).join('');
+
+}
+
+async function loadApplications(){
+
+  const jobsResult =
+  await db
+  .from('jobs')
+  .select('id')
+  .eq('employer_id',session.user.id);
+
+  if(jobsResult.error){
+
+    document
+    .getElementById('applicants')
+    .innerHTML =
+    '<div class="empty">Unable to load applications.</div>';
+
+    return;
+
+  }
+
+  const jobIds =
+  (jobsResult.data || [])
+  .map(j => j.id);
+
+  if(!jobIds.length){
+
+    document
+    .getElementById('applicationsCount')
+    .textContent = '0';
+
+    document
+    .getElementById('applicants')
+    .innerHTML = `
+      <div class="empty">
+        <div style="
