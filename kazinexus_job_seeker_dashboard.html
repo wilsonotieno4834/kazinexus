@@ -1,0 +1,1976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>KaziNexus | Jobseeker Dashboard</title>
+
+  <meta name="description" content="Manage your KaziNexus profile, CV, job applications and career opportunities.">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --navy: #082567;
+      --navy-dark: #04183f;
+      --green: #079447;
+      --green-dark: #05743a;
+      --gold: #f5b400;
+      --bg: #f5f7fb;
+      --white: #ffffff;
+      --text: #172033;
+      --muted: #667085;
+      --border: #e4e8ef;
+      --danger: #c62828;
+      --shadow: 0 8px 28px rgba(8,37,103,.08);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 250px;
+      background: var(--navy-dark);
+      color: #fff;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .brand {
+      height: 78px;
+      padding: 0 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .brand-logo {
+      width: 43px;
+      height: 43px;
+      border-radius: 50%;
+      object-fit: contain;
+    }
+
+    .brand-name {
+      font-size: 23px;
+      font-weight: 900;
+    }
+
+    .brand-name .kazi {
+      color: #fff;
+    }
+
+    .brand-name .nexus {
+      color: #57d88b;
+    }
+
+    .brand small {
+      display: block;
+      color: #91a2bf;
+      font-size: 8px;
+      margin-top: 2px;
+    }
+
+    .side-profile {
+      padding: 22px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--green);
+      display: grid;
+      place-items: center;
+      font-size: 19px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .side-profile strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .side-profile span {
+      color: #aab8d0;
+      font-size: 11px;
+      word-break: break-all;
+    }
+
+    .side-nav {
+      padding: 18px 12px;
+    }
+
+    .nav-label {
+      color: #6f83a3;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 800;
+      padding: 0 11px 8px;
+    }
+
+    .side-nav a,
+    .logout-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: #c5d0e1;
+      padding: 12px 11px;
+      border-radius: 9px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-size: 13px;
+      text-align: left;
+      margin-bottom: 3px;
+    }
+
+    .side-nav a:hover,
+    .side-nav a.active,
+    .logout-btn:hover {
+      background: rgba(255,255,255,.09);
+      color: #fff;
+    }
+
+    .side-icon {
+      width: 24px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .logout-btn {
+      color: #ffb4b4;
+      margin-top: 10px;
+    }
+
+    /* MAIN */
+
+    .main {
+      margin-left: 250px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 78px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 900;
+    }
+
+    .mobile-menu {
+      display: none;
+      border: 0;
+      background: transparent;
+      font-size: 25px;
+      cursor: pointer;
+    }
+
+    .page-title h1 {
+      color: var(--navy);
+      font-size: 22px;
+    }
+
+    .page-title p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .top-actions a {
+      padding: 9px 13px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .top-actions a:hover {
+      background: #f3f7ff;
+    }
+
+    .content {
+      padding: 30px;
+      max-width: 1450px;
+    }
+
+    /* WELCOME */
+
+    .welcome {
+      background:
+        radial-gradient(circle at 90% 10%, rgba(255,255,255,.15), transparent 25%),
+        linear-gradient(135deg,#082567,#0b438c);
+      color: #fff;
+      border-radius: 20px;
+      padding: 28px;
+      display: flex;
+      justify-content: space-between;
+      gap: 25px;
+      align-items: center;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .welcome h2 {
+      font-size: 27px;
+      margin-bottom: 5px;
+    }
+
+    .welcome p {
+      color: #d4e1f6;
+      font-size: 13px;
+    }
+
+    .welcome-actions {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 15px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-green {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-green:hover {
+      background: var(--green-dark);
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #172033;
+    }
+
+    .btn-white {
+      background: #fff;
+      color: var(--navy);
+    }
+
+    .btn-outline {
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--navy);
+    }
+
+    /* STATS */
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 15px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 19px;
+      box-shadow: 0 3px 15px rgba(0,0,0,.03);
+    }
+
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: #edf4ff;
+      display: grid;
+      place-items: center;
+      font-size: 19px;
+    }
+
+    .stat-card strong {
+      display: block;
+      color: var(--navy);
+      font-size: 26px;
+      margin-top: 12px;
+    }
+
+    .stat-card span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* GRID */
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.4fr .8fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 3px 15px rgba(0,0,0,.03);
+      margin-bottom: 20px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .card-header h2 {
+      color: var(--navy);
+      font-size: 17px;
+    }
+
+    .card-header a {
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    /* PROFILE */
+
+    .profile-progress {
+      background: #edf1f6;
+      height: 8px;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 10px 0 6px;
+    }
+
+    .profile-progress-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--green);
+      transition: .4s;
+    }
+
+    .profile-percent {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .profile-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      margin-bottom: 2px;
+    }
+
+    .field.full {
+      grid-column: 1/-1;
+    }
+
+    label {
+      display: block;
+      color: #344054;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid #d4dae4;
+      border-radius: 9px;
+      padding: 11px;
+      outline: none;
+      color: var(--text);
+      background: #fff;
+      font-size: 13px;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(7,148,71,.08);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .form-actions {
+      grid-column: 1/-1;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .message {
+      display: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      margin-top: 12px;
+    }
+
+    .message.ok {
+      display: block;
+      background: #e8f7ef;
+      color: var(--green-dark);
+    }
+
+    .message.error {
+      display: block;
+      background: #fff0f0;
+      color: var(--danger);
+    }
+
+    /* CV CARD */
+
+    .cv-card {
+      background: linear-gradient(135deg,#f0faf4,#e8f3ff);
+      border: 1px solid #dce9e3;
+    }
+
+    .cv-box {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .cv-icon {
+      width: 57px;
+      height: 57px;
+      background: #fff;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.05);
+      flex-shrink: 0;
+    }
+
+    .cv-box h3 {
+      color: var(--navy);
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .cv-box p {
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 12px;
+    }
+
+    .cv-actions {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    /* APPLICATIONS */
+
+    .application {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .application:last-child {
+      border-bottom: 0;
+    }
+
+    .application h3 {
+      color: var(--navy);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .application p {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: #eef3fa;
+      color: var(--navy);
+      font-size: 10px;
+      font-weight: 800;
+      white-space: nowrap;
+      height: fit-content;
+    }
+
+    .status.accepted,
+    .status.shortlisted {
+      background: #e6f7ee;
+      color: var(--green-dark);
+    }
+
+    .status.rejected {
+      background: #fff0f0;
+      color: var(--danger);
+    }
+
+    /* JOBS */
+
+    .job {
+      padding: 15px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .job:last-child {
+      border-bottom: 0;
+    }
+
+    .job-title-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .job h3 {
+      color: var(--navy);
+      font-size: 14px;
+    }
+
+    .job-company {
+      color: #344054;
+      font-size: 11px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .job-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 8px 0;
+    }
+
+    .job-meta span {
+      color: var(--muted);
+      background: #f5f7fa;
+      border-radius: 6px;
+      padding: 4px 7px;
+      font-size: 10px;
+    }
+
+    /* QUICK LINKS */
+
+    .quick-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .quick-link {
+      border: 1px solid var(--border);
+      padding: 13px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--navy);
+      transition: .2s;
+    }
+
+    .quick-link:hover {
+      border-color: #b8c8dd;
+      background: #f7faff;
+    }
+
+    .quick-link span {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    /* EMPTY */
+
+    .empty {
+      padding: 30px 10px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .empty-icon {
+      font-size: 28px;
+      margin-bottom: 7px;
+    }
+
+    /* MOBILE SIDEBAR */
+
+    .overlay {
+      display: none;
+    }
+
+    @media(max-width:1050px) {
+
+      .stats {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media(max-width:800px) {
+
+      .sidebar {
+        transform: translateX(-100%);
+        transition: .25s;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.4);
+        z-index: 999;
+      }
+
+      .overlay.show {
+        display: block;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .topbar {
+        padding: 0 18px;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .content {
+        padding: 20px 15px;
+      }
+
+      .top-actions a:first-child {
+        display: none;
+      }
+
+      .welcome {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media(max-width:600px) {
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+      }
+
+      .stat-card {
+        padding: 14px;
+      }
+
+      .stat-card strong {
+        font-size: 22px;
+      }
+
+      .profile-form {
+        grid-template-columns: 1fr;
+      }
+
+      .field.full,
+      .form-actions {
+        grid-column: auto;
+      }
+
+      .welcome {
+        padding: 22px;
+      }
+
+      .welcome h2 {
+        font-size: 22px;
+      }
+
+      .card {
+        padding: 17px;
+      }
+
+      .top-actions {
+        display: none;
+      }
+
+      .application {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+
+      <img
+        class="brand-logo"
+        src="/KaziNexus%20Kenya%20Opportunity%20Logo.png"
+        alt="KaziNexus"
+        onerror="this.style.display='none'"
+      >
+
+      <div>
+        <div class="brand-name">
+          <span class="kazi">Kazi</span><span class="nexus">Nexus</span>
+        </div>
+
+        <small>
+          CONNECT OPPORTUNITIES WITH THE RIGHT TALENT
+        </small>
+      </div>
+
+    </div>
+
+    <div class="side-profile">
+
+      <div class="avatar" id="sideAvatar">
+        U
+      </div>
+
+      <strong id="sideName">
+        Job Seeker
+      </strong>
+
+      <span id="sideEmail">
+        Loading...
+      </span>
+
+    </div>
+
+    <nav class="side-nav">
+
+      <div class="nav-label">
+        Dashboard
+      </div>
+
+      <a href="#" class="active">
+        <span class="side-icon">🏠</span>
+        Overview
+      </a>
+
+      <a href="/jobs/">
+        <span class="side-icon">🔎</span>
+        Find Jobs
+      </a>
+
+      <a href="/cv-builder.html">
+        <span class="side-icon">📄</span>
+        Career Application Builder
+      </a>
+
+      <a href="/alerts.html">
+        <span class="side-icon">🔔</span>
+        Job Alerts
+      </a>
+
+      <br>
+
+      <div class="nav-label">
+        My Career
+      </div>
+
+      <a href="#profileSection">
+        <span class="side-icon">👤</span>
+        My Profile
+      </a>
+
+      <a href="#applicationsSection">
+        <span class="side-icon">📬</span>
+        My Applications
+      </a>
+
+      <a href="/cv-builder.html">
+        <span class="side-icon">📝</span>
+        My CV
+      </a>
+
+      <br>
+
+      <div class="nav-label">
+        KaziNexus
+      </div>
+
+      <a href="/about.html">
+        <span class="side-icon">🇰🇪</span>
+        About KaziNexus
+      </a>
+
+      <a href="/trust-safety.html">
+        <span class="side-icon">🛡️</span>
+        Trust & Safety
+      </a>
+
+      <a href="/contact.html">
+        <span class="side-icon">💬</span>
+        Contact Support
+      </a>
+
+      <button class="logout-btn" onclick="logout()">
+        <span class="side-icon">🚪</span>
+        Log Out
+      </button>
+
+    </nav>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+
+      <button class="mobile-menu" onclick="openSidebar()">
+        ☰
+      </button>
+
+      <div class="page-title">
+
+        <h1>
+          Jobseeker Dashboard
+        </h1>
+
+        <p>
+          Manage your career, applications and opportunities.
+        </p>
+
+      </div>
+
+      <div class="top-actions">
+
+        <a href="/jobs/">
+          🔎 Find Jobs
+        </a>
+
+        <a href="/cv-builder.html">
+          📄 Build CV
+        </a>
+
+      </div>
+
+    </header>
+
+    <div class="content">
+
+      <!-- WELCOME -->
+      <section class="welcome">
+
+        <div>
+
+          <h2>
+            Welcome back, <span id="welcomeName">Jobseeker</span> 👋
+          </h2>
+
+          <p>
+            Your next opportunity could be closer than you think.
+          </p>
+
+        </div>
+
+        <div class="welcome-actions">
+
+          <a class="btn btn-gold" href="/cv-builder.html">
+            🚀 Build / Update CV
+          </a>
+
+          <a class="btn btn-white" href="/jobs/">
+            🔎 Find Opportunities
+          </a>
+
+        </div>
+
+      </section>
+
+      <!-- STATS -->
+      <section class="stats">
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+            <span>Applications</span>
+            <div class="stat-icon">📬</div>
+          </div>
+
+          <strong id="applicationCount">
+            0
+          </strong>
+
+          <span>
+            Total applications
+          </span>
+
+        </div>
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+            <span>Profile</span>
+            <div class="stat-icon">👤</div>
+          </div>
+
+          <strong id="profileScore">
+            0%
+          </strong>
+
+          <span>
+            Profile completion
+          </span>
+
+        </div>
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+            <span>CV</span>
+            <div class="stat-icon">📄</div>
+          </div>
+
+          <strong id="cvStatus">
+            Ready
+          </strong>
+
+          <span>
+            Career Application Builder
+          </span>
+
+        </div>
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+            <span>Opportunities</span>
+            <div class="stat-icon">🎯</div>
+          </div>
+
+          <strong>
+            Kenya
+          </strong>
+
+          <span>
+            All 47 counties
+          </span>
+
+        </div>
+
+      </section>
+
+      <!-- MAIN GRID -->
+      <div class="dashboard-grid">
+
+        <!-- LEFT -->
+        <div>
+
+          <!-- CV -->
+          <section class="card cv-card">
+
+            <div class="card-header">
+
+              <h2>
+                🚀 Career Application Builder
+              </h2>
+
+              <a href="/cv-builder.html">
+                Open Builder →
+              </a>
+
+            </div>
+
+            <div class="cv-box">
+
+              <div class="cv-icon">
+                📄
+              </div>
+
+              <div>
+
+                <h3>
+                  Build a stronger application
+                </h3>
+
+                <p>
+                  Upload an existing CV, create a professional CV,
+                  match it to a job and prepare a tailored application.
+                </p>
+
+                <div class="cv-actions">
+
+                  <a class="btn btn-green" href="/cv-builder.html">
+                    Open Career Builder
+                  </a>
+
+                  <a class="btn btn-outline" href="/jobs/">
+                    Match With Jobs
+                  </a>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </section>
+
+          <!-- PROFILE -->
+          <section class="card" id="profileSection">
+
+            <div class="card-header">
+
+              <h2>
+                👤 My Profile
+              </h2>
+
+              <span
+                id="profileStatusText"
+                style="font-size:11px;color:#667085;"
+              >
+                Complete your profile
+              </span>
+
+            </div>
+
+            <div>
+
+              <div class="profile-progress">
+                <div
+                  class="profile-progress-bar"
+                  id="progressBar"
+                ></div>
+              </div>
+
+              <div class="profile-percent">
+                Profile completion:
+                <strong id="progressText">0%</strong>
+              </div>
+
+            </div>
+
+            <br>
+
+            <form id="profileForm" class="profile-form">
+
+              <div class="field">
+
+                <label>
+                  Full Name
+                </label>
+
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="Your full name"
+                >
+
+              </div>
+
+              <div class="field">
+
+                <label>
+                  Phone
+                </label>
+
+                <input
+                  id="phone"
+                  type="tel"
+                  placeholder="0700000000"
+                >
+
+              </div>
+
+              <div class="field">
+
+                <label>
+                  Location / County
+                </label>
+
+                <input
+                  id="location"
+                  type="text"
+                  placeholder="e.g. Kisumu, Kenya"
+                >
+
+              </div>
+
+              <div class="field">
+
+                <label>
+                  Professional Headline
+                </label>
+
+                <input
+                  id="headline"
+                  type="text"
+                  placeholder="e.g. Sales & Customer Relationship Professional"
+                >
+
+              </div>
+
+              <div class="field full">
+
+                <label>
+                  Skills
+                </label>
+
+                <textarea
+                  id="skills"
+                  placeholder="e.g. Sales, Customer Service, Excel, Communication..."
+                ></textarea>
+
+              </div>
+
+              <div class="form-actions">
+
+                <button
+                  class="btn btn-green"
+                  type="submit"
+                  id="saveButton"
+                >
+                  💾 Save Profile
+                </button>
+
+                <a
+                  class="btn btn-outline"
+                  href="/cv-builder.html"
+                >
+                  📄 Continue to CV Builder
+                </a>
+
+              </div>
+
+            </form>
+
+            <div
+              id="message"
+              class="message"
+            ></div>
+
+          </section>
+
+          <!-- APPLICATIONS -->
+          <section class="card" id="applicationsSection">
+
+            <div class="card-header">
+
+              <h2>
+                📬 My Applications
+              </h2>
+
+              <a href="/jobs/">
+                Find More Jobs →
+              </a>
+
+            </div>
+
+            <div id="applications">
+
+              <div class="empty">
+                <div class="empty-icon">⏳</div>
+                Loading applications...
+              </div>
+
+            </div>
+
+          </section>
+
+        </div>
+
+        <!-- RIGHT -->
+        <aside>
+
+          <!-- QUICK ACTIONS -->
+          <section class="card">
+
+            <div class="card-header">
+
+              <h2>
+                ⚡ Quick Actions
+              </h2>
+
+            </div>
+
+            <div class="quick-links">
+
+              <a class="quick-link" href="/jobs/">
+                <span>🔎</span>
+                Find Jobs
+              </a>
+
+              <a class="quick-link" href="/cv-builder.html">
+                <span>📄</span>
+                Build CV
+              </a>
+
+              <a class="quick-link" href="/alerts.html">
+                <span>🔔</span>
+                Job Alerts
+              </a>
+
+              <a class="quick-link" href="/contact.html">
+                <span>💬</span>
+                Get Help
+              </a>
+
+            </div>
+
+          </section>
+
+          <!-- PROFILE TIP -->
+          <section class="card">
+
+            <div class="card-header">
+
+              <h2>
+                💡 Career Tip
+              </h2>
+
+            </div>
+
+            <p style="font-size:12px;color:#667085;line-height:1.7;">
+              Keep your CV updated and tailor your application to the
+              requirements of each opportunity. Complete your KaziNexus
+              profile so you can get better matches.
+            </p>
+
+            <br>
+
+            <a
+              class="btn btn-green"
+              style="width:100%;"
+              href="/cv-builder.html"
+            >
+              Improve My Application →
+            </a>
+
+          </section>
+
+          <!-- RECOMMENDED JOBS -->
+          <section class="card">
+
+            <div class="card-header">
+
+              <h2>
+                🎯 Latest Opportunities
+              </h2>
+
+              <a href="/jobs/">
+                View All →
+              </a>
+
+            </div>
+
+            <div id="recommendedJobs">
+
+              <div class="empty">
+                <div class="empty-icon">🔎</div>
+                Loading opportunities...
+              </div>
+
+            </div>
+
+          </section>
+
+        </aside>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+
+    /* ==========================
+       SUPABASE
+    ========================== */
+
+    const SUPABASE_URL =
+      "https://vljehlfeglstpgphzebj.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3";
+
+    const db =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+    let uid = null;
+
+    /* ==========================
+       HELPERS
+    ========================== */
+
+    const $ = id =>
+      document.getElementById(id);
+
+    function escapeHTML(value) {
+
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+    function formatDate(value) {
+
+      if (!value) return "";
+
+      try {
+
+        return new Date(value).toLocaleDateString(
+          "en-KE",
+          {
+            day: "numeric",
+            month: "short",
+            year: "numeric"
+          }
+        );
+
+      } catch {
+
+        return value;
+
+      }
+
+    }
+
+    /* ==========================
+       MOBILE SIDEBAR
+    ========================== */
+
+    function openSidebar() {
+
+      $("sidebar").classList.add("open");
+      $("overlay").classList.add("show");
+
+    }
+
+    function closeSidebar() {
+
+      $("sidebar").classList.remove("open");
+      $("overlay").classList.remove("show");
+
+    }
+
+    /* ==========================
+       AUTH
+    ========================== */
+
+    async function init() {
+
+      const {
+        data: {
+          session
+        }
+      } = await db.auth.getSession();
+
+      if (!session) {
+
+        window.location.href =
+          "/kazinexus_job_seeker.html";
+
+        return;
+
+      }
+
+      uid = session.user.id;
+
+      $("sideEmail").textContent =
+        session.user.email || "";
+
+      await loadProfile();
+
+      await loadApplications();
+
+      await loadRecommendedJobs();
+
+    }
+
+    /* ==========================
+       PROFILE
+    ========================== */
+
+    async function loadProfile() {
+
+      const {
+        data,
+        error
+      } = await db
+        .from("job_seekers")
+        .select("*")
+        .eq("id", uid)
+        .maybeSingle();
+
+      if (error) {
+
+        console.error(
+          "Profile error:",
+          error
+        );
+
+        return;
+
+      }
+
+      if (data) {
+
+        $("name").value =
+          data.full_name || "";
+
+        $("phone").value =
+          data.phone || "";
+
+        $("location").value =
+          data.location || "";
+
+        $("headline").value =
+          data.headline || "";
+
+        $("skills").value =
+          data.skills || "";
+
+      }
+
+      updateProfileUI();
+
+    }
+
+    /* ==========================
+       PROFILE SCORE
+    ========================== */
+
+    function updateProfileUI() {
+
+      const fields = [
+        $("name").value.trim(),
+        $("phone").value.trim(),
+        $("location").value.trim(),
+        $("headline").value.trim(),
+        $("skills").value.trim()
+      ];
+
+      const completed =
+        fields.filter(Boolean).length;
+
+      const percentage =
+        Math.round(
+          completed /
+          fields.length *
+          100
+        );
+
+      $("progressBar").style.width =
+        percentage + "%";
+
+      $("progressText").textContent =
+        percentage + "%";
+
+      $("profileScore").textContent =
+        percentage + "%";
+
+      if (percentage >= 80) {
+
+        $("profileStatusText").textContent =
+          "Excellent profile";
+
+        $("profileStatusText").style.color =
+          "#079447";
+
+      } else if (percentage >= 50) {
+
+        $("profileStatusText").textContent =
+          "Almost complete";
+
+      } else {
+
+        $("profileStatusText").textContent =
+          "Complete your profile";
+
+      }
+
+      const name =
+        $("name").value.trim();
+
+      const displayName =
+        name ||
+        "Jobseeker";
+
+      $("welcomeName").textContent =
+        displayName.split(" ")[0];
+
+      $("sideName").textContent =
+        displayName;
+
+      $("sideAvatar").textContent =
+        displayName.charAt(0).toUpperCase();
+
+    }
+
+    [
+      "name",
+      "phone",
+      "location",
+      "headline",
+      "skills"
+    ].forEach(id => {
+
+      $(id).addEventListener(
+        "input",
+        updateProfileUI
+      );
+
+    });
+
+    /* ==========================
+       SAVE PROFILE
+    ========================== */
+
+    $("profileForm").addEventListener(
+      "submit",
+      async event => {
+
+        event.preventDefault();
+
+        const button =
+          $("saveButton");
+
+        button.disabled = true;
+
+        button.textContent =
+          "Saving...";
+
+        const payload = {
+
+          id: uid,
+
+          full_name:
+            $("name").value.trim(),
+
+          phone:
+            $("phone").value.trim(),
+
+          location:
+            $("location").value.trim(),
+
+          headline:
+            $("headline").value.trim(),
+
+          skills:
+            $("skills").value.trim()
+
+        };
+
+        const {
+          error
+        } = await db
+          .from("job_seekers")
+          .upsert(payload);
+
+        const message =
+          $("message");
+
+        if (error) {
+
+          message.textContent =
+            error.message;
+
+          message.className =
+            "message error";
+
+        } else {
+
+          message.textContent =
+            "Profile saved successfully.";
+
+          message.className =
+            "message ok";
+
+          updateProfileUI();
+
+        }
+
+        button.disabled = false;
+
+        button.textContent =
+          "💾 Save Profile";
+
+        setTimeout(() => {
+
+          message.className =
+            "message";
+
+        }, 4000);
+
+      }
+    );
+
+    /* ==========================
+       APPLICATIONS
+    ========================== */
+
+    async function loadApplications() {
+
+      const container =
+        $("applications");
+
+      const {
+        data,
+        error
+      } = await db
+        .from("applications")
+        .select(
+          "id,status,created_at,jobs(title,company,location)"
+        )
+        .eq(
+          "job_seeker_id",
+          uid
+        )
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        );
+
+      if (error) {
+
+        console.error(
+          "Applications error:",
+          error
+        );
+
+        container.innerHTML = `
+          <div class="empty">
+            Unable to load applications right now.
+          </div>
+        `;
+
+        return;
+
+      }
+
+      const applications =
+        data || [];
+
+      $("applicationCount").textContent =
+        applications.length;
+
+      if (!applications.length) {
+
+        container.innerHTML = `
+          <div class="empty">
+
+            <div class="empty-icon">
+              📬
+            </div>
+
+            <strong>
+              No applications yet
+            </strong>
+
+            <p style="margin:6px 0 15px;">
+              Find an opportunity and start applying.
+            </p>
+
+            <a
+              class="btn btn-green"
+              href="/jobs/"
+            >
+              🔎 Find Jobs
+            </a>
+
+          </div>
+        `;
+
+        return;
+
+      }
+
+      container.innerHTML =
+        applications.map(
+          application => {
+
+            const job =
+              application.jobs || {};
+
+            const status =
+              application.status ||
+              "Submitted";
+
+            const statusClass =
+              status.toLowerCase()
+                .replace(/\s+/g,"-");
+
+            return `
+              <div class="application">
+
+                <div>
+
+                  <h3>
+                    ${escapeHTML(
+                      job.title ||
+                      "Job Opportunity"
+                    )}
+                  </h3>
+
+                  <p>
+                    ${escapeHTML(
+                      job.company ||
+                      ""
+                    )}
+                    ${
+                      job.location
+                        ? " • " +
+                          escapeHTML(
+                            job.location
+                          )
+                        : ""
+                    }
+                  </p>
+
+                  <p style="margin-top:5px;">
+                    Applied:
+                    ${formatDate(
+                      application.created_at
+                    )}
+                  </p>
+
+                </div>
+
+                <span class="status ${statusClass}">
+                  ${escapeHTML(status)}
+                </span>
+
+              </div>
+            `;
+
+          }
+        ).join("");
+
+    }
+
+    /* ==========================
+       RECOMMENDED JOBS
+    ========================== */
+
+    async function loadRecommendedJobs() {
+
+      const container =
+        $("recommendedJobs");
+
+      const {
+        data,
+        error
+      } = await db
+        .from("public_active_jobs")
+        .select("*")
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        )
+        .limit(4);
+
+      if (error) {
+
+        console.error(
+          "Jobs error:",
+          error
+        );
+
+        container.innerHTML = `
+          <div class="empty">
+            Opportunities temporarily unavailable.
+          </div>
+        `;
+
+        return;
+
+      }
+
+      const jobs =
+        data || [];
+
+      if (!jobs.length) {
+
+        container.innerHTML = `
+          <div class="empty">
+            No live opportunities found.
+          </div>
+        `;
+
+        return;
+
+      }
+
+      container.innerHTML =
+        jobs.map(job => {
+
+          return `
+            <div class="job">
+
+              <div class="job-title-row">
+
+                <div>
+
+                  <h3>
+                    ${escapeHTML(
+                      job.title ||
+                      "Opportunity"
+                    )}
+                  </h3>
+
+                  <div class="job-company">
+                    ${escapeHTML(
+                      job.company ||
+                      job.organization_name ||
+                      "Employer"
+                    )}
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="job-meta">
+
+                <span>
+                  📍 ${escapeHTML(
+                    job.location ||
+                    "Kenya"
+                  )}
+                </span>
+
+                <span>
+                  💼 ${escapeHTML(
+                    job.job_type ||
+                    "Opportunity"
+                  )}
+                </span>
+
+              </div>
+
+              <a
+                class="btn btn-outline"
+                href="/jobs/detail.html?id=${encodeURIComponent(job.id)}"
+              >
+                View Opportunity →
+              </a>
+
+            </div>
+          `;
+
+        }).join("");
+
+    }
+
+    /* ==========================
+       LOGOUT
+    ========================== */
+
+    async function logout() {
+
+      await db.auth.signOut();
+
+      window.location.href =
+        "/kazinexus_job_seeker.html";
+
+    }
+
+    /* ==========================
+       START
+    ========================== */
+
+    init();
+
+  </script>
+
+</body>
+</html>
