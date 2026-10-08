@@ -100,9 +100,6 @@ h1{
   line-height:1.5;
 }
 
-
-/* IMPORT BOX */
-
 .import-box{
   border:2px dashed #b9d9ca;
   background:#f8fcfa;
@@ -121,6 +118,7 @@ h1{
   color:var(--muted);
   font-size:14px;
   margin-top:5px;
+  line-height:1.5;
 }
 
 .import-actions{
@@ -164,6 +162,13 @@ h1{
   border:1px solid var(--border);
 }
 
+.file-info{
+  display:none;
+  margin-top:10px;
+  color:var(--muted);
+  font-size:13px;
+}
+
 .ocr-status{
   display:none;
   margin-top:14px;
@@ -196,9 +201,6 @@ h1{
   font-weight:800;
   cursor:pointer;
 }
-
-
-/* FORM */
 
 .grid{
   display:grid;
@@ -358,9 +360,7 @@ button:disabled{
 </style>
 </head>
 
-
 <body>
-
 
 <header class="header">
 
@@ -406,7 +406,6 @@ for employers on KaziNexus.
 Your submission may be reviewed by the KaziNexus team before it appears publicly.
 
 </div>
-
 
 
 <!-- IMPORT JOB ADVERT -->
@@ -466,6 +465,12 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 
 
 <div
+  id="fileInfo"
+  class="file-info">
+</div>
+
+
+<div
   id="ocrStatus"
   class="ocr-status">
 </div>
@@ -489,13 +494,10 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 </div>
 
 
-
 <form id="jobForm">
 
 <div class="grid">
 
-
-<!-- TITLE -->
 
 <div class="field">
 
@@ -511,8 +513,6 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 </div>
 
 
-<!-- COMPANY -->
-
 <div class="field">
 
 <label>
@@ -527,8 +527,6 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 </div>
 
 
-<!-- LOCATION -->
-
 <div class="field">
 
 <label>
@@ -542,8 +540,6 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 
 </div>
 
-
-<!-- TYPE -->
 
 <div class="field">
 
@@ -588,8 +584,6 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 </div>
 
 
-<!-- SALARY -->
-
 <div class="field">
 
 <label>
@@ -603,8 +597,6 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 
 </div>
 
-
-<!-- DEADLINE -->
 
 <div class="field">
 
@@ -620,8 +612,6 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 </div>
 
 
-<!-- DESCRIPTION -->
-
 <div class="field full">
 
 <label>
@@ -635,8 +625,6 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 
 </div>
 
-
-<!-- RESPONSIBILITIES -->
 
 <div class="field full">
 
@@ -652,8 +640,6 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 </div>
 
 
-<!-- QUALIFICATIONS -->
-
 <div class="field full">
 
 <label>
@@ -667,8 +653,6 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 
 </div>
 
-
-<!-- EMAIL -->
 
 <div class="field">
 
@@ -685,8 +669,6 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 </div>
 
 
-<!-- LINK -->
-
 <div class="field">
 
 <label>
@@ -701,8 +683,6 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 
 </div>
 
-
-<!-- CONTACT -->
 
 <div class="field">
 
@@ -725,6 +705,11 @@ Your submission may be reviewed by the KaziNexus team before it appears publicly
 <strong>💡 Tip:</strong>
 You can paste the original advert above or upload its poster.
 Always review the extracted information before publishing.
+
+<br><br>
+
+<strong>🔐 Review process:</strong>
+Employer-submitted jobs are placed in pending status and may be reviewed by KaziNexus before publication.
 
 </div>
 
@@ -760,7 +745,6 @@ Always review the extracted information before publishing.
 </div>
 
 
-
 <script>
 
 const SUPABASE_URL =
@@ -794,12 +778,27 @@ document.getElementById('preview');
 const previewImage =
 document.getElementById('previewImage');
 
+const fileInfo =
+document.getElementById('fileInfo');
+
 const ocrStatus =
 document.getElementById('ocrStatus');
 
 const advertText =
 document.getElementById('advertText');
 
+
+/*
+  Holds the selected poster until
+  the employer submits the job.
+*/
+
+let selectedPosterFile = null;
+
+
+/*
+  MESSAGE
+*/
 
 function message(text,type){
 
@@ -849,7 +848,6 @@ function message(text,type){
 })();
 
 
-
 /*
   IMAGE UPLOAD + OCR
 */
@@ -861,12 +859,19 @@ posterInput.addEventListener(
     const file =
       this.files[0];
 
+
     if(!file){
+
+      selectedPosterFile = null;
 
       return;
 
     }
 
+
+    /*
+      Allowed formats
+    */
 
     if(
       ![
@@ -876,15 +881,67 @@ posterInput.addEventListener(
       ].includes(file.type)
     ){
 
+      selectedPosterFile = null;
+
       message(
         'Please upload a JPG, PNG or WEBP image.',
         'error'
       );
 
+      this.value = '';
+
       return;
 
     }
 
+
+    /*
+      Maximum poster size:
+      5 MB
+    */
+
+    if(
+      file.size >
+      5 * 1024 * 1024
+    ){
+
+      selectedPosterFile = null;
+
+      message(
+        'Please choose a job poster smaller than 5 MB.',
+        'error'
+      );
+
+      this.value = '';
+
+      return;
+
+    }
+
+
+    /*
+      Keep the actual file
+      for Supabase Storage.
+    */
+
+    selectedPosterFile =
+      file;
+
+
+    fileInfo.style.display =
+      'block';
+
+    fileInfo.textContent =
+      '📎 ' +
+      file.name +
+      ' — ' +
+      (file.size / 1024 / 1024).toFixed(2) +
+      ' MB';
+
+
+    /*
+      Preview
+    */
 
     const reader =
       new FileReader();
@@ -904,6 +961,10 @@ posterInput.addEventListener(
 
     reader.readAsDataURL(file);
 
+
+    /*
+      OCR
+    */
 
     ocrStatus.style.display =
       'block';
@@ -944,8 +1005,7 @@ posterInput.addEventListener(
 
 
       const text =
-        result.data.text ||
-        '';
+        result.data.text || '';
 
 
       advertText.value =
@@ -955,7 +1015,7 @@ posterInput.addEventListener(
       if(text.trim()){
 
         ocrStatus.textContent =
-          '✅ Job poster text extracted. Review it and click "Extract Job Details".';
+          '✅ Poster text extracted. Review it and click "Extract Job Details".';
 
         extractAdvert();
 
@@ -983,9 +1043,8 @@ posterInput.addEventListener(
 );
 
 
-
 /*
-  EXTRACT DETAILS FROM PASTED/OCR TEXT
+  EXTRACT DETAILS
 */
 
 function extractAdvert(){
@@ -1017,9 +1076,9 @@ function extractAdvert(){
 
     /job\s*title\s*[:\-]\s*(.+)/i,
 
-    /position\s*[:\-]\s*(.+)/i,
-
     /position\s*title\s*[:\-]\s*(.+)/i,
+
+    /position\s*[:\-]\s*(.+)/i,
 
     /we\s+are\s+hiring\s+(.+)/i,
 
@@ -1057,6 +1116,8 @@ function extractAdvert(){
   const companyPatterns = [
 
     /company\s*[:\-]\s*(.+)/i,
+
+    /company\s*\/\s*organization\s*[:\-]\s*(.+)/i,
 
     /organization\s*[:\-]\s*(.+)/i,
 
@@ -1135,7 +1196,7 @@ function extractAdvert(){
 
   const deadlineMatch =
     text.match(
-      /(?:deadline|closing date|application closes?)\s*[:\-]?\s*([^\n]+)/i
+      /(?:deadline|closing date|application closes?|apply before|applications close)\s*[:\-]?\s*([^\n]+)/i
     );
 
 
@@ -1226,9 +1287,7 @@ function extractAdvert(){
   }
 
 
-  if(
-    deadlineMatch
-  ){
+  if(deadlineMatch){
 
     const date =
       findDate(
@@ -1248,8 +1307,8 @@ function extractAdvert(){
 
 
   /*
-    USE ORIGINAL ADVERT AS DESCRIPTION
-    IF DESCRIPTION IS EMPTY
+    Use original advert as description
+    if description is empty.
   */
 
   const description =
@@ -1267,7 +1326,7 @@ function extractAdvert(){
 
 
   /*
-    TRY TO IDENTIFY JOB TYPE
+    Try to identify job type.
   */
 
   const lower =
@@ -1335,6 +1394,10 @@ function extractAdvert(){
 }
 
 
+/*
+  CLEAN LINE
+*/
+
 function cleanLine(value){
 
   return String(value || '')
@@ -1346,6 +1409,10 @@ function cleanLine(value){
 
 }
 
+
+/*
+  FIND DATE
+*/
 
 function findDate(value){
 
@@ -1404,6 +1471,94 @@ function findDate(value){
 }
 
 
+/*
+  UPLOAD POSTER TO SUPABASE STORAGE
+*/
+
+async function uploadPoster(userId){
+
+  if(!selectedPosterFile){
+
+    return null;
+
+  }
+
+
+  const originalName =
+    selectedPosterFile.name ||
+    'job-poster';
+
+
+  const safeName =
+    originalName
+      .toLowerCase()
+      .replace(/[^a-z0-9._-]+/g,'-')
+      .replace(/-+/g,'-')
+      .replace(/^-|-$/g,'');
+
+
+  const posterPath =
+    userId +
+    '/' +
+    Date.now() +
+    '-' +
+    (safeName || 'job-poster');
+
+
+  const {
+    error
+  } =
+  await db
+    .storage
+    .from('job-posters')
+    .upload(
+      posterPath,
+      selectedPosterFile,
+      {
+        cacheControl:'3600',
+        upsert:false,
+        contentType:selectedPosterFile.type
+      }
+    );
+
+
+  if(error){
+
+    throw new Error(
+      'Poster upload failed: ' +
+      error.message
+    );
+
+  }
+
+
+  const {
+    data
+  } =
+  db
+    .storage
+    .from('job-posters')
+    .getPublicUrl(
+      posterPath
+    );
+
+
+  if(
+    !data ||
+    !data.publicUrl
+  ){
+
+    throw new Error(
+      'Poster uploaded, but its public URL could not be created.'
+    );
+
+  }
+
+
+  return data.publicUrl;
+
+}
+
 
 /*
   SUBMIT JOB
@@ -1457,6 +1612,36 @@ form.addEventListener(
           'deadline'
         ).value;
 
+
+      /*
+        Upload poster first.
+        The poster is optional.
+      */
+
+      let posterUrl =
+        null;
+
+
+      if(selectedPosterFile){
+
+        ocrStatus.style.display =
+          'block';
+
+        ocrStatus.textContent =
+          '⬆️ Uploading job poster...';
+
+
+        posterUrl =
+          await uploadPoster(
+            session.user.id
+          );
+
+      }
+
+
+      /*
+        JOB PAYLOAD
+      */
 
       const payload = {
 
@@ -1523,8 +1708,7 @@ form.addEventListener(
           null,
 
         /*
-          Deadline is now optional.
-          Empty = NULL.
+          Deadline is optional.
         */
 
         deadline:
@@ -1532,8 +1716,14 @@ form.addEventListener(
           null,
 
         /*
-          Employer-created jobs
-          go through moderation.
+          Poster URL is optional.
+        */
+
+        poster_url:
+          posterUrl,
+
+        /*
+          Employer jobs require moderation.
         */
 
         status:
@@ -1541,6 +1731,10 @@ form.addEventListener(
 
       };
 
+
+      /*
+        INSERT JOB
+      */
 
       const {
         data,
@@ -1555,9 +1749,32 @@ form.addEventListener(
 
       if(error){
 
+        /*
+          If job creation fails after
+          poster upload, try to remove
+          the orphaned poster.
+        */
+
+        if(
+          posterUrl &&
+          selectedPosterFile
+        ){
+
+          console.warn(
+            'Job insert failed after poster upload. Poster cleanup may be required.'
+          );
+
+        }
+
         throw error;
 
       }
+
+
+      console.log(
+        'Created job:',
+        data
+      );
 
 
       message(
@@ -1566,19 +1783,40 @@ form.addEventListener(
       );
 
 
+      /*
+        RESET FORM
+      */
+
       form.reset();
 
       advertText.value =
         '';
 
+      selectedPosterFile =
+        null;
+
+      posterInput.value =
+        '';
+
+      fileInfo.style.display =
+        'none';
+
+      fileInfo.textContent =
+        '';
 
       preview.style.display =
         'none';
 
+      previewImage.src =
+        '';
 
       ocrStatus.style.display =
         'none';
 
+
+      /*
+        RETURN TO DASHBOARD
+      */
 
       setTimeout(
         function(){
