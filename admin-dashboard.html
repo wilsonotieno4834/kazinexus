@@ -1,81 +1,581 @@
-```html
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KaziNexus Admin Dashboard</title>
+<title>KaziNexus | Admin Dashboard</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-body{margin:0;font-family:Arial;background:#f5f7fa;color:#172033}
-.header{background:#fff;border-bottom:1px solid #ddd;padding:16px 6%;display:flex;justify-content:space-between}
-.logo{font-size:27px;font-weight:800;color:#126b48}
-.logo span{color:#f2a900}
-.header a{color:#126b48;text-decoration:none;font-weight:700}
-.wrap{max-width:1200px;margin:30px auto;padding:0 20px}
-.card{background:#fff;border:1px solid #e4e7eb;border-radius:12px;padding:20px;margin-bottom:20px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}
-.stat{font-size:30px;font-weight:800;color:#0b4f6c;margin-top:7px}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
-.tab{padding:10px 14px;border:0;border-radius:8px;background:#eef2f5;font-weight:700;cursor:pointer}
-.tab.active{background:#126b48;color:white}
-.panel{display:none}
-.panel.active{display:block}
-.table{overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:750px}
-th,td{text-align:left;padding:12px;border-bottom:1px solid #eaecf0}
-th{font-size:13px;color:#667085;background:#fafafa}
-.badge{padding:5px 9px;border-radius:15px;font-size:12px;font-weight:700;background:#eef2f5}
-.pending{background:#fff7df;color:#8a6500}
-.active{background:#e9f7ef;color:#126b48}
-.closed,.rejected{background:#fff0f0;color:#a12b2b}
-.actions button{margin:2px;padding:8px 11px;border:0;border-radius:7px;background:#126b48;color:white;font-weight:700;cursor:pointer}
-.actions .reject{background:#a12b2b}
-.msg{display:none;padding:12px;border-radius:8px;margin-bottom:15px}
-.success{display:block;background:#e9f7ef;color:#126b48}
-.error{display:block;background:#fff0f0;color:#a12b2b}
-
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.field{margin-bottom:4px}
-.field.full{grid-column:1/-1}
-label{display:block;font-weight:700;margin-bottom:7px}
-input,select,textarea{
-width:100%;
-padding:12px;
-border:1px solid #d5dbe3;
-border-radius:8px;
-font-size:15px;
-box-sizing:border-box
-}
-textarea{min-height:120px;resize:vertical}
-.submit-btn{
-background:#126b48;
-color:white;
-border:0;
-padding:13px 22px;
-border-radius:8px;
-font-weight:800;
-font-size:16px;
-cursor:pointer
-}
-.submit-btn:disabled{opacity:.6;cursor:not-allowed}
-.admin-note{
-background:#eef8f3;
-padding:13px;
-border-radius:8px;
-color:#126b48;
-margin-bottom:20px
+:root{
+  --navy:#102a43;
+  --green:#126b48;
+  --green2:#16865a;
+  --gold:#f2a900;
+  --bg:#f4f7f9;
+  --white:#fff;
+  --text:#172033;
+  --muted:#667085;
+  --border:#e5e7eb;
+  --danger:#c62828;
+  --warning:#b26a00;
+  --shadow:0 10px 30px rgba(16,42,67,.08);
 }
 
-@media(max-width:800px){
-.stats{grid-template-columns:repeat(2,1fr)}
-.form-grid{grid-template-columns:1fr}
-.field.full{grid-column:auto}
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+.header{
+  height:72px;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.brand-mark{
+  width:43px;
+  height:43px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--navy),var(--green));
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+}
+
+.brand-text strong{
+  display:block;
+  color:var(--navy);
+  font-size:21px;
+}
+
+.brand-text span{
+  display:block;
+  color:var(--green);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.6px;
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.site-link{
+  color:var(--green);
+  font-weight:800;
+  font-size:14px;
+}
+
+.logout{
+  border:0;
+  background:#fff1f1;
+  color:var(--danger);
+  padding:10px 14px;
+  border-radius:9px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.menu{
+  display:none;
+  border:0;
+  background:#eef8f3;
+  color:var(--green);
+  width:40px;
+  height:40px;
+  border-radius:9px;
+  font-size:20px;
+}
+
+.layout{
+  display:flex;
+  min-height:calc(100vh - 72px);
+}
+
+.sidebar{
+  width:245px;
+  background:var(--navy);
+  color:#fff;
+  padding:23px 15px;
+  flex-shrink:0;
+}
+
+.sidebar-label{
+  color:#9fb3c8;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  padding:8px 12px 14px;
+}
+
+.nav{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:13px 14px;
+  margin:4px 0;
+  border-radius:10px;
+  color:#d9e2ec;
+  font-weight:700;
+  font-size:14px;
+}
+
+.nav:hover,
+.nav.active{
+  background:rgba(255,255,255,.12);
+  color:#fff;
+}
+
+.nav-icon{
+  width:25px;
+  text-align:center;
+  font-size:18px;
+}
+
+.sidebar-note{
+  margin-top:30px;
+  padding:15px;
+  border-top:1px solid rgba(255,255,255,.12);
+  color:#9fb3c8;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.main{
+  flex:1;
+  padding:28px;
+  min-width:0;
+}
+
+.welcome{
+  background:linear-gradient(135deg,var(--navy),#174e69 55%,var(--green));
+  color:#fff;
+  border-radius:20px;
+  padding:30px;
+  margin-bottom:25px;
+  box-shadow:var(--shadow);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.welcome h1{
+  margin:0 0 8px;
+  font-size:29px;
+}
+
+.welcome p{
+  margin:0;
+  color:#dbe7ef;
+}
+
+.admin-badge{
+  display:inline-block;
+  margin-top:13px;
+  padding:7px 11px;
+  background:rgba(255,255,255,.12);
+  border-radius:20px;
+  font-size:11px;
+  font-weight:800;
+}
+
+.welcome-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  border-radius:10px;
+  padding:12px 17px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.btn-white{
+  background:#fff;
+  color:var(--green);
+}
+
+.btn-green{
+  background:var(--green);
+  color:#fff;
+}
+
+.btn-red{
+  background:#fff0f0;
+  color:var(--danger);
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:25px;
+}
+
+.stat{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  box-shadow:var(--shadow);
+}
+
+.stat-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.stat-icon{
+  width:43px;
+  height:43px;
+  border-radius:12px;
+  background:#eef8f3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+}
+
+.stat-number{
+  font-size:30px;
+  font-weight:900;
+  color:var(--navy);
+  margin-top:12px;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:20px;
+}
+
+.card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:22px;
+  box-shadow:var(--shadow);
+  margin-bottom:20px;
+}
+
+.card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:18px;
+}
+
+.card-head h2{
+  margin:0;
+  font-size:19px;
+}
+
+.card-head p{
+  margin:5px 0 0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:750px;
+}
+
+th{
+  text-align:left;
+  padding:12px;
+  background:#f8fafb;
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+
+td{
+  padding:14px 12px;
+  border-bottom:1px solid var(--border);
+  font-size:13px;
+}
+
+.title{
+  font-weight:800;
+  color:var(--navy);
+}
+
+.company{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+}
+
+.status{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:800;
+  text-transform:capitalize;
+}
+
+.status.active,
+.status.verified,
+.status.approved{
+  background:#e8f7ef;
+  color:var(--green);
+}
+
+.status.pending{
+  background:#fff5df;
+  color:var(--warning);
+}
+
+.status.rejected,
+.status.suspended{
+  background:#fff0f0;
+  color:var(--danger);
+}
+
+.action{
+  border:0;
+  border-radius:7px;
+  padding:7px 10px;
+  font-weight:800;
+  cursor:pointer;
+  margin:2px;
+}
+
+.approve{
+  background:#e8f7ef;
+  color:var(--green);
+}
+
+.reject{
+  background:#fff0f0;
+  color:var(--danger);
+}
+
+.view{
+  background:#eef4f8;
+  color:var(--navy);
+}
+
+.empty{
+  text-align:center;
+  padding:35px 15px;
+  color:var(--muted);
+}
+
+.quick-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.quick{
+  border:1px solid var(--border);
+  border-radius:11px;
+  padding:15px;
+  font-weight:800;
+  color:var(--navy);
+}
+
+.quick:hover{
+  border-color:var(--green);
+  background:#f5fbf8;
+}
+
+.activity{
+  padding:13px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.activity:last-child{
+  border-bottom:0;
+}
+
+.activity strong{
+  color:var(--navy);
+}
+
+.activity small{
+  display:block;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+.message{
+  display:none;
+  padding:13px 16px;
+  border-radius:10px;
+  margin-bottom:20px;
+  font-weight:700;
+}
+
+.message.success{
+  display:block;
+  background:#e8f7ef;
+  color:var(--green);
+}
+
+.message.error{
+  display:block;
+  background:#fff0f0;
+  color:var(--danger);
+}
+
+.admin-tools{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.tool{
+  padding:14px;
+  border-radius:10px;
+  background:#f8fafb;
+  border:1px solid var(--border);
+}
+
+.tool strong{
+  display:block;
+  color:var(--navy);
+}
+
+.tool span{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+@media(max-width:1050px){
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+}
+
+@media(max-width:750px){
+
+  .header{
+    padding:0 15px;
+  }
+
+  .site-link{
+    display:none;
+  }
+
+  .menu{
+    display:block;
+  }
+
+  .sidebar{
+    position:fixed;
+    top:72px;
+    bottom:0;
+    left:-260px;
+    z-index:90;
+    transition:.25s;
+  }
+
+  .sidebar.open{
+    left:0;
+  }
+
+  .main{
+    padding:17px;
+  }
+
+  .welcome{
+    flex-direction:column;
+    align-items:flex-start;
+    padding:22px;
+  }
+
+}
+
 @media(max-width:520px){
-.stats{grid-template-columns:1fr}
-.wrap{padding:0 14px}
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  .stat{
+    padding:15px;
+  }
+
+  .stat-number{
+    font-size:24px;
+  }
+
+  .card{
+    padding:16px;
+  }
+
+  .quick-grid,
+  .admin-tools{
+    grid-template-columns:1fr;
+  }
+
+  .welcome h1{
+    font-size:24px;
+  }
+
 }
 </style>
 </head>
@@ -83,291 +583,444 @@ margin-bottom:20px
 <body>
 
 <header class="header">
-<div class="logo">Kazi<span>Nexus</span></div>
-<div>
-<a href="/">View Site</a> |
-<a href="/admin-dashboard-analytics.html">Analytics</a> |
-<a href="#" onclick="logout();return false">Log Out</a>
-</div>
+
+  <div class="brand">
+
+    <div class="brand-mark">KN</div>
+
+    <div class="brand-text">
+      <strong>KaziNexus</strong>
+      <span>CONNECT OPPORTUNITIES WITH THE RIGHT TALENT</span>
+    </div>
+
+  </div>
+
+  <div class="header-right">
+
+    <button class="menu" onclick="toggleSidebar()">☰</button>
+
+    <a class="site-link" href="index.html">
+      🌐 View Marketplace
+    </a>
+
+    <button class="logout" onclick="logout()">
+      Log Out
+    </button>
+
+  </div>
+
 </header>
 
-<main class="wrap">
 
-<div id="msg" class="msg"></div>
+<div class="layout">
 
-<div id="denied" class="card">
-Checking administrator access...
-</div>
+<aside class="sidebar" id="sidebar">
 
-<div id="admin" style="display:none">
+  <div class="sidebar-label">
+    Administration
+  </div>
 
-<div class="card">
-<h1>Admin Dashboard</h1>
-<p>Moderate jobs, verify employers, manage applications and post opportunities.</p>
-</div>
+  <a class="nav active" href="#dashboard">
+    <span class="nav-icon">📊</span>
+    Dashboard
+  </a>
 
-<div class="stats">
+  <a class="nav" href="#moderation">
+    <span class="nav-icon">🛡️</span>
+    Job Moderation
+  </a>
 
-<div class="card">
-<div>Total Jobs</div>
-<div id="jobsCount" class="stat">0</div>
-</div>
+  <a class="nav" href="#employers">
+    <span class="nav-icon">🏢</span>
+    Employers
+  </a>
 
-<div class="card">
-<div>Pending Jobs</div>
-<div id="pendingJobs" class="stat">0</div>
-</div>
+  <a class="nav" href="#applications">
+    <span class="nav-icon">👥</span>
+    Applications
+  </a>
 
-<div class="card">
-<div>Employers</div>
-<div id="employersCount" class="stat">0</div>
-</div>
+  <a class="nav" href="admin.html">
+    <span class="nav-icon">➕</span>
+    Post Opportunity
+  </a>
 
-<div class="card">
-<div>Applications</div>
-<div id="applicationsCount" class="stat">0</div>
-</div>
+  <a class="nav" href="admin-dashboard-analytics.html">
+    <span class="nav-icon">📈</span>
+    Analytics
+  </a>
 
-</div>
+  <a class="nav" href="public-jobs.html">
+    <span class="nav-icon">🔎</span>
+    Public Jobs
+  </a>
 
-<div class="card">
+  <a class="nav" href="trust-safety.html">
+    <span class="nav-icon">🔐</span>
+    Trust & Safety
+  </a>
 
-<div class="tabs">
+  <a class="nav" href="contact.html">
+    <span class="nav-icon">💬</span>
+    Support
+  </a>
 
-<button class="tab active" onclick="panel('jobs',this)">
-Job Moderation
-</button>
+  <div class="sidebar-note">
+    <strong>🇰🇪 KaziNexus Admin</strong>
+    <br><br>
+    Keep the marketplace trusted, useful and safe for Kenyan jobseekers and employers.
+  </div>
 
-<button class="tab" onclick="panel('postjob',this)">
-Post Job as Admin
-</button>
-
-<button class="tab" onclick="panel('employers',this)">
-Employers
-</button>
-
-<button class="tab" onclick="panel('apps',this)">
-Applications
-</button>
-
-<button class="tab" onclick="panel('submissions',this);submissions()">
-Opportunity Submissions
-</button>
-
-</div>
+</aside>
 
 
-<!-- JOBS -->
+<main class="main">
 
-<section id="jobs" class="panel active">
-
-<h2>Jobs</h2>
-
-<div class="table">
-
-<table>
-
-<thead>
-<tr>
-<th>Job</th>
-<th>Company</th>
-<th>Location</th>
-<th>Deadline</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-</thead>
-
-<tbody id="jobRows"></tbody>
-
-</table>
-
-</div>
-
-</section>
+<div id="message" class="message"></div>
 
 
-<!-- ADMIN POST JOB -->
+<section class="welcome" id="dashboard">
 
-<section id="postjob" class="panel">
+  <div>
 
-<h2>Post Job as Admin</h2>
+    <h1>Admin Control Centre 🛡️</h1>
 
-<div class="admin-note">
-<strong>Admin posting:</strong>
-Jobs posted here are created directly by KaziNexus administration and do not require an employer account.
-They will initially be marked <strong>pending</strong> for moderation.
-</div>
+    <p>
+      Manage jobs, employers, applications and platform activity.
+    </p>
 
-<form id="adminJobForm">
+    <span class="admin-badge">
+      🔐 Administrator Access
+    </span>
 
-<div class="form-grid">
+  </div>
 
-<div class="field">
-<label>Job Title *</label>
-<input id="admin_title" required>
-</div>
+  <div class="welcome-actions">
 
-<div class="field">
-<label>Company / Organization *</label>
-<input id="admin_company" required>
-</div>
+    <a href="admin.html" class="btn btn-white">
+      ➕ Post Opportunity
+    </a>
 
-<div class="field">
-<label>Location *</label>
-<input id="admin_location" required placeholder="e.g. Nairobi, Kisumu, Remote">
-</div>
+    <a href="index.html" class="btn btn-white">
+      🌐 View Marketplace
+    </a>
 
-<div class="field">
-<label>Job Type *</label>
-<select id="admin_job_type" required>
-<option value="">Select type</option>
-<option value="Full-time">Full-time</option>
-<option value="Part-time">Part-time</option>
-<option value="Contract">Contract</option>
-<option value="Internship">Internship</option>
-<option value="Volunteer">Volunteer</option>
-<option value="Remote">Remote</option>
-</select>
-</div>
-
-<div class="field">
-<label>Salary / Compensation</label>
-<input id="admin_salary">
-</div>
-
-<div class="field">
-<label>Application Deadline *</label>
-<input id="admin_deadline" type="date" required>
-</div>
-
-<div class="field full">
-<label>Job Description *</label>
-<textarea id="admin_description" required></textarea>
-</div>
-
-<div class="field full">
-<label>Key Responsibilities</label>
-<textarea id="admin_responsibilities"></textarea>
-</div>
-
-<div class="field full">
-<label>Qualifications & Requirements</label>
-<textarea id="admin_qualifications"></textarea>
-</div>
-
-<div class="field">
-<label>Application Email</label>
-<input id="admin_application_email" type="email">
-</div>
-
-<div class="field">
-<label>Application Link</label>
-<input id="admin_application_link" type="url" placeholder="https://...">
-</div>
-
-<div class="field">
-<label>Contact Person</label>
-<input id="admin_contact">
-</div>
-
-</div>
-
-<br>
-
-<button id="adminSubmitBtn" class="submit-btn" type="submit">
-Publish Job
-</button>
-
-</form>
+  </div>
 
 </section>
 
 
-<!-- EMPLOYERS -->
+<section class="stats">
 
-<section id="employers" class="panel">
+  <div class="stat">
 
-<h2>Employers</h2>
+    <div class="stat-top">
 
-<div class="table">
+      <div class="stat-label">
+        Total Jobs
+      </div>
 
-<table>
+      <div class="stat-icon">
+        💼
+      </div>
 
-<thead>
-<tr>
-<th>Organization</th>
-<th>Industry</th>
-<th>Location</th>
-<th>Contact</th>
-<th>Verification</th>
-</tr>
-</thead>
+    </div>
 
-<tbody id="employerRows"></tbody>
+    <div class="stat-number" id="totalJobs">
+      0
+    </div>
 
-</table>
+  </div>
 
-</div>
+
+  <div class="stat">
+
+    <div class="stat-top">
+
+      <div class="stat-label">
+        Active Jobs
+      </div>
+
+      <div class="stat-icon">
+        🟢
+      </div>
+
+    </div>
+
+    <div class="stat-number" id="activeJobs">
+      0
+    </div>
+
+  </div>
+
+
+  <div class="stat">
+
+    <div class="stat-top">
+
+      <div class="stat-label">
+        Employers
+      </div>
+
+      <div class="stat-icon">
+        🏢
+      </div>
+
+    </div>
+
+    <div class="stat-number" id="employerCount">
+      0
+    </div>
+
+  </div>
+
+
+  <div class="stat">
+
+    <div class="stat-top">
+
+      <div class="stat-label">
+        Applications
+      </div>
+
+      <div class="stat-icon">
+        👥
+      </div>
+
+    </div>
+
+    <div class="stat-number" id="applicationCount">
+      0
+    </div>
+
+  </div>
 
 </section>
 
 
-<!-- APPLICATIONS -->
+<div class="grid">
 
-<section id="apps" class="panel">
 
-<h2>Applications</h2>
+<div>
 
-<div class="table">
+<section class="card" id="moderation">
 
-<table>
+  <div class="card-head">
 
-<thead>
-<tr>
-<th>Applicant</th>
-<th>Email</th>
-<th>Job</th>
-<th>Status</th>
-<th>Date</th>
-</tr>
-</thead>
+    <div>
+      <h2>🛡️ Job Moderation</h2>
+      <p>Review recently submitted opportunities.</p>
+    </div>
 
-<tbody id="appRows"></tbody>
+    <a href="admin.html" class="btn btn-green">
+      + Post Job
+    </a>
 
-</table>
+  </div>
 
-</div>
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>Opportunity</th>
+          <th>Company</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Action</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="jobRows">
+
+        <tr>
+          <td colspan="6" class="empty">
+            Loading jobs...
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
 
 </section>
 
 
-<!-- SUBMISSIONS -->
+<section class="card" id="employers">
 
-<section id="submissions" class="panel">
+  <div class="card-head">
 
-<h2>Opportunity Submissions</h2>
+    <div>
+      <h2>🏢 Employer Verification</h2>
+      <p>Monitor employer accounts and verification.</p>
+    </div>
 
-<div class="table">
+  </div>
 
-<table>
 
-<thead>
-<tr>
-<th>Opportunity</th>
-<th>Poster</th>
-<th>Company</th>
-<th>Deadline</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-</thead>
+  <div class="table-wrap">
 
-<tbody id="submissionRows"></tbody>
+    <table>
 
-</table>
+      <thead>
+
+        <tr>
+          <th>Organisation</th>
+          <th>Industry</th>
+          <th>Location</th>
+          <th>Verification</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="employerRows">
+
+        <tr>
+          <td colspan="4" class="empty">
+            Loading employers...
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>
+
+
+<section class="card" id="applications">
+
+  <div class="card-head">
+
+    <div>
+      <h2>👥 Recent Applications</h2>
+      <p>Latest activity from jobseekers.</p>
+    </div>
+
+  </div>
+
+  <div id="applicationRows">
+
+    <div class="empty">
+      Loading applications...
+    </div>
+
+  </div>
+
+</section>
 
 </div>
+
+
+<div>
+
+
+<section class="card">
+
+  <div class="card-head">
+
+    <div>
+      <h2>⚡ Quick Actions</h2>
+      <p>Common administration tasks.</p>
+    </div>
+
+  </div>
+
+
+  <div class="quick-grid">
+
+    <a class="quick" href="admin.html">
+      ➕ Post Opportunity
+    </a>
+
+    <a class="quick" href="#moderation">
+      🛡️ Review Jobs
+    </a>
+
+    <a class="quick" href="#employers">
+      🏢 Employers
+    </a>
+
+    <a class="quick" href="#applications">
+      👥 Applications
+    </a>
+
+    <a class="quick" href="admin-dashboard-analytics.html">
+      📈 Analytics
+    </a>
+
+    <a class="quick" href="trust-safety.html">
+      🔐 Trust & Safety
+    </a>
+
+  </div>
+
+</section>
+
+
+<section class="card">
+
+  <div class="card-head">
+
+    <div>
+      <h2>📌 Platform Tools</h2>
+      <p>KaziNexus management centre.</p>
+    </div>
+
+  </div>
+
+
+  <div class="admin-tools">
+
+    <div class="tool">
+      <strong>Jobs</strong>
+      <span>Review and manage opportunities.</span>
+    </div>
+
+    <div class="tool">
+      <strong>Employers</strong>
+      <span>Monitor verification status.</span>
+    </div>
+
+    <div class="tool">
+      <strong>Jobseekers</strong>
+      <span>Support the candidate community.</span>
+    </div>
+
+    <div class="tool">
+      <strong>Applications</strong>
+      <span>Monitor application activity.</span>
+    </div>
+
+  </div>
+
+</section>
+
+
+<section class="card">
+
+  <div class="card-head">
+
+    <div>
+      <h2>🇰🇪 KaziNexus Mission</h2>
+    </div>
+
+  </div>
+
+  <p style="color:#667085;line-height:1.7;margin:0">
+    Connect opportunities with the right talent across all 47 counties.
+    Keep job information accurate, employers trustworthy and the
+    marketplace useful for everyone.
+  </p>
 
 </section>
 
@@ -377,517 +1030,524 @@ Publish Job
 
 </main>
 
+</div>
+
 
 <script>
 
-const db=supabase.createClient(
-'https://vljehlfeglstpgphzebj.supabase.co',
-'sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3'
+const SUPABASE_URL =
+'https://vljehlfeglstpgphzebj.supabase.co';
+
+const SUPABASE_KEY =
+'sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3';
+
+const db =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
 );
 
-const esc=v=>String(v??'').replace(
-/[&<>"']/g,
-m=>({
-'&':'&amp;',
-'<':'&lt;',
-'>':'&gt;',
-'"':'&quot;',
-"'":'&#039;'
-}[m])
-);
-
-const msg=(t,c)=>{
-const x=document.getElementById('msg');
-x.textContent=t;
-x.className='msg '+c;
-x.style.display='block';
-};
+let session = null;
 
 
-function panel(id,b){
+const esc = value =>
+String(value ?? '')
+.replace(/[&<>"']/g,c=>({
+  '&':'&amp;',
+  '<':'&lt;',
+  '>':'&gt;',
+  '"':'&quot;',
+  "'":'&#39;'
+}[c]));
 
-document.querySelectorAll('.panel')
-.forEach(x=>x.classList.remove('active'));
 
-document.getElementById(id)
-.classList.add('active');
+function showMessage(text,type){
 
-document.querySelectorAll('.tab')
-.forEach(x=>x.classList.remove('active'));
+  const el =
+  document.getElementById('message');
 
-b.classList.add('active');
+  el.textContent = text;
+
+  el.className =
+  'message ' + type;
 
 }
 
 
-/* ADMIN ACCESS */
+function toggleSidebar(){
+
+  document
+  .getElementById('sidebar')
+  .classList.toggle('open');
+
+}
+
 
 async function init(){
 
-const {data:{session}}=await db.auth.getSession();
+  const result =
+  await db.auth.getSession();
 
-if(!session){
-location.href='/admin.html';
-return;
-}
+  session =
+  result.data.session;
 
-const {data:ad}=await db
-.from('admin_users')
-.select('user_id')
-.eq('user_id',session.user.id)
-.eq('active',true)
-.maybeSingle();
+  if(!session){
 
-if(!ad){
+    location.href =
+    'auth.html';
 
-document.getElementById('denied').textContent=
-'Access denied. This account is not an active KaziNexus administrator.';
+    return;
 
-return;
-}
+  }
 
-document.getElementById('denied').style.display='none';
-document.getElementById('admin').style.display='block';
-
-await Promise.all([
-jobs(),
-employers(),
-apps()
-]);
+  await Promise.all([
+    loadStats(),
+    loadJobs(),
+    loadEmployers(),
+    loadApplications()
+  ]);
 
 }
 
 
-/* LOAD JOBS */
+async function loadStats(){
 
-async function jobs(){
+  const jobs =
+  await db
+  .from('jobs')
+  .select('id,status',{
+    count:'exact',
+    head:false
+  });
 
-const {data,error}=await db
-.from('jobs')
-.select('id,title,company,location,deadline,status')
-.order('created_at',{ascending:false});
+  const employers =
+  await db
+  .from('employers')
+  .select('id',{
+    count:'exact',
+    head:true
+  });
 
-if(error){
-msg(error.message,'error');
-return;
-}
+  const applications =
+  await db
+  .from('applications')
+  .select('id',{
+    count:'exact',
+    head:true
+  });
 
-document.getElementById('jobsCount').textContent=
-(data||[]).length;
+  const jobData =
+  jobs.data || [];
 
-document.getElementById('pendingJobs').textContent=
-(data||[]).filter(x=>x.status==='pending').length;
+  document
+  .getElementById('totalJobs')
+  .textContent =
+  jobs.count ?? jobData.length;
 
-document.getElementById('jobRows').innerHTML=
-(data||[]).map(j=>`
+  document
+  .getElementById('activeJobs')
+  .textContent =
+  jobData.filter(
+    j => j.status === 'active'
+  ).length;
 
-<tr>
+  document
+  .getElementById('employerCount')
+  .textContent =
+  employers.count ?? 0;
 
-<td><b>${esc(j.title)}</b></td>
-
-<td>${esc(j.company)}</td>
-
-<td>${esc(j.location)}</td>
-
-<td>${esc(j.deadline)}</td>
-
-<td>
-<span class="badge ${esc(j.status)}">
-${esc(j.status)}
-</span>
-</td>
-
-<td class="actions">
-
-${
-j.status==='pending'
-?
-`<button onclick="setJob('${j.id}','active')">Approve</button>
-<button class="reject" onclick="setJob('${j.id}','closed')">Reject</button>`
-:
-j.status==='active'
-?
-`<button class="reject" onclick="setJob('${j.id}','closed')">Close</button>`
-:
-`<button onclick="setJob('${j.id}','active')">Reopen</button>`
-}
-
-</td>
-
-</tr>
-
-`).join('')
-||
-'<tr><td colspan="6">No jobs.</td></tr>';
+  document
+  .getElementById('applicationCount')
+  .textContent =
+  applications.count ?? 0;
 
 }
 
 
-/* APPROVE / REJECT JOB */
+async function loadJobs(){
 
-async function setJob(id,status){
+  const result =
+  await db
+  .from('jobs')
+  .select(`
+    id,
+    title,
+    company,
+    location,
+    status,
+    created_at
+  `)
+  .order('created_at',{
+    ascending:false
+  })
+  .limit(25);
 
-const {error}=await db
-.from('jobs')
-.update({status})
-.eq('id',id);
+  if(result.error){
 
-if(error){
-msg(error.message,'error');
-return;
-}
+    showMessage(
+      result.error.message,
+      'error'
+    );
 
-msg('Job status updated.','success');
+    return;
 
-jobs();
+  }
 
-}
+  const jobs =
+  result.data || [];
 
+  if(!jobs.length){
 
-/* ADMIN POST JOB */
+    document
+    .getElementById('jobRows')
+    .innerHTML = `
+      <tr>
+        <td colspan="6" class="empty">
+          No jobs found.
+        </td>
+      </tr>
+    `;
 
-document.getElementById('adminJobForm')
-.addEventListener('submit',async e=>{
+    return;
 
-e.preventDefault();
-
-const btn=document.getElementById('adminSubmitBtn');
-
-btn.disabled=true;
-btn.textContent='Publishing...';
-
-try{
-
-const job={
-employer_id:null,
-
-title:document.getElementById('admin_title')
-.value.trim(),
-
-company:document.getElementById('admin_company')
-.value.trim(),
-
-location:document.getElementById('admin_location')
-.value.trim(),
-
-job_type:document.getElementById('admin_job_type')
-.value,
-
-salary:
-document.getElementById('admin_salary')
-.value.trim() || null,
-
-description:
-document.getElementById('admin_description')
-.value.trim(),
-
-responsibilities:
-document.getElementById('admin_responsibilities')
-.value.trim() || null,
-
-qualifications:
-document.getElementById('admin_qualifications')
-.value.trim() || null,
-
-application_email:
-document.getElementById('admin_application_email')
-.value.trim() || null,
-
-application_link:
-document.getElementById('admin_application_link')
-.value.trim() || null,
-
-contact_person:
-document.getElementById('admin_contact')
-.value.trim() || null,
-
-deadline:
-document.getElementById('admin_deadline')
-.value,
-
-status:'pending'
-
-};
-
-const {data,error}=await db
-.from('jobs')
-.insert(job)
-.select()
-.single();
-
-if(error) throw error;
-
-msg(
-'Job posted successfully. It is now pending admin review.',
-'success'
-);
-
-document.getElementById('adminJobForm').reset();
-
-await jobs();
-
-btn.disabled=false;
-btn.textContent='Publish Job';
-
-}catch(err){
-
-msg(
-err.message || 'Unable to publish job.',
-'error'
-);
-
-btn.disabled=false;
-btn.textContent='Publish Job';
-
-}
-
-});
+  }
 
 
-/* EMPLOYERS */
+  document
+  .getElementById('jobRows')
+  .innerHTML =
+  jobs.map(j=>`
 
-async function employers(){
+    <tr>
 
-const {data,error}=await db
-.from('employers')
-.select(
-'id,organization_name,industry,location,contact_person,verified'
-)
-.order('created_at',{ascending:false});
+      <td>
+        <div class="title">
+          ${esc(j.title)}
+        </div>
+      </td>
 
-if(error){
-msg(error.message,'error');
-return;
-}
+      <td>
+        <div class="company">
+          ${esc(j.company || 'Not specified')}
+        </div>
+      </td>
 
-document.getElementById('employersCount').textContent=
-(data||[]).length;
+      <td>
+        ${esc(j.location || 'Kenya')}
+      </td>
 
-document.getElementById('employerRows').innerHTML=
-(data||[]).map(e=>`
+      <td>
 
-<tr>
+        <span class="status ${
+          j.status === 'active'
+          ? 'active'
+          : j.status === 'pending'
+          ? 'pending'
+          : j.status === 'rejected'
+          ? 'rejected'
+          : ''
+        }">
 
-<td><b>${esc(e.organization_name)}</b></td>
+          ${esc(j.status || 'unknown')}
 
-<td>${esc(e.industry||'-')}</td>
+        </span>
 
-<td>${esc(e.location||'-')}</td>
+      </td>
 
-<td>${esc(e.contact_person||'-')}</td>
+      <td>
+        ${j.created_at
+          ? new Date(j.created_at)
+            .toLocaleDateString()
+          : '-'}
+      </td>
 
-<td class="actions">
+      <td>
 
-<span class="badge ${e.verified?'active':'pending'}">
+        <button
+          class="action view"
+          onclick="viewJob('${j.id}')">
+          View
+        </button>
 
-${e.verified?'Verified':'Unverified'}
+        ${
+          j.status === 'pending'
+          ? `
+            <button
+              class="action approve"
+              onclick="updateJob('${j.id}','active')">
+              Approve
+            </button>
 
-</span>
+            <button
+              class="action reject"
+              onclick="updateJob('${j.id}','rejected')">
+              Reject
+            </button>
+          `
+          : ''
+        }
 
-<button onclick="verify('${e.id}',${!e.verified})">
+      </td>
 
-${e.verified?'Unverify':'Verify'}
+    </tr>
 
-</button>
-
-</td>
-
-</tr>
-
-`).join('')
-||
-'<tr><td colspan="5">No employers.</td></tr>';
+  `).join('');
 
 }
 
 
-/* VERIFY EMPLOYER */
+async function updateJob(id,status){
 
-async function verify(id,v){
+  const result =
+  await db
+  .from('jobs')
+  .update({
+    status:status,
+    reviewed_at:new Date().toISOString(),
+    reviewed_by:session.user.id
+  })
+  .eq('id',id);
 
-const {error}=await db
-.from('employers')
-.update({verified:v})
-.eq('id',id);
+  if(result.error){
 
-if(error){
-msg(error.message,'error');
-return;
-}
+    showMessage(
+      result.error.message,
+      'error'
+    );
 
-msg('Employer verification updated.','success');
+    return;
 
-employers();
+  }
 
-}
+  showMessage(
+    status === 'active'
+      ? 'Job approved successfully.'
+      : 'Job rejected successfully.',
+    'success'
+  );
 
-
-/* APPLICATIONS */
-
-async function apps(){
-
-const {data,error}=await db
-.from('applications')
-.select(
-'applicant_name,applicant_email,status,created_at,jobs(title)'
-)
-.order('created_at',{ascending:false})
-.limit(100);
-
-if(error){
-msg(error.message,'error');
-return;
-}
-
-document.getElementById('applicationsCount').textContent=
-(data||[]).length;
-
-document.getElementById('appRows').innerHTML=
-(data||[]).map(a=>`
-
-<tr>
-
-<td>${esc(a.applicant_name)}</td>
-
-<td>${esc(a.applicant_email)}</td>
-
-<td>${esc(a.jobs?.title||'Job')}</td>
-
-<td>
-<span class="badge">
-${esc(a.status)}
-</span>
-</td>
-
-<td>
-${new Date(a.created_at).toLocaleString()}
-</td>
-
-</tr>
-
-`).join('')
-||
-'<tr><td colspan="5">No applications.</td></tr>';
+  await loadStats();
+  await loadJobs();
 
 }
 
 
-/* OPPORTUNITY SUBMISSIONS */
+function viewJob(id){
 
-async function submissions(){
-
-const {data,error}=await db
-.from('job_submissions')
-.select(
-'id,title,company,location,deadline,status,poster_name,poster_email,created_at'
-)
-.order('created_at',{ascending:false});
-
-if(error){
-msg(error.message,'error');
-return;
-}
-
-document.getElementById('submissionRows').innerHTML=
-(data||[]).map(s=>`
-
-<tr>
-
-<td>
-<b>${esc(s.title)}</b><br>
-<small>${esc(s.location)}</small>
-</td>
-
-<td>
-${esc(s.poster_name)}<br>
-<small>${esc(s.poster_email)}</small>
-</td>
-
-<td>${esc(s.company)}</td>
-
-<td>${esc(s.deadline)}</td>
-
-<td>
-<span class="badge ${esc(s.status)}">
-${esc(s.status)}
-</span>
-</td>
-
-<td class="actions">
-
-${
-s.status==='pending'
-?
-`<button onclick="reviewSubmission('${s.id}','approved')">
-Approve & Publish
-</button>
-
-<button class="reject"
-onclick="reviewSubmission('${s.id}','rejected')">
-Reject
-</button>`
-:
-'Reviewed'
-}
-
-</td>
-
-</tr>
-
-`).join('')
-||
-'<tr><td colspan="6">No opportunity submissions.</td></tr>';
+  location.href =
+  `jobs/detail.html?id=${encodeURIComponent(id)}`;
 
 }
 
 
-/* REVIEW SUBMISSION */
+async function loadEmployers(){
 
-async function reviewSubmission(id,decision){
+  const result =
+  await db
+  .from('employers')
+  .select(`
+    id,
+    organization_name,
+    industry,
+    location,
+    verified,
+    verification_status
+  `)
+  .order('created_at',{
+    ascending:false
+  })
+  .limit(20);
 
-const note=
-decision==='rejected'
-?
-prompt('Reason for rejection (optional):')||null
-:
-null;
+  if(result.error){
 
-const {error}=await db.rpc(
-'review_job_submission',
-{
-submission_id:id,
-decision,
-admin_note_value:note
+    document
+    .getElementById('employerRows')
+    .innerHTML = `
+      <tr>
+        <td colspan="4" class="empty">
+          Unable to load employers.
+        </td>
+      </tr>
+    `;
+
+    return;
+
+  }
+
+  const employers =
+  result.data || [];
+
+  if(!employers.length){
+
+    document
+    .getElementById('employerRows')
+    .innerHTML = `
+      <tr>
+        <td colspan="4" class="empty">
+          No employers found.
+        </td>
+      </tr>
+    `;
+
+    return;
+
+  }
+
+
+  document
+  .getElementById('employerRows')
+  .innerHTML =
+  employers.map(e=>{
+
+    const verified =
+      e.verified === true ||
+      String(e.verification_status || '')
+      .toLowerCase() === 'verified';
+
+    return `
+
+      <tr>
+
+        <td>
+          <div class="title">
+            ${esc(
+              e.organization_name ||
+              'Unnamed organisation'
+            )}
+          </div>
+        </td>
+
+        <td>
+          ${esc(e.industry || 'Not specified')}
+        </td>
+
+        <td>
+          ${esc(e.location || 'Kenya')}
+        </td>
+
+        <td>
+
+          <span class="status ${
+            verified
+            ? 'verified'
+            : 'pending'
+          }">
+
+            ${
+              verified
+              ? 'Verified'
+              : 'Not Verified'
+            }
+
+          </span>
+
+        </td>
+
+      </tr>
+
+    `;
+
+  }).join('');
+
 }
-);
 
-if(error){
-msg(error.message,'error');
-return;
+
+async function loadApplications(){
+
+  const result =
+  await db
+  .from('applications')
+  .select(`
+    applicant_name,
+    applicant_email,
+    status,
+    created_at,
+    job_id
+  `)
+  .order('created_at',{
+    ascending:false
+  })
+  .limit(10);
+
+  if(result.error){
+
+    document
+    .getElementById('applicationRows')
+    .innerHTML = `
+      <div class="empty">
+        Unable to load applications.
+      </div>
+    `;
+
+    return;
+
+  }
+
+  const apps =
+  result.data || [];
+
+  if(!apps.length){
+
+    document
+    .getElementById('applicationRows')
+    .innerHTML = `
+      <div class="empty">
+        📬<br><br>
+        No applications yet.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  document
+  .getElementById('applicationRows')
+  .innerHTML =
+  apps.map(a=>`
+
+    <div class="activity">
+
+      <strong>
+        ${esc(
+          a.applicant_name ||
+          'Jobseeker'
+        )}
+      </strong>
+
+      <small>
+        ${esc(
+          a.applicant_email ||
+          ''
+        )}
+        ·
+        ${esc(
+          a.status ||
+          'Submitted'
+        )}
+        ·
+        ${
+          a.created_at
+          ? new Date(a.created_at)
+            .toLocaleDateString()
+          : ''
+        }
+      </small>
+
+    </div>
+
+  `).join('');
+
 }
 
-msg(
-decision==='approved'
-?
-'Opportunity approved and published.'
-:
-'Opportunity rejected.',
-'success'
-);
-
-submissions();
-jobs();
-
-}
-
-
-/* LOGOUT */
 
 async function logout(){
 
-await db.auth.signOut();
+  await db.auth.signOut();
 
-location.href='/admin.html';
+  location.href =
+  'auth.html';
 
 }
 
@@ -898,4 +1558,3 @@ init();
 
 </body>
 </html>
-```
