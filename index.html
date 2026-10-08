@@ -1,331 +1,2063 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>KaziNexus | Kenya's Free Job Marketplace</title>
+  <title>KaziNexus Kenya | Jobs, Careers & Opportunities</title>
 
-<meta name="description" content="KaziNexus connects jobseekers with legitimate job opportunities and verified employers across all 47 counties of Kenya.">
+  <meta name="description" content="KaziNexus is Kenya's free job marketplace connecting jobseekers across all 47 counties with verified employers and opportunities.">
+  <meta name="keywords" content="Kenya jobs, jobs in Kenya, employment Kenya, careers Kenya, job opportunities, KaziNexus, CV builder, internships, NGO jobs">
+  <meta name="author" content="KaziNexus">
 
-<meta name="robots" content="index, follow">
+  <meta property="og:title" content="KaziNexus Kenya | Connect Opportunities With the Right Talent">
+  <meta property="og:description" content="Find jobs, post opportunities, build your CV and connect with employers across Kenya.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kazinexus.pages.dev/">
 
-<link rel="canonical" href="https://kazinexus.pages.dev/">
+  <link rel="icon" href="/icon-192.png">
 
-<style>
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #172033;
-    background: #f7f9fc;
-}
-
-header {
-    background: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 16px 6%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.logo {
-    font-size: 28px;
-    font-weight: 900;
-    color: #126b48;
-}
-
-.logo span {
-    color: #f2a900;
-}
-
-nav {
-    display: flex;
-    gap: 18px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-nav a {
-    color: #344054;
-    text-decoration: none;
-    font-weight: 700;
-}
-
-nav a:hover {
-    color: #126b48;
-}
-
-.hero {
-    background: linear-gradient(135deg, #0e5138, #126b48);
-    color: #ffffff;
-    padding: 75px 6%;
-}
-
-.hero-inner {
-    max-width: 1100px;
-    margin: auto;
-}
-
-.hero h1 {
-    font-size: clamp(38px, 6vw, 62px);
-    line-height: 1.05;
-    max-width: 800px;
-    margin: 0 0 20px;
-}
-
-.hero p {
-    font-size: 20px;
-    line-height: 1.6;
-    max-width: 760px;
-    color: #eef8f3;
-}
-
-.actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 30px;
-}
-
-.actions a {
-    padding: 14px 22px;
-    border-radius: 9px;
-    text-decoration: none;
-    font-weight: 800;
-    background: #ffffff;
-    color: #126b48;
-}
-
-.actions a.alt {
-    background: transparent;
-    color: #ffffff;
-    border: 1px solid #bfe5d2;
-}
-
-main {
-    max-width: 1100px;
-    margin: auto;
-    padding: 50px 20px;
-}
-
-.section {
-    margin-bottom: 45px;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-
-.card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    padding: 25px;
-}
-
-.card h2 {
-    margin-top: 0;
-}
-
-.card a {
-    color: #126b48;
-    font-weight: 800;
-    text-decoration: none;
-}
-
-.contact {
-    background: #eef8f3;
-    border-radius: 14px;
-    padding: 28px;
-}
-
-.contact a {
-    color: #126b48;
-    font-weight: 800;
-}
-
-footer {
-    background: #102a43;
-    color: #d9e2ec;
-    padding: 30px 6%;
-    text-align: center;
-}
-
-footer a {
-    color: #ffffff;
-    margin: 0 8px;
-}
-
-@media (max-width: 750px) {
-    .grid {
-        grid-template-columns: 1fr;
+  <style>
+    :root {
+      --navy: #082567;
+      --navy-dark: #04183f;
+      --green: #079447;
+      --green-dark: #05743a;
+      --gold: #f5b400;
+      --light: #f5f8fc;
+      --white: #ffffff;
+      --text: #172033;
+      --muted: #667085;
+      --border: #e5eaf2;
+      --shadow: 0 12px 35px rgba(8,37,103,.10);
+      --radius: 18px;
     }
 
-    .hero {
-        padding: 55px 20px;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    /* =========================
+       TOP BAR
+    ========================== */
+
+    .topbar {
+      background: var(--navy-dark);
+      color: #fff;
+      padding: 8px 5%;
+      font-size: 13px;
+    }
+
+    .topbar-inner {
+      max-width: 1250px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .topbar span {
+      opacity: .9;
+    }
+
+    .top-links {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .top-links a:hover {
+      color: #9df0bf;
+    }
+
+    /* =========================
+       NAVIGATION
+    ========================== */
 
     header {
-        padding: 15px 20px;
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
-}
-</style>
+
+    .nav {
+      max-width: 1250px;
+      margin: auto;
+      min-height: 76px;
+      padding: 0 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 210px;
+    }
+
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: contain;
+    }
+
+    .brand-text {
+      line-height: 1.05;
+    }
+
+    .brand-name {
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -.7px;
+    }
+
+    .brand-name .kazi {
+      color: var(--navy);
+    }
+
+    .brand-name .nexus {
+      color: var(--green);
+    }
+
+    .brand-tagline {
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: .2px;
+      margin-top: 3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .nav-links a {
+      padding: 10px 13px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #344054;
+    }
+
+    .nav-links a:hover {
+      background: #eef5ff;
+      color: var(--navy);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: none;
+      border-radius: 10px;
+      padding: 11px 17px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-dark);
+    }
+
+    .btn-navy {
+      background: var(--navy);
+      color: #fff;
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: var(--navy);
+      border: 1px solid #cfd7e6;
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: #172033;
+    }
+
+    .mobile-menu {
+      display: none;
+      border: 0;
+      background: transparent;
+      font-size: 28px;
+      cursor: pointer;
+    }
+
+    /* =========================
+       HERO
+    ========================== */
+
+    .hero {
+      background:
+        radial-gradient(circle at 90% 10%, rgba(7,148,71,.16), transparent 30%),
+        radial-gradient(circle at 10% 20%, rgba(245,180,0,.12), transparent 25%),
+        linear-gradient(135deg, #061c4d 0%, #082567 55%, #0a3b83 100%);
+      color: #fff;
+      padding: 72px 5% 78px;
+      overflow: hidden;
+    }
+
+    .hero-inner {
+      max-width: 1250px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 55px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.18);
+      padding: 8px 13px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(40px, 5vw, 65px);
+      line-height: 1.05;
+      letter-spacing: -2.5px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: #8df0b7;
+    }
+
+    .hero p {
+      max-width: 680px;
+      color: #dce7fb;
+      font-size: 18px;
+      margin-bottom: 28px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .hero-buttons .btn {
+      padding: 14px 20px;
+    }
+
+    .hero-search {
+      margin-top: 30px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 8px;
+      max-width: 720px;
+      display: flex;
+      box-shadow: 0 15px 45px rgba(0,0,0,.22);
+    }
+
+    .hero-search input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 14px;
+      font-size: 15px;
+      min-width: 0;
+    }
+
+    .hero-search button {
+      border: none;
+      background: var(--green);
+      color: white;
+      border-radius: 11px;
+      padding: 0 22px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .hero-card {
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(12px);
+      padding: 25px;
+      border-radius: 24px;
+      box-shadow: 0 25px 60px rgba(0,0,0,.20);
+    }
+
+    .hero-card-title {
+      font-size: 19px;
+      font-weight: 900;
+      margin-bottom: 17px;
+    }
+
+    .career-option {
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.12);
+      padding: 15px;
+      border-radius: 13px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .career-icon {
+      width: 43px;
+      height: 43px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.15);
+      display: grid;
+      place-items: center;
+      font-size: 21px;
+      flex-shrink: 0;
+    }
+
+    .career-option strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .career-option small {
+      color: #cbd8ee;
+      font-size: 12px;
+    }
+
+    /* =========================
+       STATS
+    ========================== */
+
+    .stats {
+      max-width: 1120px;
+      margin: -30px auto 0;
+      position: relative;
+      z-index: 5;
+      padding: 0 20px;
+    }
+
+    .stats-grid {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      overflow: hidden;
+    }
+
+    .stat {
+      padding: 22px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:last-child {
+      border-right: none;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--navy);
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* =========================
+       GENERAL SECTIONS
+    ========================== */
+
+    section {
+      padding: 70px 5%;
+    }
+
+    .container {
+      max-width: 1250px;
+      margin: auto;
+    }
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: 38px;
+    }
+
+    .section-heading h2 {
+      color: var(--navy);
+      font-size: 34px;
+      letter-spacing: -.8px;
+      margin-bottom: 8px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      max-width: 650px;
+      margin: auto;
+    }
+
+    /* =========================
+       QUICK ACTIONS
+    ========================== */
+
+    .quick-section {
+      background: #fff;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 17px;
+    }
+
+    .quick-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,.04);
+      transition: .2s ease;
+    }
+
+    .quick-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow);
+    }
+
+    .quick-icon {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      font-size: 25px;
+      background: #eef5ff;
+      margin-bottom: 17px;
+    }
+
+    .quick-card h3 {
+      color: var(--navy);
+      margin-bottom: 7px;
+    }
+
+    .quick-card p {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    .quick-card a {
+      color: var(--green);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    /* =========================
+       CAREER BUILDER
+    ========================== */
+
+    .builder-section {
+      background: linear-gradient(180deg,#f7fbff,#eef7f2);
+    }
+
+    .builder {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .builder-content h2 {
+      color: var(--navy);
+      font-size: 38px;
+      line-height: 1.15;
+      margin-bottom: 15px;
+    }
+
+    .builder-content p {
+      color: var(--muted);
+      margin-bottom: 22px;
+      font-size: 16px;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: grid;
+      gap: 11px;
+      margin-bottom: 25px;
+    }
+
+    .feature-list li {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .check {
+      width: 23px;
+      height: 23px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #d8f5e4;
+      color: var(--green);
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .builder-preview {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 25px;
+      box-shadow: var(--shadow);
+    }
+
+    .cv-window {
+      border: 1px solid #dce2eb;
+      border-radius: 13px;
+      overflow: hidden;
+    }
+
+    .cv-header {
+      padding: 19px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e4e8ef;
+    }
+
+    .cv-header strong {
+      color: var(--navy);
+      font-size: 20px;
+    }
+
+    .cv-header small {
+      display: block;
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .cv-lines {
+      padding: 18px;
+    }
+
+    .line {
+      height: 9px;
+      background: #e8edf4;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    .line.short {
+      width: 55%;
+    }
+
+    .line.medium {
+      width: 75%;
+    }
+
+    /* =========================
+       JOBS
+    ========================== */
+
+    .jobs-section {
+      background: #fff;
+    }
+
+    .job-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .job-toolbar h3 {
+      color: var(--navy);
+      font-size: 22px;
+    }
+
+    .jobs-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 18px;
+    }
+
+    .job-card {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 16px;
+      padding: 21px;
+      transition: .2s ease;
+    }
+
+    .job-card:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-3px);
+    }
+
+    .job-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 13px;
+    }
+
+    .job-type {
+      background: #e8f8ef;
+      color: var(--green-dark);
+      border-radius: 20px;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .job-card h3 {
+      color: var(--navy);
+      font-size: 17px;
+      margin-bottom: 5px;
+    }
+
+    .company {
+      font-weight: 700;
+      color: #344054;
+      font-size: 13px;
+    }
+
+    .job-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .job-meta span {
+      background: #f5f7fa;
+      padding: 5px 8px;
+      border-radius: 7px;
+    }
+
+    .job-card .btn {
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .loading {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+
+    /* =========================
+       AUDIENCE
+    ========================== */
+
+    .audience {
+      background: #f6f8fc;
+    }
+
+    .audience-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+    }
+
+    .audience-card {
+      border-radius: 22px;
+      padding: 32px;
+      color: #fff;
+      min-height: 245px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .audience-card.jobseeker {
+      background: linear-gradient(135deg,#082567,#10499a);
+    }
+
+    .audience-card.employer {
+      background: linear-gradient(135deg,#05743a,#0a9e55);
+    }
+
+    .audience-card h3 {
+      font-size: 27px;
+      margin-bottom: 8px;
+    }
+
+    .audience-card p {
+      color: rgba(255,255,255,.84);
+      max-width: 500px;
+    }
+
+    /* =========================
+       CAREER CENTRE
+    ========================== */
+
+    .career-centre {
+      background: #fff;
+    }
+
+    .career-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 18px;
+    }
+
+    .career-card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      background: #fff;
+    }
+
+    .career-card .icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .career-card h3 {
+      color: var(--navy);
+      margin-bottom: 7px;
+    }
+
+    .career-card p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* =========================
+       TRUST
+    ========================== */
+
+    .trust {
+      background: var(--navy-dark);
+      color: #fff;
+    }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 20px;
+    }
+
+    .trust-item {
+      text-align: center;
+      padding: 15px;
+    }
+
+    .trust-item .icon {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .trust-item h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .trust-item p {
+      color: #b8c5dc;
+      font-size: 12px;
+    }
+
+    /* =========================
+       CTA
+    ========================== */
+
+    .cta {
+      padding: 55px 5%;
+      background: #eaf7ef;
+    }
+
+    .cta-box {
+      max-width: 1100px;
+      margin: auto;
+      background: linear-gradient(135deg,#05743a,#0a9e55);
+      border-radius: 24px;
+      padding: 38px;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 25px;
+    }
+
+    .cta-box h2 {
+      font-size: 30px;
+      margin-bottom: 5px;
+    }
+
+    .cta-box p {
+      color: #d8f8e5;
+    }
+
+    /* =========================
+       FOOTER
+    ========================== */
+
+    footer {
+      background: #03132f;
+      color: #fff;
+      padding: 55px 5% 25px;
+    }
+
+    .footer-grid {
+      max-width: 1250px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: 1.5fr repeat(3,1fr);
+      gap: 35px;
+    }
+
+    .footer-brand p {
+      color: #aab8d0;
+      font-size: 13px;
+      margin-top: 13px;
+      max-width: 330px;
+    }
+
+    footer h4 {
+      margin-bottom: 13px;
+      font-size: 14px;
+    }
+
+    footer a {
+      display: block;
+      color: #aab8d0;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    footer a:hover {
+      color: #fff;
+    }
+
+    .footer-bottom {
+      max-width: 1250px;
+      margin: 35px auto 0;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,.1);
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      color: #8795ad;
+      font-size: 12px;
+    }
+
+    /* =========================
+       WHATSAPP
+    ========================== */
+
+    .whatsapp {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 57px;
+      height: 57px;
+      border-radius: 50%;
+      background: #25D366;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 28px;
+      box-shadow: 0 8px 25px rgba(0,0,0,.22);
+      z-index: 999;
+    }
+
+    .whatsapp:hover {
+      transform: scale(1.05);
+    }
+
+    /* =========================
+       MOBILE
+    ========================== */
+
+    @media(max-width:1000px) {
+
+      .nav-links,
+      .nav-actions {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .nav.mobile-open {
+        position: relative;
+      }
+
+      .nav.mobile-open .nav-links {
+        display: flex;
+        position: absolute;
+        top: 76px;
+        left: 0;
+        right: 0;
+        padding: 15px 5%;
+        background: #fff;
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .nav.mobile-open .nav-actions {
+        display: flex;
+        position: absolute;
+        top: 280px;
+        left: 5%;
+        right: 5%;
+        background: #fff;
+        padding: 10px 0 18px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card {
+        max-width: 650px;
+      }
+
+      .quick-grid {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .jobs-grid {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .trust-grid {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .footer-grid {
+        grid-template-columns: repeat(2,1fr);
+      }
+    }
+
+    @media(max-width:650px) {
+
+      .topbar {
+        display: none;
+      }
+
+      .nav {
+        min-height: 67px;
+      }
+
+      .brand-logo {
+        width: 41px;
+        height: 41px;
+      }
+
+      .brand-name {
+        font-size: 20px;
+      }
+
+      .brand-tagline {
+        font-size: 8px;
+      }
+
+      .hero {
+        padding: 48px 5% 60px;
+      }
+
+      .hero h1 {
+        font-size: 42px;
+        letter-spacing: -1.5px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+      }
+
+      .hero-buttons .btn {
+        width: 100%;
+      }
+
+      .hero-search {
+        flex-direction: column;
+        gap: 7px;
+      }
+
+      .hero-search button {
+        min-height: 48px;
+      }
+
+      .stats {
+        margin-top: -20px;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .stat:nth-child(2) {
+        border-right: none;
+      }
+
+      .stat:nth-child(-n+2) {
+        border-bottom: 1px solid var(--border);
+      }
+
+      section {
+        padding: 55px 5%;
+      }
+
+      .section-heading h2 {
+        font-size: 28px;
+      }
+
+      .quick-grid,
+      .jobs-grid,
+      .career-grid,
+      .audience-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .builder {
+        grid-template-columns: 1fr;
+      }
+
+      .builder-content h2 {
+        font-size: 30px;
+      }
+
+      .trust-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .cta-box {
+        padding: 28px 22px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span>🇰🇪 Kenya's free job marketplace</span>
 
-<a href="/" style="text-decoration:none;">
-<div class="logo">Kazi<span>Nexus</span></div>
-</a>
+      <div class="top-links">
+        <a href="/about.html">About</a>
+        <a href="/trust-safety.html">Trust & Safety</a>
+        <a href="/contact.html">Contact</a>
+      </div>
+    </div>
+  </div>
 
-<nav>
-<a href="/jobs/">Find Jobs</a>
-<a href="/post-opportunity.html">Share Opportunity</a>
-<a href="/employers/auth.html">For Employers</a>
-<a href="/admin.html">Admin</a>
-</nav>
+  <!-- NAVIGATION -->
+  <header>
+    <nav class="nav" id="mainNav">
 
-</header>
+      <a href="/" class="brand">
+        <!--
+          IMPORTANT:
+          Upload your latest KaziNexus logo to the GitHub repository
+          using this filename:
+          KaziNexus Kenya Opportunity Logo.png
+        -->
+        <img
+          class="brand-logo"
+          src="/KaziNexus%20Kenya%20Opportunity%20Logo.png"
+          alt="KaziNexus Logo"
+          onerror="this.style.display='none'"
+        >
 
+        <div class="brand-text">
+          <div class="brand-name">
+            <span class="kazi">Kazi</span><span class="nexus">Nexus</span>
+          </div>
+          <div class="brand-tagline">
+            Connect Opportunities With the Right Talent.
+          </div>
+        </div>
+      </a>
 
-<section class="hero">
+      <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="/jobs/">Find Jobs</a>
+        <a href="/post-opportunity.html">Post Opportunity</a>
+        <a href="/cv-builder.html">CV Builder</a>
+        <a href="/partners.html">Partners</a>
+      </div>
 
-<div class="hero-inner">
+      <div class="nav-actions">
+        <a class="btn btn-outline" href="/jobseekers/auth.html">
+          Job Seeker Login
+        </a>
 
-<h1>
-Connect Opportunities With the Right Talent
-</h1>
+        <a class="btn btn-primary" href="/employers/auth.html">
+          Employer Login
+        </a>
+      </div>
 
-<p>
-Kenya's free job marketplace connecting jobseekers across all 47 counties with legitimate opportunities and verified employers.
-</p>
+      <button class="mobile-menu" onclick="toggleMenu()" aria-label="Open menu">
+        ☰
+      </button>
 
-<div class="actions">
+    </nav>
+  </header>
 
-<a href="/jobs/">
-Find Jobs
-</a>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
 
-<a class="alt" href="/post-opportunity.html">
-Post or Share an Opportunity
-</a>
+      <div>
 
-</div>
+        <div class="hero-badge">
+          🇰🇪 Built for Kenya • All 47 Counties
+        </div>
 
-</div>
+        <h1>
+          Find the right
+          <span>opportunity.</span>
+          Build your future.
+        </h1>
 
-</section>
+        <p>
+          KaziNexus connects jobseekers, employers, recruiters,
+          organizations and opportunities in one trusted Kenyan
+          career marketplace.
+        </p>
 
+        <div class="hero-buttons">
 
-<main>
+          <a class="btn btn-primary" href="/jobs/">
+            🔎 Find Jobs
+          </a>
 
-<section class="section">
+          <a class="btn btn-gold" href="/cv-builder.html">
+            🚀 Build Your CV
+          </a>
 
-<h2>Built for Kenya's Job Market</h2>
+          <a class="btn btn-outline" href="/post-opportunity.html">
+            📢 Post Opportunity
+          </a>
 
-<div class="grid">
+        </div>
 
-<div class="card">
+        <form class="hero-search" onsubmit="searchJobs(event)">
+          <input
+            id="heroSearch"
+            type="search"
+            placeholder="Search jobs, skills, companies or locations..."
+            aria-label="Search jobs"
+          >
 
-<h2>Find Jobs</h2>
+          <button type="submit">
+            Search Jobs
+          </button>
+        </form>
 
-<p>
-Search opportunities by keyword, county, category and job type.
-</p>
+      </div>
 
-<a href="/jobs/">
-Browse Current Jobs →
-</a>
+      <div class="hero-card">
 
-</div>
+        <div class="hero-card-title">
+          🚀 Your Career Toolkit
+        </div>
 
+        <div class="career-option">
+          <div class="career-icon">📄</div>
+          <div>
+            <strong>Build & Update Your CV</strong>
+            <small>Create an ATS-friendly CV from your profile.</small>
+          </div>
+        </div>
 
-<div class="card">
+        <div class="career-option">
+          <div class="career-icon">🎯</div>
+          <div>
+            <strong>Match Your CV to Jobs</strong>
+            <small>Identify skills and keywords employers need.</small>
+          </div>
+        </div>
 
-<h2>Post Free</h2>
+        <div class="career-option">
+          <div class="career-icon">✉️</div>
+          <div>
+            <strong>Create Applications</strong>
+            <small>Prepare tailored cover letters and applications.</small>
+          </div>
+        </div>
 
-<p>
-Employers and legitimate opportunity sharers can submit vacancies. New or unverified posters may require admin approval.
-</p>
+        <div class="career-option">
+          <div class="career-icon">📊</div>
+          <div>
+            <strong>Track Your Applications</strong>
+            <small>Keep your job search organized.</small>
+          </div>
+        </div>
 
-<a href="/post-opportunity.html">
-Submit an Opportunity →
-</a>
+      </div>
 
-</div>
+    </div>
+  </section>
 
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stats-grid">
 
-<div class="card">
+      <div class="stat">
+        <strong>47</strong>
+        <span>Counties Covered</span>
+      </div>
 
-<h2>Safety First</h2>
+      <div class="stat">
+        <strong id="jobCount">—</strong>
+        <span>Live Opportunities</span>
+      </div>
 
-<p>
-Help us keep KaziNexus useful by reporting suspicious or misleading opportunities.
-</p>
+      <div class="stat">
+        <strong>Free</strong>
+        <span>For Jobseekers</span>
+      </div>
 
-<a href="/trust-safety.html">
-Trust &amp; Safety →
-</a>
+      <div class="stat">
+        <strong>Free</strong>
+        <span>Employer Posting</span>
+      </div>
 
-</div>
+    </div>
+  </div>
 
-</div>
+  <!-- QUICK ACTIONS -->
+  <section class="quick-section">
 
-</section>
+    <div class="container">
 
+      <div class="section-heading">
+        <h2>Everything You Need to Move Forward</h2>
+        <p>
+          KaziNexus is more than a job board. It is your complete
+          career and opportunity platform.
+        </p>
+      </div>
 
-<section class="section contact">
+      <div class="quick-grid">
 
-<h2>Need Help?</h2>
+        <div class="quick-card">
+          <div class="quick-icon">🔎</div>
+          <h3>Find Jobs</h3>
+          <p>
+            Search opportunities by county, category, employer and job type.
+          </p>
+          <a href="/jobs/">Explore Jobs →</a>
+        </div>
 
-<p>
-Contact KaziNexus for support, partnerships or reporting assistance.
-</p>
+        <div class="quick-card">
+          <div class="quick-icon">📄</div>
+          <h3>Career Application Builder</h3>
+          <p>
+            Build your CV, tailor it to jobs and prepare professional applications.
+          </p>
+          <a href="/cv-builder.html">Open CV Builder →</a>
+        </div>
 
-<p>
-<strong>WhatsApp / Phone:</strong>
-<a href="https://wa.me/254706174379">
-0706174379
-</a>
-</p>
+        <div class="quick-card">
+          <div class="quick-icon">📢</div>
+          <h3>Post an Opportunity</h3>
+          <p>
+            Employers and organizations can submit legitimate opportunities.
+          </p>
+          <a href="/post-opportunity.html">Post Opportunity →</a>
+        </div>
 
-<p>
-<a href="/contact.html">
-Contact Us
-</a>
-</p>
+        <div class="quick-card">
+          <div class="quick-icon">🤝</div>
+          <h3>Partner With Us</h3>
+          <p>
+            NGOs, universities, recruiters and organizations can reach talent.
+          </p>
+          <a href="/partners.html">Become a Partner →</a>
+        </div>
 
-</section>
+      </div>
 
-</main>
+    </div>
 
+  </section>
 
-<footer>
+  <!-- CAREER APPLICATION BUILDER -->
+  <section class="builder-section">
 
-<div>
-<strong>KaziNexus</strong> — Kenya's free job marketplace
-</div>
+    <div class="container">
 
-<p>
-<a href="/contact.html">Contact</a>
-<a href="/trust-safety.html">Trust &amp; Safety</a>
-<a href="/legal.html">Legal</a>
-</p>
+      <div class="builder">
 
-</footer>
+        <div class="builder-content">
+
+          <div class="hero-badge" style="background:#e5f7ed;color:#05743a;border:none;">
+            🚀 KaziNexus Career Application Builder
+          </div>
+
+          <h2>
+            Don't just apply for jobs.
+            <br>
+            Apply better.
+          </h2>
+
+          <p>
+            Build a professional CV, import an existing CV, match your
+            profile to a job description and create a stronger application
+            package from one place.
+          </p>
+
+          <ul class="feature-list">
+
+            <li>
+              <span class="check">✓</span>
+              Upload and analyse your existing CV
+            </li>
+
+            <li>
+              <span class="check">✓</span>
+              Build an ATS-friendly CV
+            </li>
+
+            <li>
+              <span class="check">✓</span>
+              Match your CV to specific jobs
+            </li>
+
+            <li>
+              <span class="check">✓</span>
+              Identify missing skills and keywords
+            </li>
+
+            <li>
+              <span class="check">✓</span>
+              Generate tailored cover letters
+            </li>
+
+          </ul>
+
+          <a class="btn btn-primary" href="/cv-builder.html">
+            Open Career Application Builder →
+          </a>
+
+        </div>
+
+        <div class="builder-preview">
+
+          <div class="cv-window">
+
+            <div class="cv-header">
+              <strong>Wilson Odhiambo Otieno</strong>
+              <small>Professional CV Preview</small>
+            </div>
+
+            <div class="cv-lines">
+
+              <div class="line medium"></div>
+              <div class="line short"></div>
+
+              <br>
+
+              <strong style="color:#082567;">PROFESSIONAL SUMMARY</strong>
+
+              <div class="line"></div>
+              <div class="line"></div>
+              <div class="line medium"></div>
+
+              <br>
+
+              <strong style="color:#082567;">EXPERIENCE</strong>
+
+              <div class="line"></div>
+              <div class="line"></div>
+              <div class="line short"></div>
+
+              <br>
+
+              <strong style="color:#082567;">SKILLS</strong>
+
+              <div class="line medium"></div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- LATEST JOBS -->
+  <section class="jobs-section">
+
+    <div class="container">
+
+      <div class="job-toolbar">
+
+        <div>
+          <h3>🔥 Latest Opportunities</h3>
+          <p style="font-size:13px;color:#667085;">
+            Fresh opportunities from KaziNexus.
+          </p>
+        </div>
+
+        <a class="btn btn-outline" href="/jobs/">
+          View All Jobs →
+        </a>
+
+      </div>
+
+      <div class="jobs-grid" id="jobsGrid">
+
+        <div class="loading">
+          Loading latest opportunities...
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- JOB SEEKERS / EMPLOYERS -->
+  <section class="audience">
+
+    <div class="container">
+
+      <div class="section-heading">
+        <h2>Built for Both Sides of the Opportunity</h2>
+        <p>
+          Whether you are looking for your next role or looking for talent,
+          KaziNexus gives you the tools to connect.
+        </p>
+      </div>
+
+      <div class="audience-grid">
+
+        <div class="audience-card jobseeker">
+
+          <div>
+            <h3>👤 For Jobseekers</h3>
+
+            <p>
+              Create your profile, build your CV, discover opportunities,
+              apply for jobs and track your applications.
+            </p>
+          </div>
+
+          <div>
+            <a class="btn btn-gold" href="/jobseekers/auth.html">
+              Create Jobseeker Account →
+            </a>
+          </div>
+
+        </div>
+
+        <div class="audience-card employer">
+
+          <div>
+            <h3>🏢 For Employers</h3>
+
+            <p>
+              Reach qualified talent across Kenya and manage your
+              opportunities and applicants from your employer dashboard.
+            </p>
+          </div>
+
+          <div>
+            <a class="btn btn-gold" href="/employers/auth.html">
+              Employer Portal →
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- CAREER CENTRE -->
+  <section class="career-centre">
+
+    <div class="container">
+
+      <div class="section-heading">
+        <h2>KaziNexus Career Centre</h2>
+        <p>
+          Tools and resources to help you become more competitive.
+        </p>
+      </div>
+
+      <div class="career-grid">
+
+        <a href="/cv-builder.html" class="career-card">
+          <div class="icon">📄</div>
+          <h3>CV Builder</h3>
+          <p>
+            Build, update and tailor your professional CV.
+          </p>
+        </a>
+
+        <a href="/jobs/" class="career-card">
+          <div class="icon">🎯</div>
+          <h3>Job Matching</h3>
+          <p>
+            Find opportunities based on your skills and experience.
+          </p>
+        </a>
+
+        <a href="/alerts.html" class="career-card">
+          <div class="icon">🔔</div>
+          <h3>Job Alerts</h3>
+          <p>
+            Stay informed when new opportunities become available.
+          </p>
+        </a>
+
+        <a href="/about.html" class="career-card">
+          <div class="icon">🇰🇪</div>
+          <h3>Kenya Opportunities</h3>
+          <p>
+            Discover opportunities from counties across Kenya.
+          </p>
+        </a>
+
+        <a href="/trust-safety.html" class="career-card">
+          <div class="icon">🛡️</div>
+          <h3>Trust & Safety</h3>
+          <p>
+            Learn how KaziNexus works to keep opportunities safer.
+          </p>
+        </a>
+
+        <a href="/contact.html" class="career-card">
+          <div class="icon">💬</div>
+          <h3>Need Help?</h3>
+          <p>
+            Contact the KaziNexus team for assistance.
+          </p>
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- TRUST -->
+  <section class="trust">
+
+    <div class="container">
+
+      <div class="section-heading" style="margin-bottom:30px;">
+        <h2 style="color:#fff;">A Platform Built Around Trust</h2>
+        <p style="color:#b8c5dc;">
+          KaziNexus is designed to connect genuine opportunities with
+          people looking for meaningful work.
+        </p>
+      </div>
+
+      <div class="trust-grid">
+
+        <div class="trust-item">
+          <div class="icon">🛡️</div>
+          <h3>Verification</h3>
+          <p>
+            Verified employers and organizations can receive verification badges.
+          </p>
+        </div>
+
+        <div class="trust-item">
+          <div class="icon">🇰🇪</div>
+          <h3>Kenya Focused</h3>
+          <p>
+            Built specifically for opportunities across all 47 counties.
+          </p>
+        </div>
+
+        <div class="trust-item">
+          <div class="icon">🆓</div>
+          <h3>Free Access</h3>
+          <p>
+            Jobseekers can access the marketplace without paying to search.
+          </p>
+        </div>
+
+        <div class="trust-item">
+          <div class="icon">🚨</div>
+          <h3>Report Suspicious Posts</h3>
+          <p>
+            Users can report opportunities that appear suspicious or misleading.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+
+    <div class="cta-box">
+
+      <div>
+        <h2>Ready for your next opportunity?</h2>
+        <p>
+          Start with a job search or build a stronger application today.
+        </p>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+
+        <a class="btn btn-gold" href="/jobs/">
+          Find Jobs
+        </a>
+
+        <a class="btn" style="background:#fff;color:#05743a;" href="/cv-builder.html">
+          Build My CV
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+
+    <div class="footer-grid">
+
+      <div class="footer-brand">
+
+        <div class="brand-name">
+          <span style="color:#fff;">Kazi</span>
+          <span style="color:#55d58a;">Nexus</span>
+        </div>
+
+        <p>
+          Kenya's free job marketplace connecting opportunities
+          with the right talent.
+        </p>
+
+        <p style="margin-top:12px;">
+          📞 0706174379<br>
+          💬 WhatsApp available
+        </p>
+
+      </div>
+
+      <div>
+        <h4>Jobseekers</h4>
+        <a href="/jobs/">Find Jobs</a>
+        <a href="/cv-builder.html">Build CV</a>
+        <a href="/jobseekers/auth.html">Jobseeker Login</a>
+        <a href="/alerts.html">Job Alerts</a>
+      </div>
+
+      <div>
+        <h4>Employers</h4>
+        <a href="/post-opportunity.html">Post Opportunity</a>
+        <a href="/employers/auth.html">Employer Login</a>
+        <a href="/partners.html">Partners</a>
+        <a href="/contact.html">Contact Us</a>
+      </div>
+
+      <div>
+        <h4>KaziNexus</h4>
+        <a href="/about.html">About Us</a>
+        <a href="/trust-safety.html">Trust & Safety</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/terms.html">Terms</a>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+
+      <span>
+        © <span id="year"></span> KaziNexus. All rights reserved.
+      </span>
+
+      <span>
+        Connect Opportunities With the Right Talent.
+      </span>
+
+    </div>
+
+  </footer>
+
+  <!-- WHATSAPP -->
+  <a
+    class="whatsapp"
+    href="https://wa.me/254706174379?text=Hello%20KaziNexus%2C%20I%20need%20help."
+    target="_blank"
+    rel="noopener"
+    aria-label="Contact KaziNexus on WhatsApp"
+  >
+    💬
+  </a>
+
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+
+    /* =========================
+       CONFIGURATION
+    ========================== */
+
+    const SUPABASE_URL =
+      "https://vljehlfeglstpgphzebj.supabase.co";
+
+    const SUPABASE_KEY =
+      "sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3";
+
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
+
+    /* =========================
+       YEAR
+    ========================== */
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    /* =========================
+       MOBILE MENU
+    ========================== */
+
+    function toggleMenu() {
+
+      const nav = document.getElementById("mainNav");
+
+      nav.classList.toggle("mobile-open");
+
+    }
+
+    /* =========================
+       SEARCH
+    ========================== */
+
+    function searchJobs(event) {
+
+      event.preventDefault();
+
+      const value =
+        document.getElementById("heroSearch").value.trim();
+
+      if (!value) {
+
+        window.location.href = "/jobs/";
+
+        return;
+      }
+
+      window.location.href =
+        "/jobs/?search=" +
+        encodeURIComponent(value);
+
+    }
+
+    /* =========================
+       LOAD JOBS
+    ========================== */
+
+    async function loadLatestJobs() {
+
+      const grid =
+        document.getElementById("jobsGrid");
+
+      try {
+
+        const { data, error } =
+          await supabaseClient
+            .from("public_active_jobs")
+            .select("*")
+            .order("created_at", {
+              ascending: false
+            })
+            .limit(6);
+
+        if (error) {
+          throw error;
+        }
+
+        const jobs = data || [];
+
+        document.getElementById("jobCount").textContent =
+          jobs.length > 0 ? jobs.length + "+" : "0";
+
+        if (!jobs.length) {
+
+          grid.innerHTML = `
+            <div class="loading">
+              <div style="font-size:30px;margin-bottom:10px;">📭</div>
+              <strong>No live opportunities found.</strong>
+              <p style="margin-top:5px;">
+                Check the jobs page for the latest listings.
+              </p>
+              <br>
+              <a class="btn btn-primary" href="/jobs/">
+                Browse Jobs
+              </a>
+            </div>
+          `;
+
+          return;
+        }
+
+        grid.innerHTML = jobs.map(job => {
+
+          const title =
+            escapeHTML(job.title || "Opportunity");
+
+          const company =
+            escapeHTML(
+              job.company ||
+              job.organization_name ||
+              "Employer"
+            );
+
+          const location =
+            escapeHTML(
+              job.location || "Kenya"
+            );
+
+          const type =
+            escapeHTML(
+              job.job_type || "Opportunity"
+            );
+
+          const salary =
+            job.salary
+              ? escapeHTML(String(job.salary))
+              : "";
+
+          const deadline =
+            job.deadline
+              ? formatDate(job.deadline)
+              : "";
+
+          return `
+            <article class="job-card">
+
+              <div class="job-top">
+
+                <div style="font-size:22px;">
+                  💼
+                </div>
+
+                <span class="job-type">
+                  ${type}
+                </span>
+
+              </div>
+
+              <h3>${title}</h3>
+
+              <div class="company">
+                ${company}
+              </div>
+
+              <div class="job-meta">
+
+                <span>📍 ${location}</span>
+
+                ${
+                  salary
+                    ? `<span>💰 ${salary}</span>`
+                    : ""
+                }
+
+                ${
+                  deadline
+                    ? `<span>⏳ ${deadline}</span>`
+                    : ""
+                }
+
+              </div>
+
+              <a
+                class="btn btn-navy"
+                href="/jobs/detail.html?id=${encodeURIComponent(job.id)}"
+              >
+                View Opportunity
+              </a>
+
+            </article>
+          `;
+
+        }).join("");
+
+      } catch (error) {
+
+        console.error(
+          "KaziNexus job loading error:",
+          error
+        );
+
+        grid.innerHTML = `
+          <div class="loading">
+
+            <div style="font-size:30px;margin-bottom:10px;">
+              ⚠️
+            </div>
+
+            <strong>
+              Opportunities are temporarily unavailable.
+            </strong>
+
+            <p style="margin-top:5px;">
+              Please try again shortly.
+            </p>
+
+            <br>
+
+            <a class="btn btn-outline" href="/jobs/">
+              Open Jobs Page
+            </a>
+
+          </div>
+        `;
+
+      }
+
+    }
+
+    /* =========================
+       DATE FORMAT
+    ========================== */
+
+    function formatDate(value) {
+
+      try {
+
+        return new Date(value)
+          .toLocaleDateString(
+            "en-KE",
+            {
+              day: "numeric",
+              month: "short",
+              year: "numeric"
+            }
+          );
+
+      } catch {
+
+        return value;
+
+      }
+
+    }
+
+    /* =========================
+       HTML SAFETY
+    ========================== */
+
+    function escapeHTML(value) {
+
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    }
+
+    /* =========================
+       START
+    ========================== */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      loadLatestJobs
+    );
+
+  </script>
 
 </body>
 </html>
-```
