@@ -1,22 +1,1623 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KaziNexus | Post a Job</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>KaziNexus | Post a Job</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>body{margin:0;font-family:Arial,sans-serif;background:#f5f7fa;color:#172033}.header{background:#fff;border-bottom:1px solid #ddd;padding:16px 6%;display:flex;justify-content:space-between;align-items:center}.logo{font-size:27px;font-weight:800;color:#126b48}.logo span{color:#f2a900}.header a{color:#126b48;text-decoration:none;font-weight:700}.container{max-width:850px;margin:45px auto;padding:0 20px}.card{background:#fff;padding:32px;border-radius:14px;box-shadow:0 5px 20px #00000010}h1{margin-top:0}.intro{color:#667085;margin-bottom:28px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field{margin-bottom:18px}.full{grid-column:1/-1}label{display:block;font-weight:700;margin-bottom:7px}input,select,textarea{width:100%;padding:13px;border:1px solid #d5dbe3;border-radius:8px;font-size:15px;box-sizing:border-box}textarea{min-height:120px;resize:vertical}button{background:#126b48;color:white;border:0;padding:14px 24px;border-radius:8px;font-weight:800;font-size:16px;cursor:pointer}.note{background:#eef8f3;padding:13px;border-radius:8px;color:#126b48;margin-bottom:25px}.msg{display:none;margin-top:20px;padding:15px;border-radius:9px;line-height:1.5}.success{background:#e9f7ef;color:#126b48}.error{background:#fff0f0;color:#a12b2b}@media(max-width:650px){.grid{grid-template-columns:1fr}.full{grid-column:auto}}</style></head>
-<body><header class="header"><div class="logo">Kazi<span>Nexus</span></div><a href="/employers/dashboard.html">Dashboard</a></header>
-<div class="container"><div class="card"><h1>Post a Job</h1><p class="intro">Connect your vacancy with candidates who have the right skills.</p><div class="note"><strong>Basic job posting is free</strong> for employers on KaziNexus.</div>
-<form id="jobForm"><div class="grid"><div class="field"><label>Job Title *</label><input id="title" required></div><div class="field"><label>Company / Organization *</label><input id="company" required></div><div class="field"><label>Location *</label><input id="location" required placeholder="e.g. Kisumu, Nairobi, Remote"></div><div class="field"><label>Job Type *</label><select id="type" required><option value="">Select type</option><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Internship</option><option>Volunteer</option><option>Remote</option></select></div><div class="field"><label>Salary / Compensation</label><input id="salary"></div><div class="field"><label>Application Deadline *</label><input id="deadline" type="date" required></div><div class="field full"><label>Job Description *</label><textarea id="description" required></textarea></div><div class="field full"><label>Key Responsibilities</label><textarea id="responsibilities"></textarea></div><div class="field full"><label>Qualifications & Requirements</label><textarea id="qualifications"></textarea></div><div class="field"><label>Application Email</label><input id="application_email" type="email"></div><div class="field"><label>Application Link</label><input id="application_link" type="url" placeholder="https://..."></div><div class="field"><label>Contact Person</label><input id="contact"></div></div><button id="submitBtn" type="submit">Publish Job</button></form><div id="msg" class="msg"></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<style>
+
+:root{
+  --navy:#102a43;
+  --green:#126b48;
+  --green2:#16865a;
+  --bg:#f4f7f9;
+  --white:#fff;
+  --text:#172033;
+  --muted:#667085;
+  --border:#d5dbe3;
+  --danger:#a12b2b;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.header{
+  background:#fff;
+  border-bottom:1px solid #e5e7eb;
+  padding:15px 6%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.logo{
+  font-size:27px;
+  font-weight:900;
+  color:var(--navy);
+}
+
+.logo span{
+  color:var(--green);
+}
+
+.header-right{
+  display:flex;
+  gap:18px;
+  align-items:center;
+}
+
+.header a{
+  color:var(--green);
+  text-decoration:none;
+  font-weight:800;
+}
+
+.container{
+  max-width:950px;
+  margin:35px auto;
+  padding:0 20px;
+}
+
+.card{
+  background:#fff;
+  padding:30px;
+  border-radius:16px;
+  box-shadow:0 7px 25px rgba(16,42,67,.08);
+}
+
+h1{
+  margin:0 0 8px;
+  color:var(--navy);
+}
+
+.intro{
+  color:var(--muted);
+  margin-bottom:25px;
+}
+
+.note{
+  background:#eef8f3;
+  padding:15px;
+  border-radius:10px;
+  color:var(--green);
+  margin-bottom:25px;
+  line-height:1.5;
+}
+
+
+/* IMPORT BOX */
+
+.import-box{
+  border:2px dashed #b9d9ca;
+  background:#f8fcfa;
+  border-radius:14px;
+  padding:22px;
+  margin-bottom:28px;
+}
+
+.import-box h2{
+  margin:0 0 7px;
+  color:var(--navy);
+  font-size:20px;
+}
+
+.import-box p{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:5px;
+}
+
+.import-actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:15px;
+}
+
+.import-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--green);
+  color:#fff;
+  border:0;
+  padding:12px 16px;
+  border-radius:9px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.import-btn.secondary{
+  background:#eaf4ef;
+  color:var(--green);
+}
+
+.file-input{
+  display:none;
+}
+
+.preview{
+  display:none;
+  margin-top:18px;
+}
+
+.preview img{
+  max-width:100%;
+  max-height:350px;
+  border-radius:10px;
+  border:1px solid var(--border);
+}
+
+.ocr-status{
+  display:none;
+  margin-top:14px;
+  padding:12px;
+  border-radius:9px;
+  background:#eef4f8;
+  color:var(--navy);
+  font-size:13px;
+  font-weight:700;
+}
+
+.advert-text{
+  width:100%;
+  min-height:180px;
+  margin-top:15px;
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  font-size:14px;
+  resize:vertical;
+}
+
+.extract-btn{
+  margin-top:10px;
+  background:var(--navy);
+  color:#fff;
+  border:0;
+  padding:11px 15px;
+  border-radius:8px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+
+/* FORM */
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.field{
+  margin-bottom:3px;
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+label{
+  display:block;
+  font-weight:800;
+  margin-bottom:7px;
+  color:var(--navy);
+}
+
+.optional{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:normal;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-size:15px;
+  background:#fff;
+  color:var(--text);
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  outline:none;
+  border-color:var(--green);
+  box-shadow:0 0 0 3px rgba(18,107,72,.08);
+}
+
+textarea{
+  min-height:130px;
+  resize:vertical;
+}
+
+.form-note{
+  background:#f8fafb;
+  border-left:4px solid var(--green);
+  padding:12px;
+  margin:5px 0 20px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.submit-area{
+  margin-top:25px;
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+button.publish{
+  background:var(--green);
+  color:#fff;
+  border:0;
+  padding:14px 24px;
+  border-radius:9px;
+  font-weight:900;
+  font-size:16px;
+  cursor:pointer;
+}
+
+button.publish:hover{
+  background:var(--green2);
+}
+
+button:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+
+.msg{
+  display:none;
+  margin-top:20px;
+  padding:15px;
+  border-radius:9px;
+  line-height:1.5;
+  font-weight:700;
+}
+
+.success{
+  background:#e9f7ef;
+  color:var(--green);
+}
+
+.error{
+  background:#fff0f0;
+  color:var(--danger);
+}
+
+.help{
+  color:var(--muted);
+  font-size:12px;
+}
+
+@media(max-width:700px){
+
+  .header{
+    padding:14px 18px;
+  }
+
+  .header-right{
+    gap:10px;
+  }
+
+  .header-right a:last-child{
+    display:none;
+  }
+
+  .container{
+    margin:20px auto;
+    padding:0 12px;
+  }
+
+  .card{
+    padding:20px;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .full{
+    grid-column:auto;
+  }
+
+  .import-actions{
+    flex-direction:column;
+  }
+
+  .import-btn{
+    width:100%;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+  <div class="logo">
+    Kazi<span>Nexus</span>
+  </div>
+
+  <div class="header-right">
+
+    <a href="dashboard-connected.html">
+      📊 Dashboard
+    </a>
+
+    <a href="index.html">
+      🌐 Marketplace
+    </a>
+
+  </div>
+
+</header>
+
+
+<div class="container">
+
+<div class="card">
+
+<h1>
+  Post a Job
+</h1>
+
+<p class="intro">
+  Connect your vacancy with candidates who have the right skills.
+</p>
+
+
+<div class="note">
+
+<strong>Basic job posting is free</strong>
+for employers on KaziNexus.
+
+<br>
+
+Your submission may be reviewed by the KaziNexus team before it appears publicly.
+
+</div>
+
+
+
+<!-- IMPORT JOB ADVERT -->
+
+<div class="import-box">
+
+<h2>
+  📋 Import Your Job Advert
+</h2>
+
+<p>
+  Already have a complete job advert? Paste it below or upload a job poster/image.
+  KaziNexus will help extract the information into the form.
+</p>
+
+
+<div class="import-actions">
+
+<button
+  type="button"
+  class="import-btn"
+  onclick="document.getElementById('posterInput').click()">
+
+  📷 Upload Job Poster
+
+</button>
+
+
+<button
+  type="button"
+  class="import-btn secondary"
+  onclick="document.getElementById('advertText').focus()">
+
+  📋 Paste Job Advert
+
+</button>
+
+</div>
+
+
+<input
+  id="posterInput"
+  class="file-input"
+  type="file"
+  accept="image/png,image/jpeg,image/webp">
+
+
+<div
+  id="preview"
+  class="preview">
+
+  <img
+    id="previewImage"
+    alt="Job poster preview">
+
+</div>
+
+
+<div
+  id="ocrStatus"
+  class="ocr-status">
+</div>
+
+
+<textarea
+  id="advertText"
+  class="advert-text"
+  placeholder="Paste the complete job advert here..."></textarea>
+
+
+<button
+  type="button"
+  class="extract-btn"
+  onclick="extractAdvert()">
+
+  ✨ Extract Job Details
+
+</button>
+
+</div>
+
+
+
+<form id="jobForm">
+
+<div class="grid">
+
+
+<!-- TITLE -->
+
+<div class="field">
+
+<label>
+  Job Title *
+</label>
+
+<input
+  id="title"
+  required
+  placeholder="e.g. Sales Representative">
+
+</div>
+
+
+<!-- COMPANY -->
+
+<div class="field">
+
+<label>
+  Company / Organization *
+</label>
+
+<input
+  id="company"
+  required
+  placeholder="e.g. KaziNexus">
+
+</div>
+
+
+<!-- LOCATION -->
+
+<div class="field">
+
+<label>
+  Location *
+</label>
+
+<input
+  id="location"
+  required
+  placeholder="e.g. Kisumu, Nairobi, Remote">
+
+</div>
+
+
+<!-- TYPE -->
+
+<div class="field">
+
+<label>
+  Job Type *
+</label>
+
+<select
+  id="type"
+  required>
+
+<option value="">
+  Select type
+</option>
+
+<option>
+  Full-time
+</option>
+
+<option>
+  Part-time
+</option>
+
+<option>
+  Contract
+</option>
+
+<option>
+  Internship
+</option>
+
+<option>
+  Volunteer
+</option>
+
+<option>
+  Remote
+</option>
+
+</select>
+
+</div>
+
+
+<!-- SALARY -->
+
+<div class="field">
+
+<label>
+  Salary / Compensation
+  <span class="optional">(Optional)</span>
+</label>
+
+<input
+  id="salary"
+  placeholder="e.g. KSh 30,000 + commission">
+
+</div>
+
+
+<!-- DEADLINE -->
+
+<div class="field">
+
+<label>
+  Application Deadline
+  <span class="optional">(Optional)</span>
+</label>
+
+<input
+  id="deadline"
+  type="date">
+
+</div>
+
+
+<!-- DESCRIPTION -->
+
+<div class="field full">
+
+<label>
+  Job Description *
+</label>
+
+<textarea
+  id="description"
+  required
+  placeholder="Describe the opportunity..."></textarea>
+
+</div>
+
+
+<!-- RESPONSIBILITIES -->
+
+<div class="field full">
+
+<label>
+  Key Responsibilities
+  <span class="optional">(Optional)</span>
+</label>
+
+<textarea
+  id="responsibilities"
+  placeholder="List the main responsibilities..."></textarea>
+
+</div>
+
+
+<!-- QUALIFICATIONS -->
+
+<div class="field full">
+
+<label>
+  Qualifications & Requirements
+  <span class="optional">(Optional)</span>
+</label>
+
+<textarea
+  id="qualifications"
+  placeholder="List qualifications and requirements..."></textarea>
+
+</div>
+
+
+<!-- EMAIL -->
+
+<div class="field">
+
+<label>
+  Application Email
+  <span class="optional">(Optional)</span>
+</label>
+
+<input
+  id="application_email"
+  type="email"
+  placeholder="jobs@example.com">
+
+</div>
+
+
+<!-- LINK -->
+
+<div class="field">
+
+<label>
+  Application Link
+  <span class="optional">(Optional)</span>
+</label>
+
+<input
+  id="application_link"
+  type="url"
+  placeholder="https://...">
+
+</div>
+
+
+<!-- CONTACT -->
+
+<div class="field">
+
+<label>
+  Contact Person
+  <span class="optional">(Optional)</span>
+</label>
+
+<input
+  id="contact"
+  placeholder="Name / HR contact">
+
+</div>
+
+</div>
+
+
+<div class="form-note">
+
+<strong>💡 Tip:</strong>
+You can paste the original advert above or upload its poster.
+Always review the extracted information before publishing.
+
+</div>
+
+
+<div class="submit-area">
+
+<button
+  id="submitBtn"
+  class="publish"
+  type="submit">
+
+  Publish Job
+
+</button>
+
+<span class="help">
+  Submitted jobs are subject to KaziNexus moderation rules.
+</span>
+
+</div>
+
+</form>
+
+
+<div
+  id="msg"
+  class="msg">
+</div>
+
+
+</div>
+
+</div>
+
+
+
 <script>
-const SUPABASE_URL='https://vljehlfeglstpgphzebj.supabase.co';
-const SUPABASE_KEY='sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3';
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const form=document.getElementById('jobForm'); const msg=document.getElementById('msg'); const btn=document.getElementById('submitBtn');
-function message(t,c){msg.textContent=t;msg.className='msg '+c;msg.style.display='block'}
-(async()=>{const {data:{session}}=await db.auth.getSession(); if(!session){message('Please log in as an employer before posting a job.','error');btn.disabled=true;}})();
-form.addEventListener('submit',async e=>{e.preventDefault();msg.style.display='none';btn.disabled=true;btn.textContent='Publishing...';
- try{const {data:{session}}=await db.auth.getSession();if(!session)throw new Error('Please log in as an employer first.');
- const company=document.getElementById('company').value.trim();
- const {data,error}=await db.from('jobs').insert({employer_id:session.user.id,title:document.getElementById('title').value.trim(),company,location:document.getElementById('location').value.trim(),job_type:document.getElementById('type').value,salary:document.getElementById('salary').value.trim()||null,description:document.getElementById('description').value.trim(),responsibilities:document.getElementById('responsibilities').value.trim()||null,qualifications:document.getElementById('qualifications').value.trim()||null,application_email:document.getElementById('application_email').value.trim()||null,application_link:document.getElementById('application_link').value.trim()||null,contact_person:document.getElementById('contact').value.trim()||null,deadline:document.getElementById('deadline').value,status:'pending'}).select().single();
- if(error)throw error; message('Job submitted successfully. It is now pending admin review before appearing publicly.','success'); form.reset(); setTimeout(()=>location.href='/employers/dashboard.html',1200);
- }catch(err){message(err.message||'Unable to publish job.','error');btn.disabled=false;btn.textContent='Publish Job';}
-});
-</script></body></html>
+
+const SUPABASE_URL =
+'https://vljehlfeglstpgphzebj.supabase.co';
+
+const SUPABASE_KEY =
+'sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3';
+
+const db =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+const form =
+document.getElementById('jobForm');
+
+const msg =
+document.getElementById('msg');
+
+const btn =
+document.getElementById('submitBtn');
+
+const posterInput =
+document.getElementById('posterInput');
+
+const preview =
+document.getElementById('preview');
+
+const previewImage =
+document.getElementById('previewImage');
+
+const ocrStatus =
+document.getElementById('ocrStatus');
+
+const advertText =
+document.getElementById('advertText');
+
+
+function message(text,type){
+
+  msg.textContent =
+    text;
+
+  msg.className =
+    'msg ' + type;
+
+  msg.style.display =
+    'block';
+
+  window.scrollTo({
+    top:document.body.scrollHeight,
+    behavior:'smooth'
+  });
+
+}
+
+
+/*
+  CHECK LOGIN
+*/
+
+(async()=>{
+
+  const {
+    data:{
+      session
+    }
+  } =
+  await db.auth.getSession();
+
+
+  if(!session){
+
+    message(
+      'Please log in as an employer before posting a job.',
+      'error'
+    );
+
+    btn.disabled =
+      true;
+
+  }
+
+})();
+
+
+
+/*
+  IMAGE UPLOAD + OCR
+*/
+
+posterInput.addEventListener(
+  'change',
+  async function(){
+
+    const file =
+      this.files[0];
+
+    if(!file){
+
+      return;
+
+    }
+
+
+    if(
+      ![
+        'image/png',
+        'image/jpeg',
+        'image/webp'
+      ].includes(file.type)
+    ){
+
+      message(
+        'Please upload a JPG, PNG or WEBP image.',
+        'error'
+      );
+
+      return;
+
+    }
+
+
+    const reader =
+      new FileReader();
+
+
+    reader.onload =
+      function(e){
+
+        previewImage.src =
+          e.target.result;
+
+        preview.style.display =
+          'block';
+
+      };
+
+
+    reader.readAsDataURL(file);
+
+
+    ocrStatus.style.display =
+      'block';
+
+    ocrStatus.textContent =
+      '🔎 Reading the job poster... Please wait.';
+
+
+    try{
+
+      const result =
+        await Tesseract.recognize(
+          file,
+          'eng',
+          {
+            logger:function(info){
+
+              if(
+                info.status ===
+                'recognizing text'
+              ){
+
+                const percent =
+                  Math.round(
+                    (info.progress || 0) * 100
+                  );
+
+                ocrStatus.textContent =
+                  '🔎 Reading job poster... ' +
+                  percent +
+                  '%';
+
+              }
+
+            }
+          }
+        );
+
+
+      const text =
+        result.data.text ||
+        '';
+
+
+      advertText.value =
+        text.trim();
+
+
+      if(text.trim()){
+
+        ocrStatus.textContent =
+          '✅ Job poster text extracted. Review it and click "Extract Job Details".';
+
+        extractAdvert();
+
+      }else{
+
+        ocrStatus.textContent =
+          '⚠️ No readable text was found in the image.';
+
+      }
+
+
+    }catch(error){
+
+      console.error(
+        'OCR error:',
+        error
+      );
+
+      ocrStatus.textContent =
+        '⚠️ Could not read the image. You can paste the advert manually.';
+
+    }
+
+  }
+);
+
+
+
+/*
+  EXTRACT DETAILS FROM PASTED/OCR TEXT
+*/
+
+function extractAdvert(){
+
+  const text =
+    advertText.value.trim();
+
+
+  if(!text){
+
+    message(
+      'Please paste a job advert or upload a job poster first.',
+      'error'
+    );
+
+    return;
+
+  }
+
+
+  /*
+    TITLE
+  */
+
+  let title = '';
+
+
+  const titlePatterns = [
+
+    /job\s*title\s*[:\-]\s*(.+)/i,
+
+    /position\s*[:\-]\s*(.+)/i,
+
+    /position\s*title\s*[:\-]\s*(.+)/i,
+
+    /we\s+are\s+hiring\s+(.+)/i,
+
+    /hiring\s+(.+)/i
+
+  ];
+
+
+  for(
+    const pattern of titlePatterns
+  ){
+
+    const match =
+      text.match(pattern);
+
+    if(match){
+
+      title =
+        cleanLine(match[1]);
+
+      break;
+
+    }
+
+  }
+
+
+  /*
+    COMPANY
+  */
+
+  let company = '';
+
+
+  const companyPatterns = [
+
+    /company\s*[:\-]\s*(.+)/i,
+
+    /organization\s*[:\-]\s*(.+)/i,
+
+    /organisation\s*[:\-]\s*(.+)/i,
+
+    /employer\s*[:\-]\s*(.+)/i
+
+  ];
+
+
+  for(
+    const pattern of companyPatterns
+  ){
+
+    const match =
+      text.match(pattern);
+
+    if(match){
+
+      company =
+        cleanLine(match[1]);
+
+      break;
+
+    }
+
+  }
+
+
+  /*
+    LOCATION
+  */
+
+  let location = '';
+
+
+  const locationMatch =
+    text.match(
+      /location\s*[:\-]\s*(.+)/i
+    );
+
+
+  if(locationMatch){
+
+    location =
+      cleanLine(
+        locationMatch[1]
+      );
+
+  }
+
+
+  /*
+    EMAIL
+  */
+
+  const emailMatch =
+    text.match(
+      /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i
+    );
+
+
+  /*
+    APPLICATION LINK
+  */
+
+  const linkMatch =
+    text.match(
+      /https?:\/\/[^\s<>"')]+/i
+    );
+
+
+  /*
+    DEADLINE
+  */
+
+  const deadlineMatch =
+    text.match(
+      /(?:deadline|closing date|application closes?)\s*[:\-]?\s*([^\n]+)/i
+    );
+
+
+  /*
+    CONTACT PERSON
+  */
+
+  let contact = '';
+
+
+  const contactMatch =
+    text.match(
+      /(?:contact person|contact|hr contact)\s*[:\-]\s*([^\n]+)/i
+    );
+
+
+  if(contactMatch){
+
+    contact =
+      cleanLine(
+        contactMatch[1]
+      );
+
+  }
+
+
+  /*
+    FILL FIELDS
+  */
+
+  if(title){
+
+    document.getElementById(
+      'title'
+    ).value =
+      title;
+
+  }
+
+
+  if(company){
+
+    document.getElementById(
+      'company'
+    ).value =
+      company;
+
+  }
+
+
+  if(location){
+
+    document.getElementById(
+      'location'
+    ).value =
+      location;
+
+  }
+
+
+  if(emailMatch){
+
+    document.getElementById(
+      'application_email'
+    ).value =
+      emailMatch[0];
+
+  }
+
+
+  if(linkMatch){
+
+    document.getElementById(
+      'application_link'
+    ).value =
+      linkMatch[0];
+
+  }
+
+
+  if(contact){
+
+    document.getElementById(
+      'contact'
+    ).value =
+      contact;
+
+  }
+
+
+  if(
+    deadlineMatch
+  ){
+
+    const date =
+      findDate(
+        deadlineMatch[1]
+      );
+
+    if(date){
+
+      document.getElementById(
+        'deadline'
+      ).value =
+        date;
+
+    }
+
+  }
+
+
+  /*
+    USE ORIGINAL ADVERT AS DESCRIPTION
+    IF DESCRIPTION IS EMPTY
+  */
+
+  const description =
+    document.getElementById(
+      'description'
+    );
+
+
+  if(!description.value.trim()){
+
+    description.value =
+      text;
+
+  }
+
+
+  /*
+    TRY TO IDENTIFY JOB TYPE
+  */
+
+  const lower =
+    text.toLowerCase();
+
+  const type =
+    document.getElementById(
+      'type'
+    );
+
+
+  if(
+    lower.includes('full-time') ||
+    lower.includes('full time')
+  ){
+
+    type.value =
+      'Full-time';
+
+  }else if(
+    lower.includes('part-time') ||
+    lower.includes('part time')
+  ){
+
+    type.value =
+      'Part-time';
+
+  }else if(
+    lower.includes('internship') ||
+    lower.includes('intern')
+  ){
+
+    type.value =
+      'Internship';
+
+  }else if(
+    lower.includes('volunteer')
+  ){
+
+    type.value =
+      'Volunteer';
+
+  }else if(
+    lower.includes('remote')
+  ){
+
+    type.value =
+      'Remote';
+
+  }else if(
+    lower.includes('contract')
+  ){
+
+    type.value =
+      'Contract';
+
+  }
+
+
+  message(
+    '✅ Job information extracted. Please review and complete the form before publishing.',
+    'success'
+  );
+
+}
+
+
+function cleanLine(value){
+
+  return String(value || '')
+    .replace(/\r/g,'')
+    .split('\n')[0]
+    .trim()
+    .replace(/[|•]+$/,'')
+    .trim();
+
+}
+
+
+function findDate(value){
+
+  const text =
+    String(value || '');
+
+
+  /*
+    YYYY-MM-DD
+  */
+
+  let match =
+    text.match(
+      /\b(20\d{2})[-\/](\d{1,2})[-\/](\d{1,2})\b/
+    );
+
+
+  if(match){
+
+    return (
+      match[1] +
+      '-' +
+      String(match[2]).padStart(2,'0') +
+      '-' +
+      String(match[3]).padStart(2,'0')
+    );
+
+  }
+
+
+  /*
+    DD/MM/YYYY
+  */
+
+  match =
+    text.match(
+      /\b(\d{1,2})[\/\-](\d{1,2})[\/\-](20\d{2})\b/
+    );
+
+
+  if(match){
+
+    return (
+      match[3] +
+      '-' +
+      String(match[2]).padStart(2,'0') +
+      '-' +
+      String(match[1]).padStart(2,'0')
+    );
+
+  }
+
+
+  return '';
+
+}
+
+
+
+/*
+  SUBMIT JOB
+*/
+
+form.addEventListener(
+  'submit',
+  async function(e){
+
+    e.preventDefault();
+
+
+    msg.style.display =
+      'none';
+
+
+    btn.disabled =
+      true;
+
+    btn.textContent =
+      'Submitting...';
+
+
+    try{
+
+      const {
+        data:{
+          session
+        }
+      } =
+      await db.auth.getSession();
+
+
+      if(!session){
+
+        throw new Error(
+          'Please log in as an employer first.'
+        );
+
+      }
+
+
+      const company =
+        document.getElementById(
+          'company'
+        ).value.trim();
+
+
+      const deadlineValue =
+        document.getElementById(
+          'deadline'
+        ).value;
+
+
+      const payload = {
+
+        employer_id:
+          session.user.id,
+
+        title:
+          document.getElementById(
+            'title'
+          ).value.trim(),
+
+        company:
+          company,
+
+        location:
+          document.getElementById(
+            'location'
+          ).value.trim(),
+
+        job_type:
+          document.getElementById(
+            'type'
+          ).value,
+
+        salary:
+          document.getElementById(
+            'salary'
+          ).value.trim() ||
+          null,
+
+        description:
+          document.getElementById(
+            'description'
+          ).value.trim(),
+
+        responsibilities:
+          document.getElementById(
+            'responsibilities'
+          ).value.trim() ||
+          null,
+
+        qualifications:
+          document.getElementById(
+            'qualifications'
+          ).value.trim() ||
+          null,
+
+        application_email:
+          document.getElementById(
+            'application_email'
+          ).value.trim() ||
+          null,
+
+        application_link:
+          document.getElementById(
+            'application_link'
+          ).value.trim() ||
+          null,
+
+        contact_person:
+          document.getElementById(
+            'contact'
+          ).value.trim() ||
+          null,
+
+        /*
+          Deadline is now optional.
+          Empty = NULL.
+        */
+
+        deadline:
+          deadlineValue ||
+          null,
+
+        /*
+          Employer-created jobs
+          go through moderation.
+        */
+
+        status:
+          'pending'
+
+      };
+
+
+      const {
+        data,
+        error
+      } =
+      await db
+        .from('jobs')
+        .insert(payload)
+        .select()
+        .single();
+
+
+      if(error){
+
+        throw error;
+
+      }
+
+
+      message(
+        '✅ Job submitted successfully. It is now pending KaziNexus review before appearing publicly.',
+        'success'
+      );
+
+
+      form.reset();
+
+      advertText.value =
+        '';
+
+
+      preview.style.display =
+        'none';
+
+
+      ocrStatus.style.display =
+        'none';
+
+
+      setTimeout(
+        function(){
+
+          location.href =
+            'dashboard-connected.html';
+
+        },
+        1800
+      );
+
+
+    }catch(error){
+
+      console.error(
+        'Job submission error:',
+        error
+      );
+
+
+      message(
+        error.message ||
+        'Unable to submit job.',
+        'error'
+      );
+
+
+      btn.disabled =
+        false;
+
+      btn.textContent =
+        'Publish Job';
+
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
