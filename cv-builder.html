@@ -4,1075 +4,833 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KaziNexus Career Application Builder</title>
-
-<!-- PDF and Word document import libraries -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.8.0/mammoth.browser.min.js"></script>
-
+<meta name="theme-color" content="#0f766e">
+<title>Career Application Builder | KaziNexus</title>
 <style>
-:root {
-  --teal: #075e54;
-  --teal-light: #0b7a6e;
-  --gold: #f5ad35;
-  --ink: #23333d;
-  --muted: #64737b;
-  --line: #d9e5e3;
-  --soft: #eaf5f2;
-  --white: #fff;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: #f1f5f6;
-  color: var(--ink);
-  font: 14px/1.5 Arial, Helvetica, sans-serif;
-}
-
-.topbar {
-  background: var(--teal);
-  color: white;
-  padding: 17px 20px;
-}
-
-.topbar h1 {
-  font-size: 22px;
-  margin: 0 0 4px;
-}
-
-.topbar p {
-  margin: 0;
-  color: #d9f4ed;
-}
-
-.toolbar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: white;
-  padding: 12px;
-  border-bottom: 1px solid var(--line);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-button, .file-label {
-  border: 0;
-  border-radius: 7px;
-  padding: 10px 13px;
-  font-size: 13px;
-  font-weight: bold;
-  cursor: pointer;
-  display: inline-block;
-  background: var(--teal);
-  color: white;
-}
-
-button.secondary, .file-label.secondary {
-  background: #e6f0ed;
-  color: var(--teal);
-}
-
-button.gold {
-  background: var(--gold);
-  color: #263238;
-}
-
-button:disabled {
-  opacity: .55;
-  cursor: wait;
-}
-
-.file-label input {
-  display: none;
-}
-
-.status {
-  max-width: 1100px;
-  margin: 12px auto 0;
-  padding: 0 16px;
-  color: var(--teal);
-  font-weight: bold;
-}
-
-.status.error { color: #b42318; }
-
-.layout {
-  max-width: 1250px;
-  margin: 18px auto;
-  padding: 0 16px;
-  display: grid;
-  grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
-  gap: 20px;
-  align-items: start;
-}
-
-.editor {
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 17px;
-}
-
-.editor h2 {
-  color: var(--teal);
-  font-size: 19px;
-  margin: 0 0 10px;
-}
-
-.editor h3 {
-  font-size: 14px;
-  color: var(--teal);
-  margin: 22px 0 8px;
-  padding-bottom: 5px;
-  border-bottom: 1px solid var(--line);
-}
-
-.editor p.help {
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.import-box {
-  background: var(--soft);
-  border: 1px solid #c8e4dc;
-  border-radius: 9px;
-  padding: 12px;
-  margin: 12px 0;
-}
-
-.import-box strong {
-  display: block;
-  color: var(--teal);
-  margin-bottom: 5px;
-}
-
-.import-box p {
-  font-size: 12px;
-  margin: 4px 0 10px;
-}
-
-.import-box input[type=file] {
-  width: 100%;
-  font-size: 12px;
-  background: white;
-  padding: 8px;
-  border: 1px solid #c8d8d4;
-  border-radius: 6px;
-}
-
-label {
-  display: block;
-  font-weight: bold;
-  font-size: 12px;
-  margin: 10px 0 4px;
-  color: #43545b;
-}
-
-input[type=text],
-input[type=email],
-textarea,
-select {
-  width: 100%;
-  border: 1px solid #cbd7db;
-  border-radius: 7px;
-  padding: 9px 10px;
-  font: 13px Arial, sans-serif;
-  color: var(--ink);
-  background: white;
-}
-
-textarea {
-  min-height: 70px;
-  resize: vertical;
-}
-
-.row-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 9px;
-}
-
-.preview-wrap {
-  min-width: 0;
-}
-
-.preview-label {
-  color: var(--muted);
-  font-size: 12px;
-  margin: 0 0 8px;
-}
-
-.paper {
-  background: white;
-  width: 100%;
-  max-width: 820px;
-  min-height: 1000px;
-  margin: 0 auto;
-  padding: 30px;
-  border-top: 8px solid var(--gold);
-  box-shadow: 0 5px 24px #20304015;
-}
-
-.cv-header {
-  background: var(--teal);
-  color: white;
-  margin: -30px -30px 20px;
-  padding: 23px 27px 18px;
-  border-bottom: 4px solid var(--gold);
-}
-
-.cv-header h1 {
-  font-size: 29px;
-  line-height: 1.15;
-  overflow-wrap: anywhere;
-  margin: 0 0 5px;
-}
-
-.cv-title {
-  font-size: 13px;
-  color: #e0f4ef;
-  font-weight: bold;
-  margin-bottom: 9px;
-}
-
-.cv-contact {
-  font-size: 10px;
-  color: white;
-  overflow-wrap: anywhere;
-}
-
-.cv-columns {
-  display: grid;
-  grid-template-columns: 1.12fr .88fr;
-  gap: 22px;
-}
-
-.cv-section {
-  margin: 0 0 14px;
-  break-inside: avoid;
-}
-
-.cv-section h2 {
-  font-size: 11px;
-  letter-spacing: .7px;
-  text-transform: uppercase;
-  color: var(--teal);
-  border-bottom: 1.5px solid var(--teal-light);
-  padding-bottom: 4px;
-  margin: 0 0 8px;
-}
-
-.cv-section p {
-  font-size: 10px;
-  margin: 4px 0;
-  white-space: pre-line;
-  overflow-wrap: anywhere;
-}
-
-.cv-item {
-  margin: 0 0 9px;
-  break-inside: avoid;
-}
-
-.cv-item h3 {
-  font-size: 10.5px;
-  margin: 0 0 3px;
-  overflow-wrap: anywhere;
-}
-
-.cv-item p {
-  font-size: 10px;
-  white-space: pre-line;
-}
-
-.cv-skills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-
-.skill-pill {
-  background: var(--soft);
-  color: var(--teal);
-  border-radius: 4px;
-  padding: 4px 6px;
-  font-size: 9px;
-  overflow-wrap: anywhere;
-}
-
-.empty {
-  color: #8b989e;
-  font-style: italic;
-}
-
-#extractedText {
-  min-height: 130px;
-}
-
-@media (max-width: 900px) {
-  .layout { grid-template-columns: 1fr; }
-  .paper { min-height: 0; }
-  .toolbar { position: static; }
-}
-
-@media (max-width: 540px) {
-  .row-fields { grid-template-columns: 1fr; }
-  .paper { padding: 20px 17px; }
-  .cv-header {
-    margin: -20px -17px 15px;
-    padding: 19px 17px 15px;
-  }
-  .cv-header h1 { font-size: 23px; }
-  .cv-columns { grid-template-columns: 1fr; gap: 0; }
-}
-
-@page {
-  size: A4;
-  margin: 10mm;
-}
-
-@media print {
-  body { background: white; }
-
-  .topbar, .toolbar, .editor, .status, .preview-label {
-    display: none !important;
-  }
-
-  .layout {
-    display: block;
-    margin: 0;
-    padding: 0;
-    max-width: none;
-  }
-
-  .paper {
-    max-width: none;
-    width: 100%;
-    min-height: 0;
-    margin: 0;
-    padding: 0;
-    box-shadow: none;
-    border-top: 5px solid var(--gold);
-  }
-
-  .cv-header {
-    margin: 0 0 14px;
-    padding: 15px 17px;
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-  }
-
-  .cv-header h1 { font-size: 22px; }
-  .cv-columns { grid-template-columns: 1.12fr .88fr; gap: 15px; }
-  .cv-section { margin-bottom: 9px; }
-  .cv-section h2 { font-size: 9.5px; }
-  .cv-section p, .cv-item p { font-size: 9px; }
-  .cv-item h3 { font-size: 9.5px; }
-
-  .skill-pill {
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-  }
+:root{--brand:#0f766e;--brand2:#115e59;--accent:#d4a72c;--ink:#17212b;--muted:#5b6773;--line:#dce4e8;--paper:#fff;--bg:#f2f6f7;--soft:#e9f5f3}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;color:var(--ink);background:var(--bg);line-height:1.45}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.site-header{background:linear-gradient(120deg,#0b4f4b,#0f766e);color:white;padding:24px max(18px,calc((100% - 1380px)/2));display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.brand{display:flex;gap:12px;align-items:center}
+.brand-mark{width:45px;height:45px;border-radius:13px;background:#fff;color:#0f766e;display:grid;place-items:center;font-weight:900;font-size:20px}
+.brand h1{font-size:clamp(20px,3vw,28px);margin:0}
+.brand p{margin:3px 0 0;color:#d8f3ef;font-size:13px}
+.header-link{color:white;text-decoration:none;border:1px solid #ffffff70;padding:10px 14px;border-radius:10px;font-weight:700}
+.hero{max-width:1380px;margin:auto;padding:22px 18px 10px}
+.hero h2{margin:0 0 6px;font-size:clamp(22px,3vw,31px)}
+.hero p{margin:0;color:var(--muted);max-width:850px}
+.notice{margin-top:14px;background:#fff8e6;border:1px solid #f2dfaa;padding:11px 14px;border-radius:10px;color:#70530b;font-size:13px}
+.tabs{max-width:1380px;margin:16px auto 0;padding:0 18px;display:flex;gap:8px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:white;color:#334155;padding:11px 15px;border-radius:10px 10px 0 0;font-weight:800}
+.tab.active{background:var(--brand);border-color:var(--brand);color:white}
+.workspace{max-width:1380px;margin:0 auto;padding:0 18px 36px;display:grid;grid-template-columns:minmax(320px,.9fr) minmax(380px,1.1fr);gap:18px;align-items:start}
+.panel{background:white;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 8px 25px #12202a08}
+.panel-head{padding:16px 18px;background:#fbfdfd;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.panel-head h3{margin:0;font-size:17px}
+.panel-body{padding:18px}
+.section-title{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--brand);font-weight:900;margin:24px 0 12px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+.section-title:first-child{margin-top:0}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field.full{grid-column:1/-1}
+.field label{font-size:12px;font-weight:800;color:#42515d}
+.field input,.field textarea,.field select{width:100%;border:1px solid #cbd5dc;border-radius:9px;padding:10px 11px;background:#fff;color:var(--ink);outline:none}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--brand);box-shadow:0 0 0 3px #0f766e18}
+.field textarea{resize:vertical;min-height:90px}
+.field small{font-size:11px;color:var(--muted)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);border-radius:9px;padding:10px 13px;font-weight:800;background:#fff;color:#23313b}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.dark{background:#1f2937;color:#fff;border-color:#1f2937}
+.btn.warn{color:#9f3329;border-color:#f0c4be}
+.btn.small{font-size:12px;padding:7px 9px}
+.controls-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.checkline{display:flex;gap:8px;align-items:center;font-size:13px;color:#334155;margin-top:10px}
+.checkline input{accent-color:var(--brand)}
+.helper{font-size:12px;color:var(--muted);margin:9px 0 0}
+.status{font-size:12px;min-height:18px;color:var(--brand);font-weight:700;margin-top:8px}
+.preview-wrap{background:#e9eef0;padding:20px;overflow:auto}
+.preview-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.preview-toolbar strong{font-size:13px}
+.cv-paper{--cv-accent:#0f766e;--cv-light:#e8f5f3;background:#fff;color:#202a33;width:100%;max-width:794px;min-height:1122px;margin:0 auto;box-shadow:0 4px 18px #0b1b2420;padding:42px 48px;font-size:12px;overflow-wrap:anywhere}
+.cv-header{display:flex;gap:20px;align-items:center;border-bottom:3px solid var(--cv-accent);padding-bottom:20px;margin-bottom:20px}
+.cv-header.no-photo{display:block}
+.cv-header-text{flex:1;min-width:0}
+.cv-name{font-size:30px;line-height:1.12;margin:0 0 5px;color:#17212b;font-weight:900;letter-spacing:-.03em}
+.cv-headline{font-size:15px;color:var(--cv-accent);font-weight:800;margin:0 0 10px}
+.cv-contact{font-size:10px;color:#52616b;display:flex;flex-wrap:wrap;gap:5px 12px}
+.cv-photo{width:105px;height:125px;object-fit:cover;border-radius:8px;border:2px solid var(--cv-accent);flex:0 0 auto}
+.cv-section{margin:0 0 17px;break-inside:avoid}
+.cv-section h2{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--cv-accent);margin:0 0 7px;padding-bottom:5px;border-bottom:1px solid #dbe2e5}
+.cv-section p{margin:0 0 6px;white-space:pre-line}
+.cv-section ul{margin:5px 0 0;padding-left:18px}
+.cv-section li{margin:0 0 4px}
+.cv-entry{margin:0 0 10px;break-inside:avoid}
+.cv-entry-title{font-weight:800;font-size:12px}
+.cv-entry-sub{color:#596873;font-size:10px;font-style:italic;margin:2px 0 4px}
+.cv-skills{display:flex;flex-wrap:wrap;gap:5px}
+.cv-skill{background:var(--cv-light);color:#263b3b;padding:4px 7px;border-radius:4px;font-size:10px}
+.cv-two-col{display:grid;grid-template-columns:1.7fr 1fr;gap:22px}
+.cv-two-col .cv-sidebar{border-left:1px solid #dbe2e5;padding-left:18px}
+.cv-two-col .cv-sidebar .cv-section h2{font-size:10px}
+.cv-two-col .cv-main .cv-section{margin-bottom:18px}
+.cv-paper.layout-compact{padding:32px 38px;font-size:11px}
+.layout-compact .cv-name{font-size:25px}
+.layout-compact .cv-section{margin-bottom:11px}
+.layout-compact .cv-header{padding-bottom:13px;margin-bottom:13px}
+.layout-single .cv-two-col{display:block}
+.layout-single .cv-sidebar{border:0;padding:0}
+.style-ats{--cv-accent:#222;--cv-light:#f0f0f0;font-family:Arial,Helvetica,sans-serif}
+.style-ats .cv-header{border-bottom:1px solid #222}
+.style-ats .cv-name{font-size:26px}
+.style-ats .cv-section h2{letter-spacing:.06em;border-bottom:1px solid #aaa}
+.style-executive{--cv-accent:#26384e;--cv-light:#e9edf3;font-family:Georgia,'Times New Roman',serif}
+.style-corporate{--cv-accent:#1d4ed8;--cv-light:#eaf0ff}
+.style-minimal{--cv-accent:#4b5563;--cv-light:#f3f4f6}
+.style-graduate{--cv-accent:#0f766e;--cv-light:#e7f5f2}
+.style-ngo{--cv-accent:#426b3c;--cv-light:#edf5e9}
+.style-creative{--cv-accent:#9333a8;--cv-light:#f7eafa}
+.style-academic{--cv-accent:#7c2d12;--cv-light:#f8eee8;font-family:Georgia,'Times New Roman',serif}
+.style-modern{--cv-accent:#0f766e;--cv-light:#e8f5f3}
+.style-ats .cv-contact{display:block}
+.style-ats .cv-contact span:after{content:" | ";color:#777}
+.style-ats .cv-photo{border-radius:0}
+.match-result{padding:12px;border-radius:10px;background:#edf7f3;border:1px solid #cce8db;margin-top:12px}
+.match-score{font-size:25px;font-weight:900;color:var(--brand)}
+.match-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:11px;padding:4px 7px;border-radius:5px;background:white;border:1px solid var(--line)}
+.cover-preview{border:1px solid var(--line);padding:18px;border-radius:10px;background:#fff;white-space:pre-wrap;min-height:250px;font-size:13px}
+.footer{text-align:center;color:#64727b;font-size:12px;padding:20px}
+.hidden{display:none!important}
+@media(max-width:950px){.workspace{grid-template-columns:1fr}.preview-wrap{padding:12px}.cv-paper{min-height:0;padding:28px 26px}.site-header{padding:20px 18px}}
+@media(max-width:520px){.field-grid,.controls-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel-body{padding:14px}.cv-paper{padding:22px 18px;font-size:11px}.cv-name{font-size:24px}.cv-photo{width:76px;height:90px}.cv-two-col{grid-template-columns:1fr}.cv-two-col .cv-sidebar{border-left:0;border-top:1px solid #dbe2e5;padding:14px 0 0}.tabs{gap:5px}.tab{padding:9px;font-size:12px}}
+@page{size:A4;margin:12mm}
+@media print{
+ body{background:white}
+ .site-header,.hero,.tabs,.editor-panel,.preview-toolbar,.footer,.notice{display:none!important}
+ .workspace{display:block!important;max-width:none;margin:0;padding:0}
+ .preview-panel{border:0;box-shadow:none}
+ .preview-panel .panel-head{display:none}
+ .preview-wrap{padding:0;background:white;overflow:visible}
+ .cv-paper{width:100%;max-width:none;min-height:0;box-shadow:none;padding:0;font-size:10.5pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .cv-name{font-size:25pt}
+ .cv-section{break-inside:avoid}
+ .cv-entry{break-inside:avoid}
+ .cv-header{break-inside:avoid}
+ .cv-paper a{color:inherit;text-decoration:none}
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.13.0/mammoth.browser.min.js"></script>
 </head>
-
 <body>
-
-<header class="topbar">
-  <h1>KaziNexus Career Application Builder</h1>
-  <p>Connect Opportunities With the Right Talent</p>
+<header class="site-header">
+  <div class="brand">
+    <div class="brand-mark">KN</div>
+    <div>
+      <h1>KaziNexus Career Application Builder</h1>
+      <p>Connect Opportunities With the Right Talent</p>
+    </div>
+  </div>
+  <a class="header-link" href="https://kazinexus.pages.dev/">← Back to KaziNexus</a>
 </header>
 
-<nav class="toolbar">
-  <label class="file-label">
-    Import Existing CV
-    <input id="cvFile" type="file" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain">
-  </label>
+<section class="hero">
+  <h2>Build a professional CV for your next opportunity</h2>
+  <p>Create a clean, job-ready CV, import an existing document, compare your CV with a job description, and prepare a tailored cover letter. Your information stays in this browser unless you choose to export it.</p>
+  <div class="notice"><strong>Privacy note:</strong> This version does not upload your CV to KaziNexus or save it to an online account. Use “Export backup” to keep a copy of your information.</div>
+</section>
 
-  <button class="secondary" id="parseButton" type="button">
-    Fill CV From Imported Text
-  </button>
-
-  <button type="button" onclick="window.print()">
-    Print / Save as PDF
-  </button>
-
-  <button class="gold" type="button" onclick="downloadTextCV()">
-    Export TXT
-  </button>
-
-  <button class="secondary" type="button" onclick="clearCV()">
-    Clear CV
-  </button>
+<nav class="tabs" aria-label="Career tools">
+  <button class="tab active" data-tab="builder">My Profile & CV</button>
+  <button class="tab" data-tab="match">Match a Job</button>
+  <button class="tab" data-tab="cover">Cover Letter</button>
 </nav>
 
-<div id="status" class="status" role="status" aria-live="polite"></div>
-
-<div class="layout">
-
-  <aside class="editor">
-    <h2>Build Your CV</h2>
-
-    <p class="help">
-      Upload an existing PDF, Word DOCX or TXT CV. The builder will extract
-      the text and attempt to organise it into editable sections.
-      Check every section before exporting your CV.
-    </p>
-
-    <div class="import-box">
-      <strong>Step 1: Import your existing CV</strong>
-      <p>Select your CV file. PDF and DOCX files are supported.</p>
-      <p class="help">
-        For privacy, the import runs in your browser using the included
-        document libraries. The file is not uploaded to a KaziNexus server
-        by this page.
-      </p>
-      <label for="cvFile">Choose CV file</label>
-      <input id="cvFile" type="file" accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain">
-      <label for="extractedText">Extracted CV text</label>
-      <textarea id="extractedText" placeholder="Text extracted from your CV will appear here. You can also paste CV text here."></textarea>
-      <button type="button" id="parseButton2" class="secondary">
-        Organise Extracted Text
-      </button>
+<main class="workspace">
+<section class="panel editor-panel" id="builderPanel">
+  <div class="panel-head">
+    <h3>CV details</h3>
+    <div class="btn-row">
+      <button class="btn small" id="backupBtn">Export backup</button>
+      <button class="btn small" id="restoreBtn">Import backup</button>
+      <input class="hidden" id="backupFile" type="file" accept=".json,application/json">
     </div>
+  </div>
 
-    <h3>Personal Information</h3>
-
-    <label for="name">Full Name</label>
-    <input id="name" type="text" placeholder="Your full name">
-
-    <label for="headline">Professional Title</label>
-    <input id="headline" type="text" placeholder="e.g. Project Officer | Field Researcher">
-
-    <div class="row-fields">
-      <div>
-        <label for="email">Email</label>
-        <input id="email" type="email" placeholder="you@example.com">
-      </div>
-      <div>
-        <label for="phone">Phone</label>
-        <input id="phone" type="text" placeholder="+254...">
-      </div>
+  <div class="panel-body">
+    <div class="btn-row">
+      <label class="btn primary" for="cvFile">Import existing CV</label>
+      <input id="cvFile" class="hidden" type="file" accept=".pdf,.docx,.txt,.md">
+      <button class="btn" id="sampleBtn" type="button">Load sample</button>
+      <button class="btn warn" id="clearBtn" type="button">Clear all</button>
     </div>
+    <p class="helper">Supported files: PDF, Word (.docx), and plain text. Imported text is organised into editable fields where possible. Always check the result before exporting.</p>
+    <div class="status" id="importStatus" role="status"></div>
 
-    <div class="row-fields">
-      <div>
+    <div class="section-title">Personal information</div>
+    <div class="field-grid">
+      <div class="field full">
+        <label for="fullName">Full name</label>
+        <input id="fullName" data-field="fullName" placeholder="e.g. Wilson Odhiambo Otieno">
+      </div>
+      <div class="field full">
+        <label for="headline">Professional title / target role</label>
+        <input id="headline" data-field="headline" placeholder="e.g. Field Officer | Research Enumerator">
+      </div>
+      <div class="field">
+        <label for="email">Email address</label>
+        <input id="email" data-field="email" type="email" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label for="phone">Phone number</label>
+        <input id="phone" data-field="phone" placeholder="+254 7xx xxx xxx">
+      </div>
+      <div class="field">
         <label for="location">Location</label>
-        <input id="location" type="text" placeholder="Kisumu, Kenya">
+        <input id="location" data-field="location" placeholder="Town, County, Kenya">
       </div>
-      <div>
-        <label for="linkedin">LinkedIn / Portfolio</label>
-        <input id="linkedin" type="text" placeholder="Optional">
+      <div class="field">
+        <label for="linkedin">LinkedIn / portfolio (optional)</label>
+        <input id="linkedin" data-field="linkedin" placeholder="Profile URL">
+      </div>
+      <div class="field full">
+        <label for="summary">Professional profile</label>
+        <textarea id="summary" data-field="summary" rows="4" placeholder="Write 3–5 lines about your experience, strengths and career focus."></textarea>
       </div>
     </div>
 
-    <label for="summary">Professional Summary</label>
-    <textarea id="summary" placeholder="Your experience, strengths and career goals"></textarea>
+    <div class="section-title">Experience</div>
+    <div class="field">
+      <label for="experience">Work experience (most recent first)</label>
+      <textarea id="experience" data-field="experience" rows="8" placeholder="Job Title — Employer&#10;Month Year – Month Year | Location&#10;• Responsibility or achievement&#10;• Responsibility or achievement"></textarea>
+      <small>Separate each role with a blank line. Use bullets to list achievements.</small>
+    </div>
 
-    <h3>Work Experience</h3>
-    <label for="experience">Roles, Employers, Dates and Achievements</label>
-    <textarea id="experience" placeholder="Job title — Employer — Dates&#10;Responsibilities and achievements"></textarea>
+    <div class="section-title">Education</div>
+    <div class="field">
+      <label for="education">Education and training</label>
+      <textarea id="education" data-field="education" rows="5" placeholder="Qualification — Institution&#10;Year completed&#10;&#10;Additional qualification or training"></textarea>
+    </div>
 
-    <h3>Education</h3>
-    <label for="education">Qualifications and Institutions</label>
-    <textarea id="education" placeholder="Qualification — Institution — Year"></textarea>
+    <div class="section-title">Skills and additional information</div>
+    <div class="field-grid">
+      <div class="field full">
+        <label for="skills">Key skills (comma-separated)</label>
+        <textarea id="skills" data-field="skills" rows="3" placeholder="KoboToolbox, data collection, customer service, Excel"></textarea>
+      </div>
+      <div class="field full">
+        <label for="certifications">Certifications and training</label>
+        <textarea id="certifications" data-field="certifications" rows="3" placeholder="Course — Provider — Year"></textarea>
+      </div>
+      <div class="field">
+        <label for="languages">Languages</label>
+        <textarea id="languages" data-field="languages" rows="2" placeholder="English, Kiswahili, Luo"></textarea>
+      </div>
+      <div class="field">
+        <label for="achievements">Achievements</label>
+        <textarea id="achievements" data-field="achievements" rows="3" placeholder="Measurable results, awards or recognition"></textarea>
+      </div>
+      <div class="field full">
+        <label for="projects">Projects / volunteering</label>
+        <textarea id="projects" data-field="projects" rows="3" placeholder="Project name, role, dates, results"></textarea>
+      </div>
+      <div class="field full">
+        <label for="additional">Other relevant information (optional)</label>
+        <textarea id="additional" data-field="additional" rows="3" placeholder="Professional memberships, publications, interests relevant to the role"></textarea>
+      </div>
+    </div>
 
-    <h3>Core Skills</h3>
-    <label for="skills">Separate skills with commas or new lines</label>
-    <textarea id="skills" placeholder="Communication, Excel, KoboToolbox"></textarea>
+    <div class="section-title">Design and export</div>
+    <div class="controls-grid">
+      <div class="field">
+        <label for="cvTemplate">CV template</label>
+        <select id="cvTemplate">
+          <option value="modern">Modern Professional</option>
+          <option value="ats">ATS Standard</option>
+          <option value="executive">Executive</option>
+          <option value="corporate">Corporate Blue</option>
+          <option value="minimal">Minimal Clean</option>
+          <option value="graduate">Graduate</option>
+          <option value="ngo">NGO / Development</option>
+          <option value="creative">Creative</option>
+          <option value="academic">Academic / Research</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="cvLayout">Layout</label>
+        <select id="cvLayout">
+          <option value="single">Single-column (ATS friendly)</option>
+          <option value="two">Two-column professional</option>
+          <option value="compact">Compact</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="cvLength">Length preference</label>
+        <select id="cvLength">
+          <option value="standard">Standard (recommended)</option>
+          <option value="compact">Compact spacing</option>
+          <option value="detailed">Detailed content</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="photoInput">Profile photo (optional)</label>
+        <input id="photoInput" type="file" accept="image/png,image/jpeg,image/webp">
+      </div>
+    </div>
+    <label class="checkline"><input type="checkbox" id="showPhoto"> Show profile photo on CV</label>
+    <p class="helper">For most online applications, choose ATS Standard and a single-column layout. Use a photo only when the employer or application format expects one.</p>
 
-    <h3>Certifications and Training</h3>
-    <label for="certifications">One item per line</label>
-    <textarea id="certifications" placeholder="Certificates and relevant training"></textarea>
+    <div class="btn-row" style="margin-top:16px">
+      <button class="btn primary" id="printBtn">Print / Save as PDF</button>
+      <button class="btn" id="txtBtn">Export TXT</button>
+      <button class="btn" id="htmlBtn">Download CV HTML</button>
+    </div>
+    <p class="helper">To save a PDF, select “Print / Save as PDF”, then choose “Save as PDF” in your browser’s print window.</p>
+  </div>
+</section>
 
-    <h3>Languages</h3>
-    <label for="languages">Languages and proficiency</label>
-    <textarea id="languages" placeholder="English — Fluent&#10;Kiswahili — Fluent"></textarea>
-
-    <h3>Projects</h3>
-    <label for="projects">Relevant Projects</label>
-    <textarea id="projects" placeholder="Project name and contribution"></textarea>
-
-    <h3>Achievements</h3>
-    <label for="achievements">Key Achievements</label>
-    <textarea id="achievements" placeholder="Results, awards or accomplishments"></textarea>
-
-    <h3>Additional Information</h3>
-    <label for="additional">Optional Information</label>
-    <textarea id="additional" placeholder="Volunteering, memberships or other relevant information"></textarea>
-  </aside>
-
-  <main class="preview-wrap">
-    <p class="preview-label">
-      LIVE PREVIEW — Modern Teal and Gold CV
-    </p>
-
-    <article class="paper" id="cvPreview">
-      <header class="cv-header">
-        <h1 id="out-name">YOUR FULL NAME</h1>
-        <div id="out-headline" class="cv-title">PROFESSIONAL TITLE</div>
-        <div id="out-contact" class="cv-contact">
-          Email • Phone • Location
+<section class="panel preview-panel">
+  <div class="panel-head">
+    <h3>Live CV preview</h3>
+    <span style="font-size:12px;color:#0f766e;font-weight:800">Updates as you type</span>
+  </div>
+  <div class="preview-wrap">
+    <div class="preview-toolbar">
+      <strong id="previewLabel">Modern Professional · A4 preview</strong>
+      <span style="font-size:11px;color:#52616b">Check all details before sending</span>
+    </div>
+    <article id="cvPreview" class="cv-paper style-modern layout-single" aria-label="CV preview">
+      <header class="cv-header no-photo">
+        <div class="cv-header-text">
+          <h1 class="cv-name">Your Full Name</h1>
+          <p class="cv-headline">Professional Title</p>
+          <div class="cv-contact"></div>
         </div>
       </header>
-
-      <div class="cv-columns">
-        <div>
-          <section class="cv-section" id="section-summary">
-            <h2>Professional Summary</h2>
-            <p id="out-summary" class="empty">Add your professional summary.</p>
-          </section>
-
-          <section class="cv-section" id="section-experience">
-            <h2>Work Experience</h2>
-            <div id="out-experience" class="empty">Add your work experience.</div>
-          </section>
-
-          <section class="cv-section" id="section-projects">
-            <h2>Projects</h2>
-            <div id="out-projects" class="empty">Add relevant projects.</div>
-          </section>
-
-          <section class="cv-section" id="section-achievements">
-            <h2>Achievements</h2>
-            <div id="out-achievements" class="empty">Add your achievements.</div>
-          </section>
-        </div>
-
-        <div>
-          <section class="cv-section" id="section-skills">
-            <h2>Core Skills</h2>
-            <div id="out-skills" class="empty">Add your skills.</div>
-          </section>
-
-          <section class="cv-section" id="section-education">
-            <h2>Education</h2>
-            <div id="out-education" class="empty">Add your education.</div>
-          </section>
-
-          <section class="cv-section" id="section-certifications">
-            <h2>Certifications & Training</h2>
-            <div id="out-certifications" class="empty">Add relevant training.</div>
-          </section>
-
-          <section class="cv-section" id="section-languages">
-            <h2>Languages</h2>
-            <div id="out-languages" class="empty">Add your languages.</div>
-          </section>
-
-          <section class="cv-section" id="section-additional">
-            <h2>Additional Information</h2>
-            <div id="out-additional" class="empty">Add other relevant details.</div>
-          </section>
-        </div>
-      </div>
+      <div class="cv-content"></div>
     </article>
-  </main>
+  </div>
+</section>
 
-</div>
+<section class="panel hidden" id="matchPanel" style="grid-column:1/-1">
+ <div class="panel-head">
+   <h3>Match your CV to a job</h3>
+   <span style="font-size:12px;color:#64727b">Runs in your browser</span>
+ </div>
+ <div class="panel-body">
+  <div class="field">
+    <label for="jobDescription">Paste the job advert or job description</label>
+    <textarea id="jobDescription" rows="9" placeholder="Paste the job title, responsibilities, qualifications and required skills here..."></textarea>
+  </div>
+  <div class="btn-row" style="margin-top:12px">
+    <button class="btn primary" id="matchBtn">Analyse CV match</button>
+    <button class="btn" id="clearJobBtn">Clear job description</button>
+  </div>
+  <div id="matchOutput"></div>
+  <p class="helper">The score is a simple keyword comparison, not a hiring prediction. It does not guarantee ATS compatibility or an interview. Only add skills and experience you genuinely have.</p>
+ </div>
+</section>
+
+<section class="panel hidden" id="coverPanel" style="grid-column:1/-1">
+ <div class="panel-head">
+   <h3>Tailored cover letter</h3>
+   <span style="font-size:12px;color:#64727b">Edit before sending</span>
+ </div>
+ <div class="panel-body">
+  <div class="field-grid">
+   <div class="field">
+     <label for="companyName">Employer / organisation</label>
+     <input id="companyName" placeholder="Organisation name">
+   </div>
+   <div class="field">
+     <label for="roleName">Position applied for</label>
+     <input id="roleName" placeholder="Job title">
+   </div>
+   <div class="field">
+     <label for="hiringName">Hiring manager (optional)</label>
+     <input id="hiringName" placeholder="Hiring Manager">
+   </div>
+   <div class="field">
+     <label for="letterDate">Date</label>
+     <input id="letterDate" type="date">
+   </div>
+   <div class="field full">
+     <label for="letterHighlights">Relevant strengths / examples for this job</label>
+     <textarea id="letterHighlights" rows="4" placeholder="Add real examples, results, experience or skills relevant to this vacancy."></textarea>
+   </div>
+  </div>
+  <div class="btn-row" style="margin:12px 0">
+    <button class="btn primary" id="generateLetterBtn">Generate draft</button>
+    <button class="btn" id="copyLetterBtn">Copy letter</button>
+    <button class="btn" id="downloadLetterBtn">Download TXT</button>
+  </div>
+  <div id="coverLetter" class="cover-preview" contenteditable="true" aria-label="Editable cover letter">Your cover letter draft will appear here. Fill in the details and choose “Generate draft”.</div>
+  <p class="helper">This creates a starting draft from the details you provide. Personalise it and verify all statements before applying.</p>
+ </div>
+</section>
+</main>
+
+<footer class="footer">KaziNexus · Connect Opportunities With the Right Talent · Kenya</footer>
 
 <script>
-(function () {
-  "use strict";
-
-  const fieldIds = [
-    "name", "headline", "email", "phone", "location", "linkedin",
-    "summary", "experience", "education", "skills", "certifications",
-    "languages", "projects", "achievements", "additional"
-  ];
-
-  const statusEl = document.getElementById("status");
-  const extractedText = document.getElementById("extractedText");
-  const fileInputs = [
-    document.getElementById("cvFile"),
-    ...document.querySelectorAll('input[type="file"]')
-  ];
-
-  function setStatus(message, isError = false) {
-    statusEl.textContent = message;
-    statusEl.classList.toggle("error", isError);
-  }
-
-  function getValue(id) {
-    return document.getElementById(id).value.trim();
-  }
-
-  function setValue(id, value) {
-    if (value && String(value).trim()) {
-      document.getElementById(id).value = String(value).trim();
-    }
-  }
-
-  function outputText(id, value, placeholder) {
-    const el = document.getElementById(id);
-    el.textContent = value || placeholder;
-    el.classList.toggle("empty", !value);
-  }
-
-  function renderLines(id, value) {
-    const target = document.getElementById("out-" + id);
-    target.replaceChildren();
-
-    const lines = value.split(/\n+/).map(s => s.trim()).filter(Boolean);
-
-    if (!lines.length) {
-      const placeholders = {
-        experience: "Add your work experience.",
-        education: "Add your education.",
-        certifications: "Add relevant training.",
-        languages: "Add your languages.",
-        projects: "Add relevant projects.",
-        achievements: "Add your achievements.",
-        additional: "Add other relevant details."
-      };
-
-      target.textContent = placeholders[id] || "Add details.";
-      target.className = "empty";
-      return;
-    }
-
-    target.className = "";
-
-    lines.forEach(line => {
-      const item = document.createElement("div");
-      item.className = "cv-item";
-
-      if (/^[•\-*]\s*/.test(line)) {
-        const p = document.createElement("p");
-        p.textContent = line.replace(/^[•\-*]\s*/, "");
-        item.appendChild(p);
-      } else {
-        const h = document.createElement("h3");
-        h.textContent = line;
-        item.appendChild(h);
-      }
-
-      target.appendChild(item);
-    });
-  }
-
-  function renderSkills(value) {
-    const target = document.getElementById("out-skills");
-    target.replaceChildren();
-
-    const items = value.split(/[,;\n]+/).map(s => s.trim()).filter(Boolean);
-
-    if (!items.length) {
-      target.textContent = "Add your skills.";
-      target.className = "empty";
-      return;
-    }
-
-    target.className = "";
-    const wrap = document.createElement("div");
-    wrap.className = "cv-skills";
-
-    items.forEach(skill => {
-      const span = document.createElement("span");
-      span.className = "skill-pill";
-      span.textContent = skill;
-      wrap.appendChild(span);
-    });
-
-    target.appendChild(wrap);
-  }
-
-  function render() {
-    outputText("out-name", getValue("name"), "YOUR FULL NAME");
-    outputText("out-headline", getValue("headline"), "PROFESSIONAL TITLE");
-
-    const contact = ["email", "phone", "location", "linkedin"]
-      .map(getValue)
-      .filter(Boolean)
-      .join("  •  ");
-
-    outputText("out-contact", contact, "Email • Phone • Location");
-
-    outputText(
-      "out-summary",
-      getValue("summary"),
-      "Add your professional summary."
-    );
-
-    [
-      "experience", "education", "certifications", "languages",
-      "projects", "achievements", "additional"
-    ].forEach(id => renderLines(id, getValue(id)));
-
-    renderSkills(getValue("skills"));
-  }
-
-  fieldIds.forEach(id => {
-    document.getElementById(id).addEventListener("input", render);
-  });
-
-  // Use the PDF.js worker that matches the loaded PDF.js version.
-  if (window.pdfjsLib) {
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-  }
-
-  async function extractPDF(file) {
-    if (!window.pdfjsLib) {
-      throw new Error(
-        "The PDF reader did not load. Check your internet connection and reload the page."
-      );
-    }
-
-    const buffer = await file.arrayBuffer();
-
-    const pdf = await window.pdfjsLib.getDocument({
-      data: new Uint8Array(buffer)
-    }).promise;
-
-    const pages = [];
-
-    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
-      const page = await pdf.getPage(pageNumber);
-      const content = await page.getTextContent();
-
-      // Group text items into approximate visual lines.
-      const rows = new Map();
-
-      content.items.forEach(item => {
-        if (!item.str || !item.str.trim()) return;
-
-        const transform = item.transform || [];
-        const y = Math.round(transform[5] || 0);
-        const x = transform[4] || 0;
-        const key = String(y);
-
-        if (!rows.has(key)) rows.set(key, []);
-        rows.get(key).push({ x, text: item.str });
-      });
-
-      const orderedRows = [...rows.entries()]
-        .sort((a, b) => Number(b[0]) - Number(a[0]));
-
-      const pageText = orderedRows.map(([, items]) =>
-        items.sort((a, b) => a.x - b.x)
-          .map(item => item.text)
-          .join(" ")
-          .trim()
-      ).filter(Boolean).join("\n");
-
-      pages.push(pageText);
-    }
-
-    const result = pages.join("\n\n").trim();
-
-    if (!result) {
-      throw new Error(
-        "No selectable text was found. Your PDF may be a scanned image. Use an OCR-enabled PDF or paste the CV text into the extracted text box."
-      );
-    }
-
-    return result;
-  }
-
-  async function extractDOCX(file) {
-    if (!window.mammoth) {
-      throw new Error(
-        "The Word document reader did not load. Check your internet connection and reload the page."
-      );
-    }
-
-    const result = await window.mammoth.extractRawText({
-      arrayBuffer: await file.arrayBuffer()
-    });
-
-    return (result.value || "").trim();
-  }
-
-  async function importFile(file) {
-    if (!file) return;
-
-    setStatus("Reading your CV…");
-
-    try {
-      const extension = file.name.split(".").pop().toLowerCase();
-      let text = "";
-
-      if (extension === "pdf" || file.type === "application/pdf") {
-        text = await extractPDF(file);
-      } else if (extension === "docx") {
-        text = await extractDOCX(file);
-      } else if (extension === "txt" || file.type.startsWith("text/")) {
-        text = await file.text();
-      } else {
-        throw new Error("Unsupported file type. Please select a PDF, DOCX or TXT file.");
-      }
-
-      if (!text.trim()) {
-        throw new Error("No text could be extracted from this file.");
-      }
-
-      extractedText.value = text;
-      setStatus(
-        "CV imported successfully. Review the extracted text, then select “Organise Extracted Text”."
-      );
-
-      organiseText(text);
-    } catch (error) {
-      console.error("CV import error:", error);
-      setStatus(error.message || "The CV could not be imported.", true);
-    }
-  }
-
-  // Both file selectors trigger the same import process.
-  document.querySelectorAll('input[type="file"]').forEach(input => {
-    input.addEventListener("change", event => {
-      const file = event.target.files && event.target.files[0];
-      if (file) importFile(file);
-    });
-  });
-
-  function findSection(text, headings) {
-    const lines = text.split(/\r?\n/);
-    const headingRegex = new RegExp(
-      "^\\s*(?:" + headings
-        .map(h => h.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-        .join("|") +
-      ")\\s*[:\\-]?\\s*$",
-      "i"
-    );
-
-    let start = -1;
-    let end = lines.length;
-
-    for (let i = 0; i < lines.length; i++) {
-      if (headingRegex.test(lines[i])) {
-        start = i + 1;
-        break;
-      }
-    }
-
-    if (start < 0) return "";
-
-    const allHeadings = [
-      "professional summary", "summary", "profile", "objective",
-      "career objective", "work experience", "professional experience",
-      "employment history", "experience", "education", "academic background",
-      "qualifications", "skills", "key skills", "technical skills",
-      "competencies", "certifications", "certificates", "training",
-      "languages", "projects", "key projects", "achievements",
-      "awards", "additional information", "volunteering",
-      "references", "interests", "personal details"
-    ];
-
-    const anyHeading = new RegExp(
-      "^\\s*(?:" + allHeadings
-        .map(h => h.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-        .join("|") +
-      ")\\s*[:\\-]?\\s*$",
-      "i"
-    );
-
-    for (let i = start; i < lines.length; i++) {
-      if (anyHeading.test(lines[i])) {
-        end = i;
-        break;
-      }
-    }
-
-    return lines.slice(start, end).join("\n").trim();
-  }
-
-  function organiseText(rawText) {
-    const text = rawText.replace(/\r/g, "\n").replace(/\n{3,}/g, "\n\n");
-    const lines = text.split("\n").map(s => s.trim()).filter(Boolean);
-
-    if (!lines.length) {
-      setStatus("There is no text to organise.", true);
-      return;
-    }
-
-    // Only fill fields where a reasonable value can be identified.
-    const emailMatch = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
-    const phoneMatch = text.match(/(?:\+?254|0)\s?(?:\d[\s-]?){8,10}\d/);
-
-    if (emailMatch) setValue("email", emailMatch[0]);
-    if (phoneMatch) setValue("phone", phoneMatch[0].replace(/\s+/g, " ").trim());
-
-    const linkedinMatch = text.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/[^\s,]+/i);
-    if (linkedinMatch) setValue("linkedin", linkedinMatch[0]);
-
-    const sectionMap = [
-      {
-        id: "summary",
-        headings: ["professional summary", "summary", "profile", "career objective", "objective"]
-      },
-      {
-        id: "experience",
-        headings: ["work experience", "professional experience", "employment history", "experience"]
-      },
-      {
-        id: "education",
-        headings: ["education", "academic background", "qualifications", "educational background"]
-      },
-      {
-        id: "skills",
-        headings: ["skills", "key skills", "technical skills", "competencies", "core competencies"]
-      },
-      {
-        id: "certifications",
-        headings: ["certifications", "certificates", "training", "professional development"]
-      },
-      {
-        id: "languages",
-        headings: ["languages", "language skills"]
-      },
-      {
-        id: "projects",
-        headings: ["projects", "key projects", "selected projects"]
-      },
-      {
-        id: "achievements",
-        headings: ["achievements", "awards", "accomplishments"]
-      },
-      {
-        id: "additional",
-        headings: ["additional information", "volunteering", "interests", "memberships"]
-      }
-    ];
-
-    let foundSections = 0;
-
-    sectionMap.forEach(section => {
-      const sectionText = findSection(text, section.headings);
-
-      if (sectionText) {
-        setValue(section.id, sectionText);
-        foundSections++;
-      }
-    });
-
-    // If the CV has no clear section labels, retain the imported content
-    // instead of silently losing the text.
-    if (foundSections === 0) {
-      const remainingLines = lines.filter(line =>
-        !emailMatch?.[0].includes(line) &&
-        !phoneMatch?.[0].includes(line)
-      );
-
-      if (remainingLines.length) {
-        setValue(
-          "experience",
-          remainingLines.join("\n")
-        );
-      }
-    }
-
-    // Use the first plausible non-contact line as the candidate's name.
-    if (!getValue("name")) {
-      const firstLine = lines.find(line =>
-        line.length >= 3 &&
-        line.length <= 65 &&
-        !/@/.test(line) &&
-        !/https?:\/\//i.test(line) &&
-        !/curriculum vitae|resume|résumé/i.test(line)
-      );
-
-      if (firstLine) setValue("name", firstLine);
-    }
-
-    // Look for a likely professional title near the beginning.
-    if (!getValue("headline") && lines.length > 1) {
-      const possibleTitle = lines.slice(1, 6).find(line =>
-        line.length >= 4 &&
-        line.length <= 75 &&
-        !/@/.test(line) &&
-        !/\d{5,}/.test(line) &&
-        !/curriculum vitae|resume|résumé/i.test(line)
-      );
-
-      if (possibleTitle) setValue("headline", possibleTitle);
-    }
-
-    render();
-
-    setStatus(
-      foundSections
-        ? "Text organised into CV fields. Review the name, title, dates and section contents carefully."
-        : "Text imported. The CV did not have recognisable section headings, so the extracted text was placed in Work Experience for you to reorganise."
-    );
-  }
-
-  document.getElementById("parseButton").addEventListener("click", () => {
-    organiseText(extractedText.value);
-  });
-
-  document.getElementById("parseButton2").addEventListener("click", () => {
-    organiseText(extractedText.value);
-  });
-
-  function clearCV() {
-    if (!confirm("Clear all CV fields and imported text?")) return;
-
-    fieldIds.forEach(id => {
-      document.getElementById(id).value = "";
-    });
-
-    extractedText.value = "";
-    document.querySelectorAll('input[type="file"]').forEach(input => {
-      input.value = "";
-    });
-
-    render();
-    setStatus("CV fields cleared.");
-  }
-
-  function downloadTextCV() {
-    const sections = [
-      ["NAME", getValue("name")],
-      ["PROFESSIONAL TITLE", getValue("headline")],
-      ["EMAIL", getValue("email")],
-      ["PHONE", getValue("phone")],
-      ["LOCATION", getValue("location")],
-      ["LINKEDIN / PORTFOLIO", getValue("linkedin")],
-      ["PROFESSIONAL SUMMARY", getValue("summary")],
-      ["WORK EXPERIENCE", getValue("experience")],
-      ["EDUCATION", getValue("education")],
-      ["SKILLS", getValue("skills")],
-      ["CERTIFICATIONS & TRAINING", getValue("certifications")],
-      ["LANGUAGES", getValue("languages")],
-      ["PROJECTS", getValue("projects")],
-      ["ACHIEVEMENTS", getValue("achievements")],
-      ["ADDITIONAL INFORMATION", getValue("additional")]
-    ];
-
-    const content = sections
-      .filter(([, value]) => value)
-      .map(([heading, value]) => heading + "\n" + value)
-      .join("\n\n");
-
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = (getValue("name") || "KaziNexus-CV")
-      .replace(/[^\w-]+/g, "-") + ".txt";
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  window.clearCV = clearCV;
-  window.downloadTextCV = downloadTextCV;
-
+(function(){
+'use strict';
+
+const $ = id => document.getElementById(id);
+const fieldIds = [
+ 'fullName','headline','email','phone','location','linkedin','summary',
+ 'experience','education','skills','certifications','languages',
+ 'achievements','projects','additional'
+];
+const state = {};
+let photoData = '';
+const preview = $('cvPreview');
+
+const esc = value => String(value || '').replace(/[&<>"']/g, c => ({
+ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[c]));
+
+const lines = value => String(value || '').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+
+function readFields(){
+ fieldIds.forEach(id=>state[id]=$(id).value||'');
+}
+
+function section(title, content){
+ if(!content || !String(content).trim()) return '';
+ return '<section class="cv-section"><h2>'+esc(title)+'</h2>'+content+'</section>';
+}
+
+function paragraphs(value){
+ return lines(value).map(line=>'<p>'+esc(line)+'</p>').join('');
+}
+
+function entries(value){
+ if(!value.trim())return '';
+ return value.split(/\n\s*\n/).map(block=>{
+   const ls=lines(block);
+   if(!ls.length)return '';
+   const title=ls[0];
+   const rest=ls.slice(1);
+   let body='', bullets=[];
+   rest.forEach(l=>{
+     if(/^[-•*▪]\s*/.test(l)){
+       bullets.push(l.replace(/^[-•*▪]\s*/,''));
+     }else{
+       if(bullets.length){
+         body+='<ul>'+bullets.map(b=>'<li>'+esc(b)+'</li>').join('')+'</ul>';
+         bullets=[];
+       }
+       body+='<p>'+esc(l)+'</p>';
+     }
+   });
+   if(bullets.length)body+='<ul>'+bullets.map(b=>'<li>'+esc(b)+'</li>').join('')+'</ul>';
+   return '<div class="cv-entry"><div class="cv-entry-title">'+esc(title)+'</div>'+body+'</div>';
+ }).join('');
+}
+
+function skills(value){
+ const arr=value.split(/[,;\n]+/).map(s=>s.trim()).filter(Boolean);
+ return arr.length?'<div class="cv-skills">'+arr.map(s=>'<span class="cv-skill">'+esc(s)+'</span>').join('')+'</div>':'';
+}
+
+function sectionContent(){
+ const main = [
+  section('Professional Profile', paragraphs(state.summary)),
+  section('Work Experience', entries(state.experience)),
+  section('Education', entries(state.education)),
+  section('Projects & Volunteering', entries(state.projects)),
+  section('Achievements', paragraphs(state.achievements))
+ ].join('');
+
+ const side = [
+  section('Key Skills', skills(state.skills)),
+  section('Certifications & Training', entries(state.certifications)||paragraphs(state.certifications)),
+  section('Languages', paragraphs(state.languages)),
+  section('Additional Information', paragraphs(state.additional))
+ ].join('');
+
+ return {main,side};
+}
+
+function render(){
+ readFields();
+
+ const template=$('cvTemplate').value;
+ const layout=$('cvLayout').value;
+ const length=$('cvLength').value;
+
+ preview.className='cv-paper style-'+template+' '+(layout==='two'?'layout-two':layout==='compact'?'layout-compact':'layout-single');
+
+ if(length==='compact')preview.classList.add('layout-compact');
+
+ $('previewLabel').textContent=$('cvTemplate').selectedOptions[0].text+' · '+(layout==='two'?'Two-column':layout==='compact'?'Compact':'Single-column')+' · A4 preview';
+
+ const name=state.fullName.trim()||'Your Full Name';
+ const headline=state.headline.trim()||'Professional Title';
+ const contact=[state.email,state.phone,state.location,state.linkedin].filter(Boolean);
+ const showPhoto=$('showPhoto').checked && photoData;
+ const header=preview.querySelector('.cv-header');
+
+ header.className='cv-header'+(showPhoto?'':' no-photo');
+
+ header.innerHTML=(showPhoto?'<img class="cv-photo" src="'+photoData+'" alt="Profile photo">':'')+
+ '<div class="cv-header-text"><h1 class="cv-name">'+esc(name)+'</h1><p class="cv-headline">'+esc(headline)+'</p><div class="cv-contact">'+contact.map(c=>'<span>'+esc(c)+'</span>').join('')+'</div></div>';
+
+ const content=sectionContent();
+
+ if(layout==='two'){
+  preview.querySelector('.cv-content').innerHTML='<div class="cv-two-col"><div class="cv-main">'+content.main+'</div><aside class="cv-sidebar">'+content.side+'</aside></div>';
+ }else{
+  preview.querySelector('.cv-content').innerHTML=content.main+content.side;
+ }
+}
+
+fieldIds.forEach(id=>$(id).addEventListener('input',render));
+['cvTemplate','cvLayout','cvLength','showPhoto'].forEach(id=>$(id).addEventListener('change',render));
+
+$('photoInput').addEventListener('change',function(e){
+ const file=e.target.files&&e.target.files[0];
+ if(!file)return;
+ if(!/^image\/(jpeg|png|webp)$/.test(file.type)){
+   alert('Please choose a JPG, PNG, or WebP image.');
+   return;
+ }
+ if(file.size>3*1024*1024){
+   alert('Please choose an image smaller than 3 MB.');
+   return;
+ }
+ const reader=new FileReader();
+ reader.onload=()=>{
+   photoData=reader.result;
+   $('showPhoto').checked=true;
+   render();
+ };
+ reader.readAsDataURL(file);
+});
+
+$('printBtn').addEventListener('click',()=>{
+ render();
+ window.print();
+});
+
+function plainCV(){
+ readFields();
+ return [
+  state.fullName,state.headline,
+  [state.email,state.phone,state.location,state.linkedin].filter(Boolean).join(' | '),
+  '','PROFESSIONAL PROFILE',state.summary,
+  '','WORK EXPERIENCE',state.experience,
+  '','EDUCATION',state.education,
+  '','KEY SKILLS',state.skills,
+  '','CERTIFICATIONS & TRAINING',state.certifications,
+  '','LANGUAGES',state.languages,
+  '','PROJECTS & VOLUNTEERING',state.projects,
+  '','ACHIEVEMENTS',state.achievements,
+  '','ADDITIONAL INFORMATION',state.additional
+ ].filter((v,i,a)=>v!==''||(i>0&&a[i-1]!=='')).join('\n');
+}
+
+function download(filename,content,type){
+ const blob=new Blob([content],{type:type||'text/plain;charset=utf-8'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');
+ a.href=url;
+ a.download=filename;
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+$('txtBtn').addEventListener('click',()=>{
+ readFields();
+ download((state.fullName||'KaziNexus-CV').trim().replace(/[^\w-]+/g,'-')+'.txt',plainCV());
+});
+
+$('htmlBtn').addEventListener('click',()=>{
+ readFields();
+ const clone=preview.cloneNode(true);
+ const css=[...document.querySelectorAll('style')].map(s=>s.textContent).join('\n');
+ const doc='<!DOCTYPE html><html><head><meta charset="utf-8"><title>'+esc(state.fullName||'CV')+'</title><style>'+css+'</style></head><body style="background:#fff;padding:20px">'+clone.outerHTML+'</body></html>';
+ download((state.fullName||'KaziNexus-CV').trim().replace(/[^\w-]+/g,'-')+'.html',doc,'text/html;charset=utf-8');
+});
+
+$('backupBtn').addEventListener('click',()=>{
+ readFields();
+ const payload={
+  version:1,
+  fields:state,
+  template:$('cvTemplate').value,
+  layout:$('cvLayout').value,
+  length:$('cvLength').value,
+  showPhoto:$('showPhoto').checked,
+  photo:photoData
+ };
+ download('kazinexus-cv-backup.json',JSON.stringify(payload,null,2),'application/json');
+});
+
+$('restoreBtn').addEventListener('click',()=>$('backupFile').click());
+
+$('backupFile').addEventListener('change',async e=>{
+ const f=e.target.files[0];
+ if(!f)return;
+ try{
+  const obj=JSON.parse(await f.text());
+  fieldIds.forEach(id=>$(id).value=(obj.fields&&obj.fields[id])||'');
+  if(obj.template)$('cvTemplate').value=obj.template;
+  if(obj.layout)$('cvLayout').value=obj.layout;
+  if(obj.length)$('cvLength').value=obj.length;
+  photoData=obj.photo||'';
+  $('showPhoto').checked=!!obj.showPhoto;
   render();
+  $('importStatus').textContent='Backup restored. Review your information.';
+ }catch(err){
+  alert('This backup file could not be read.');
+ }
+ e.target.value='';
+});
+
+$('clearBtn').addEventListener('click',()=>{
+ if(!confirm('Clear all CV fields? Export a backup first if you need to keep this information.'))return;
+ fieldIds.forEach(id=>$(id).value='');
+ photoData='';
+ $('photoInput').value='';
+ $('showPhoto').checked=false;
+ render();
+ $('importStatus').textContent='CV fields cleared.';
+});
+
+$('sampleBtn').addEventListener('click',()=>{
+ const sample={
+  fullName:'WILSON ODHIAMBO OTIENO',
+  headline:'Field Officer | Data Collection | Customer Relations',
+  email:'wilsonotieno4834@gmail.com',
+  phone:'+254 706 174 379',
+  location:'Kisumu, Kenya',
+  linkedin:'',
+  summary:'Results-oriented professional with experience in customer relations, field engagement, data collection and loan portfolio support. Comfortable using digital data collection tools and office productivity software. Communicates in English, Kiswahili and Luo, with a strong interest in research, community programmes and service delivery.',
+  experience:'Sales Representative — National Bank\nJan 2026 – Present\n• Support customer acquisition and explain banking products to prospective clients.\n• Maintain customer relationships and follow up on sales leads.\n\nLoan Officer — 4G Capital\nMar 2024 – Dec 2025\n• Supported client onboarding, loan processing and portfolio follow-up.\n• Built relationships with clients and monitored repayment progress.',
+  education:'Bachelor of Arts in Sociology\nUniversity qualification',
+  skills:'KoboToolbox, SurveyCTO, ODK, Microsoft Word, Excel, PowerPoint, Google Workspace, customer service, data collection, communication',
+  certifications:'',
+  languages:'English\nKiswahili\nLuo',
+  achievements:'',
+  projects:'',
+  additional:''
+ };
+ fieldIds.forEach(id=>$(id).value=sample[id]||'');
+ render();
+ $('importStatus').textContent='Sample profile loaded. Replace sample details with your own verified information.';
+});
+
+function safeText(text){
+ return String(text||'').replace(/\u0000/g,'').trim();
+}
+
+async function importFile(file){
+ $('importStatus').textContent='Reading '+file.name+'…';
+
+ try{
+  const ext=file.name.toLowerCase().split('.').pop();
+  let text='';
+
+  if(ext==='txt'||ext==='md'){
+   text=await file.text();
+  }else if(ext==='docx'){
+   if(!window.mammoth)throw new Error('Word import library could not load. Check your internet connection and try again.');
+   const result=await window.mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()});
+   text=result.value;
+  }else if(ext==='pdf'){
+   if(!window.pdfjsLib)throw new Error('PDF import library could not load. Check your internet connection and try again.');
+   pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+   const pdf=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
+   let pages=[];
+   for(let i=1;i<=pdf.numPages;i++){
+    const page=await pdf.getPage(i);
+    const c=await page.getTextContent();
+    pages.push(c.items.map(x=>x.str).join(' '));
+   }
+   text=pages.join('\n');
+  }else{
+   throw new Error('Please choose a PDF, DOCX, TXT, or MD file.');
+  }
+
+  text=safeText(text);
+  if(!text)throw new Error('No selectable text was found. Scanned PDFs may need OCR before import.');
+
+  organiseImportedText(text);
+  $('importStatus').textContent='Imported text. Check each field carefully; formatting may need adjustment.';
+ }catch(err){
+  $('importStatus').textContent='Import failed: '+err.message;
+ }
+}
+
+function organiseImportedText(text){
+ const normalized=text.replace(/\r/g,'').replace(/[ \t]+/g,' ');
+ const linesArr=normalized.split('\n').map(s=>s.trim()).filter(Boolean);
+
+ $('fullName').value=linesArr[0]||'';
+
+ const email=(normalized.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i)||[])[0]||'';
+ const phone=(normalized.match(/(?:\+?254|0)\s?(?:7\d|1\d)\s?\d{3}\s?\d{3}/)||[])[0]||'';
+
+ $('email').value=email;
+ $('phone').value=phone;
+
+ const remaining=linesArr.slice(1).filter(l=>l!==email&&l!==phone);
+ const full=remaining.join('\n');
+
+ const getSection=(names)=>{
+  const escaped=names.join('|');
+  const re=new RegExp('(?:^|\\n)\\s*(?:'+escaped+')\\s*:?\\s*\\n([\\s\\S]*?)(?=\\n\\s*(?:professional summary|profile|objective|work experience|employment history|experience|education|academic qualifications|skills|technical skills|certifications|training|languages|projects|achievements|references|additional information)\\s*:?(?:\\n|$)|$)','i');
+  const m=full.match(re);
+  return m?m[1].trim():'';
+ };
+
+ const summary=getSection(['professional summary','profile','career objective','objective']);
+ const exp=getSection(['work experience','employment history','experience']);
+ const edu=getSection(['education','academic qualifications','academic background']);
+ const sk=getSection(['skills','technical skills','key skills']);
+ const cert=getSection(['certifications','training','professional training']);
+ const lang=getSection(['languages']);
+ const projects=getSection(['projects','volunteering']);
+ const achievements=getSection(['achievements','awards']);
+
+ if(summary)$('summary').value=summary;
+ if(exp)$('experience').value=exp;
+ if(edu)$('education').value=edu;
+ if(sk)$('skills').value=sk.replace(/\n/g,', ');
+ if(cert)$('certifications').value=cert;
+ if(lang)$('languages').value=lang;
+ if(projects)$('projects').value=projects;
+ if(achievements)$('achievements').value=achievements;
+
+ if(!summary&&!exp&&!edu&&!sk){
+  $('summary').value='Imported CV text (please organise and edit):\n'+remaining.join('\n');
+ }
+
+ render();
+}
+
+$('cvFile').addEventListener('change',e=>{
+ if(e.target.files[0])importFile(e.target.files[0]);
+ e.target.value='';
+});
+
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{
+ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b===btn));
+ $('builderPanel').classList.toggle('hidden',btn.dataset.tab!=='builder');
+ $('matchPanel').classList.toggle('hidden',btn.dataset.tab!=='match');
+ $('coverPanel').classList.toggle('hidden',btn.dataset.tab!=='cover');
+}));
+
+const stopWords=new Set(('the and for with from that this your you are our will have has to of in a an or as be is by on at we they their it all any required preferred ability experience skills knowledge work role job position applicant responsibilities qualifications candidates including must can good strong').split(' '));
+
+function tokens(text){
+ return [...new Set((text.toLowerCase().match(/[a-z][a-z+#.-]{2,}/g)||[]).filter(t=>!stopWords.has(t)))];
+}
+
+$('matchBtn').addEventListener('click',()=>{
+ readFields();
+ const jd=$('jobDescription').value.trim();
+
+ if(!jd){
+  $('matchOutput').innerHTML='<p>Please paste a job description first.</p>';
+  return;
+ }
+
+ const cv=fieldIds.map(id=>state[id]).join(' ');
+ const jobTokens=tokens(jd);
+ const cvSet=new Set(tokens(cv));
+ const matched=jobTokens.filter(t=>cvSet.has(t));
+ const missing=jobTokens.filter(t=>!cvSet.has(t));
+ const score=jobTokens.length?Math.round(matched.length/jobTokens.length*100):0;
+
+ $('matchOutput').innerHTML=
+  '<div class="match-result">'+
+  '<div class="match-score">'+score+'% keyword overlap</div>'+
+  '<p>'+matched.length+' of '+jobTokens.length+' distinct job-description keywords were found in your current CV text.</p>'+
+  '<strong>Keywords found</strong>'+
+  '<div class="match-tags">'+(matched.slice(0,45).map(t=>'<span class="tag">'+esc(t)+'</span>').join('')||'<span class="tag">None detected</span>')+'</div>'+
+  '<p><strong>Keywords to review</strong></p>'+
+  '<div class="match-tags">'+(missing.slice(0,45).map(t=>'<span class="tag">'+esc(t)+'</span>').join('')||'<span class="tag">No obvious gaps</span>')+'</div>'+
+  '<p class="helper">Use relevant missing terms only if they truthfully describe your experience. Add specific examples and measurable results where possible.</p>'+
+  '</div>';
+});
+
+$('clearJobBtn').addEventListener('click',()=>{
+ $('jobDescription').value='';
+ $('matchOutput').innerHTML='';
+});
+
+function generateLetter(){
+ readFields();
+
+ const company=$('companyName').value.trim()||'[Organisation Name]';
+ const role=$('roleName').value.trim()||'[Position Title]';
+ const hiring=$('hiringName').value.trim()||'Hiring Manager';
+
+ const date=$('letterDate').value
+  ?new Date($('letterDate').value+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})
+  :new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+
+ const name=state.fullName||'[Your Name]';
+ const contact=[state.email,state.phone,state.location].filter(Boolean).join(' | ');
+
+ const intro=state.summary
+  ?state.summary.split(/[.!?]\s/)[0].replace(/[.!?]$/,'')
+  :'My background has helped me develop relevant skills in communication, teamwork and delivering results';
+
+ const strengths=$('letterHighlights').value.trim()
+  ||'I would welcome the opportunity to discuss how my experience and skills could contribute to your team.';
+
+ const letter=[
+  name,
+  contact,
+  date,
+  '',
+  company,
+  'Dear '+hiring+',',
+  '',
+  'RE: APPLICATION FOR '+role.toUpperCase(),
+  '',
+  'I am writing to apply for the '+role+' position with '+company+'. '+intro+'. I am interested in this opportunity because it aligns with my skills and professional goals.',
+  '',
+  strengths,
+  '',
+  'I am dependable, willing to learn and committed to delivering quality work. I would appreciate the opportunity to discuss my suitability for the position. Thank you for considering my application.',
+  '',
+  'Yours sincerely,',
+  name
+ ].filter((x,i)=>x!==''||i===3||i===5||i===8).join('\n');
+
+ $('coverLetter').textContent=letter;
+}
+
+$('generateLetterBtn').addEventListener('click',generateLetter);
+
+$('copyLetterBtn').addEventListener('click',async()=>{
+ try{
+  await navigator.clipboard.writeText($('coverLetter').innerText);
+  alert('Cover letter copied.');
+ }catch(e){
+  alert('Select the letter text and copy it manually.');
+ }
+});
+
+$('downloadLetterBtn').addEventListener('click',()=>{
+ download('KaziNexus-Cover-Letter.txt',$('coverLetter').innerText);
+});
+
+$('letterDate').value=new Date().toISOString().slice(0,10);
+render();
+
 })();
 </script>
-
 </body>
 </html>
