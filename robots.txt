@@ -1,7 +1,9 @@
+
 User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /dashboard
 Disallow: /employers/dashboard
 Disallow: /jobseekers/dashboard
-Sitemap: https://idyllic-faloodeh-807886.netlify.app/sitemap.xml
+
+Sitemap: https://kazinexus.co.ke/sitemap.xml
