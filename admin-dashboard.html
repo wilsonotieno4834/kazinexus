@@ -1,1801 +1,356 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KaziNexus | Admin Dashboard</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-:root{
-  --navy:#102a43;
-  --green:#126b48;
-  --green2:#16865a;
-  --gold:#f2a900;
-  --bg:#f4f7f9;
-  --white:#fff;
-  --text:#172033;
-  --muted:#667085;
-  --border:#e5e7eb;
-  --danger:#c62828;
-  --warning:#b26a00;
-  --shadow:0 10px 30px rgba(16,42,67,.08);
-}
-
+:root{--navy:#102a43;--green:#126b48;--gold:#f2a900;--bg:#f4f7f9;--text:#172033;--muted:#667085;--border:#e5e7eb;--red:#c62828}
 *{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Inter,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
-
-a{
-  text-decoration:none;
-  color:inherit;
-}
-
-.header{
-  height:72px;
-  background:#fff;
-  border-bottom:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 28px;
-  position:sticky;
-  top:0;
-  z-index:100;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:11px;
-}
-
-.brand-mark{
-  width:43px;
-  height:43px;
-  border-radius:50%;
-  background:linear-gradient(135deg,var(--navy),var(--green));
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:900;
-}
-
-.brand-text strong{
-  display:block;
-  color:var(--navy);
-  font-size:21px;
-}
-
-.brand-text span{
-  display:block;
-  color:var(--green);
-  font-size:10px;
-  font-weight:800;
-  letter-spacing:.6px;
-}
-
-.header-right{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.site-link{
-  color:var(--green);
-  font-weight:800;
-  font-size:14px;
-}
-
-.logout{
-  border:0;
-  background:#fff1f1;
-  color:var(--danger);
-  padding:10px 14px;
-  border-radius:9px;
-  font-weight:800;
-  cursor:pointer;
-}
-
-.menu{
-  display:none;
-  border:0;
-  background:#eef8f3;
-  color:var(--green);
-  width:40px;
-  height:40px;
-  border-radius:9px;
-  font-size:20px;
-}
-
-.layout{
-  display:flex;
-  min-height:calc(100vh - 72px);
-}
-
-.sidebar{
-  width:245px;
-  background:var(--navy);
-  color:#fff;
-  padding:23px 15px;
-  flex-shrink:0;
-}
-
-.sidebar-label{
-  color:#9fb3c8;
-  font-size:11px;
-  font-weight:800;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  padding:8px 12px 14px;
-}
-
-.nav{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:13px 14px;
-  margin:4px 0;
-  border-radius:10px;
-  color:#d9e2ec;
-  font-weight:700;
-  font-size:14px;
-}
-
-.nav:hover,
-.nav.active{
-  background:rgba(255,255,255,.12);
-  color:#fff;
-}
-
-.nav-icon{
-  width:25px;
-  text-align:center;
-  font-size:18px;
-}
-
-.sidebar-note{
-  margin-top:30px;
-  padding:15px;
-  border-top:1px solid rgba(255,255,255,.12);
-  color:#9fb3c8;
-  font-size:12px;
-  line-height:1.5;
-}
-
-.main{
-  flex:1;
-  padding:28px;
-  min-width:0;
-}
-
-.welcome{
-  background:linear-gradient(135deg,var(--navy),#174e69 55%,var(--green));
-  color:#fff;
-  border-radius:20px;
-  padding:30px;
-  margin-bottom:25px;
-  box-shadow:var(--shadow);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px;
-}
-
-.welcome h1{
-  margin:0 0 8px;
-  font-size:29px;
-}
-
-.welcome p{
-  margin:0;
-  color:#dbe7ef;
-}
-
-.admin-badge{
-  display:inline-block;
-  margin-top:13px;
-  padding:7px 11px;
-  background:rgba(255,255,255,.12);
-  border-radius:20px;
-  font-size:11px;
-  font-weight:800;
-}
-
-.welcome-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  border:0;
-  border-radius:10px;
-  padding:12px 17px;
-  font-weight:800;
-  cursor:pointer;
-}
-
-.btn-white{
-  background:#fff;
-  color:var(--green);
-}
-
-.btn-green{
-  background:var(--green);
-  color:#fff;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:14px;
-  margin-bottom:25px;
-}
-
-.stat{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:18px;
-  box-shadow:var(--shadow);
-}
-
-.stat-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-}
-
-.stat-icon{
-  width:40px;
-  height:40px;
-  border-radius:12px;
-  background:#eef8f3;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:19px;
-}
-
-.stat-number{
-  font-size:28px;
-  font-weight:900;
-  color:var(--navy);
-  margin-top:12px;
-}
-
-.stat-label{
-  color:var(--muted);
-  font-size:12px;
-  font-weight:700;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:2fr 1fr;
-  gap:20px;
-}
-
-.card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:22px;
-  box-shadow:var(--shadow);
-  margin-bottom:20px;
-}
-
-.card-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  margin-bottom:18px;
-}
-
-.card-head h2{
-  margin:0;
-  font-size:19px;
-}
-
-.card-head p{
-  margin:5px 0 0;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.moderation-tools{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:15px;
-}
-
-.moderation-tools input,
-.moderation-tools select{
-  border:1px solid var(--border);
-  border-radius:9px;
-  padding:10px 12px;
-  background:#fff;
-  color:var(--text);
-  font:inherit;
-  min-width:180px;
-}
-
-.moderation-tools input{
-  flex:1;
-}
-
-.table-wrap{
-  overflow-x:auto;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:750px;
-}
-
-th{
-  text-align:left;
-  padding:12px;
-  background:#f8fafb;
-  color:var(--muted);
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:.5px;
-}
-
-td{
-  padding:14px 12px;
-  border-bottom:1px solid var(--border);
-  font-size:13px;
-  vertical-align:middle;
-}
-
-.title{
-  font-weight:800;
-  color:var(--navy);
-}
-
-.company{
-  color:var(--muted);
-  font-size:12px;
-  margin-top:4px;
-}
-
-.location-cell{
-  max-width:220px;
-}
-
-.location-text{
-  display:block;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.status{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:800;
-  text-transform:capitalize;
-}
-
-.status.active,
-.status.verified,
-.status.approved{
-  background:#e8f7ef;
-  color:var(--green);
-}
-
-.status.pending{
-  background:#fff5df;
-  color:var(--warning);
-}
-
-.status.closed{
-  background:#eef1f4;
-  color:#596579;
-}
-
-.status.rejected,
-.status.suspended{
-  background:#fff0f0;
-  color:var(--danger);
-}
-
-.action{
-  border:0;
-  border-radius:7px;
-  padding:7px 10px;
-  font-weight:800;
-  cursor:pointer;
-  margin:2px;
-}
-
-.approve{
-  background:#e8f7ef;
-  color:var(--green);
-}
-
-.reject{
-  background:#fff0f0;
-  color:var(--danger);
-}
-
-.view{
-  background:#eef4f8;
-  color:var(--navy);
-}
-
-.empty{
-  text-align:center;
-  padding:35px 15px;
-  color:var(--muted);
-}
-
-.quick-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.quick{
-  border:1px solid var(--border);
-  border-radius:11px;
-  padding:15px;
-  font-weight:800;
-  color:var(--navy);
-}
-
-.quick:hover{
-  border-color:var(--green);
-  background:#f5fbf8;
-}
-
-.activity{
-  padding:13px 0;
-  border-bottom:1px solid var(--border);
-}
-
-.activity:last-child{
-  border-bottom:0;
-}
-
-.activity strong{
-  color:var(--navy);
-}
-
-.activity small{
-  display:block;
-  color:var(--muted);
-  margin-top:4px;
-}
-
-.admin-tools{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.tool{
-  padding:14px;
-  border-radius:10px;
-  background:#f8fafb;
-  border:1px solid var(--border);
-}
-
-.tool strong{
-  display:block;
-  color:var(--navy);
-}
-
-.tool span{
-  display:block;
-  margin-top:4px;
-  color:var(--muted);
-  font-size:12px;
-}
-
-.message{
-  display:none;
-  padding:13px 16px;
-  border-radius:10px;
-  margin-bottom:20px;
-  font-weight:700;
-}
-
-.message.success{
-  display:block;
-  background:#e8f7ef;
-  color:var(--green);
-}
-
-.message.error{
-  display:block;
-  background:#fff0f0;
-  color:var(--danger);
-}
-
-@media(max-width:1250px){
-
-  .stats{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-}
-
-@media(max-width:1050px){
-
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-}
-
-@media(max-width:750px){
-
-  .header{
-    padding:0 15px;
-  }
-
-  .site-link{
-    display:none;
-  }
-
-  .menu{
-    display:block;
-  }
-
-  .sidebar{
-    position:fixed;
-    top:72px;
-    bottom:0;
-    left:-260px;
-    z-index:90;
-    transition:.25s;
-  }
-
-  .sidebar.open{
-    left:0;
-  }
-
-  .main{
-    padding:17px;
-  }
-
-  .welcome{
-    flex-direction:column;
-    align-items:flex-start;
-    padding:22px;
-  }
-
-}
-
-@media(max-width:520px){
-
-  .stats{
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-  }
-
-  .stat{
-    padding:15px;
-  }
-
-  .stat-number{
-    font-size:24px;
-  }
-
-  .card{
-    padding:16px;
-  }
-
-  .quick-grid,
-  .admin-tools{
-    grid-template-columns:1fr;
-  }
-
-  .welcome h1{
-    font-size:24px;
-  }
-
-}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text)}
+a{text-decoration:none;color:inherit}
+header{height:70px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:10}
+.brand{font-size:22px;font-weight:900;color:var(--green)}.brand span{color:var(--gold)}
+.header-actions{display:flex;gap:12px;align-items:center}
+button,.btn{border:0;border-radius:8px;padding:11px 14px;font-weight:700;cursor:pointer;display:inline-block}
+.logout{background:#fff0f0;color:var(--red)}.btn{background:var(--green);color:#fff}
+.layout{display:flex;min-height:calc(100vh - 70px)}
+aside{width:225px;background:var(--navy);color:#fff;padding:20px 12px;flex-shrink:0}
+aside a{display:block;padding:13px;border-radius:8px;margin:4px 0;color:#e5edf5;font-weight:700}
+aside a:hover{background:#ffffff20}
+main{padding:24px;flex:1;min-width:0}
+.welcome{padding:25px;background:linear-gradient(120deg,var(--navy),var(--green));color:#fff;border-radius:16px;margin-bottom:22px}
+.welcome h1{margin:0 0 8px}.welcome p{margin:0 0 15px;color:#e4f1eb}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:22px}
+.stat,.card{background:#fff;border:1px solid var(--border);border-radius:13px;padding:18px;margin-bottom:18px}
+.stat small{color:var(--muted);font-weight:700}.number{font-size:28px;font-weight:900;color:var(--navy);margin-top:8px}
+.grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(250px,1fr);gap:18px}
+.card h2{font-size:19px;margin:0 0 8px}.muted{color:var(--muted);font-size:13px}
+.tools{display:flex;gap:9px;margin:16px 0;flex-wrap:wrap}
+input,select{padding:11px;border:1px solid #ccd3dc;border-radius:8px;font:inherit;max-width:100%}
+input{flex:1;min-width:180px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid var(--border);font-size:13px}
+th{background:#f8fafb;color:var(--muted);font-size:11px;text-transform:uppercase}
+.status{display:inline-block;padding:5px 9px;border-radius:20px;background:#fff3d9;color:#8a5a00;font-weight:700;font-size:11px}
+.status.active,.status.verified{background:#e8f7ef;color:var(--green)}
+.status.rejected{background:#fff0f0;color:var(--red)}
+.action{padding:7px 9px;margin:2px;font-size:12px}
+.approve{background:#e8f7ef;color:var(--green)}.reject{background:#fff0f0;color:var(--red)}.view{background:#edf3f8;color:var(--navy)}
+.quick{display:block;padding:13px;border:1px solid var(--border);border-radius:9px;margin:9px 0;font-weight:700}
+.quick:hover{border-color:var(--green)}
+.message{display:none;padding:12px;margin-bottom:16px;border-radius:8px;overflow-wrap:anywhere}
+.message.error{display:block;background:#fff0f0;color:var(--red)}
+.message.success{display:block;background:#e8f7ef;color:var(--green)}
+.empty{text-align:center;padding:25px;color:var(--muted)}
+.activity{padding:12px 0;border-bottom:1px solid var(--border);overflow-wrap:anywhere}
+.activity small{display:block;color:var(--muted);margin-top:5px}
+@media(max-width:950px){.grid{grid-template-columns:1fr}}
+@media(max-width:650px){.layout{display:block}aside{width:100%;display:flex;flex-wrap:wrap;padding:8px}aside a{padding:10px;font-size:12px}main{padding:12px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.welcome{padding:19px}header{padding:0 12px}.brand{font-size:19px}}
 </style>
 </head>
-
 <body>
-
-<header class="header">
-
-  <div class="brand">
-
-    <div class="brand-mark">KN</div>
-
-    <div class="brand-text">
-      <strong>KaziNexus</strong>
-      <span>CONNECT OPPORTUNITIES WITH THE RIGHT TALENT</span>
-    </div>
-
+<header>
+  <a href="/index.html" class="brand">Kazi<span>Nexus</span></a>
+  <div class="header-actions">
+    <a href="/index.html" class="muted">View Marketplace</a>
+    <button class="logout" onclick="logout()">Log Out</button>
   </div>
-
-  <div class="header-right">
-
-    <button class="menu" onclick="toggleSidebar()">☰</button>
-
-    <a class="site-link" href="index.html">
-      🌐 View Marketplace
-    </a>
-
-    <button class="logout" onclick="logout()">
-      Log Out
-    </button>
-
-  </div>
-
 </header>
 
-
 <div class="layout">
-
-<aside class="sidebar" id="sidebar">
-
-  <div class="sidebar-label">
-    Administration
-  </div>
-
-  <a class="nav active" href="#dashboard">
-    <span class="nav-icon">📊</span>
-    Dashboard
-  </a>
-
-  <a class="nav" href="#moderation">
-    <span class="nav-icon">🛡️</span>
-    Job Moderation
-  </a>
-
-  <a class="nav" href="#employers">
-    <span class="nav-icon">🏢</span>
-    Employers
-  </a>
-
-  <a class="nav" href="#applications">
-    <span class="nav-icon">👥</span>
-    Applications
-  </a>
-
-  <a class="nav" href="admin.html">
-    <span class="nav-icon">➕</span>
-    Post Opportunity
-  </a>
-
-  <a class="nav" href="admin-dashboard-analytics.html">
-    <span class="nav-icon">📈</span>
-    Analytics
-  </a>
-
-  <a class="nav" href="public-jobs.html">
-    <span class="nav-icon">🔎</span>
-    Public Jobs
-  </a>
-
-  <a class="nav" href="trust-safety.html">
-    <span class="nav-icon">🔐</span>
-    Trust & Safety
-  </a>
-
-  <a class="nav" href="contact.html">
-    <span class="nav-icon">💬</span>
-    Support
-  </a>
-
-  <div class="sidebar-note">
-    <strong>🇰🇪 KaziNexus Admin</strong>
-    <br><br>
-    Keep the marketplace trusted, useful and safe for Kenyan jobseekers and employers.
-  </div>
-
+<aside>
+  <a href="#dashboard">📊 Dashboard</a>
+  <a href="#moderation">🛡️ Job Moderation</a>
+  <a href="#employers">🏢 Employers</a>
+  <a href="#applications">👥 Applications</a>
+  <a href="/admin.html">➕ Admin Login / Post Opportunity</a>
+  <a href="/public-jobs.html">🔎 Public Jobs</a>
+  <a href="/trust-safety.html">🔐 Trust & Safety</a>
+  <a href="/contact.html">💬 Support</a>
 </aside>
 
-
-<main class="main">
-
+<main>
 <div id="message" class="message"></div>
 
-
 <section class="welcome" id="dashboard">
-
-  <div>
-
-    <h1>Admin Control Centre 🛡️</h1>
-
-    <p>
-      Manage jobs, employers, applications and platform activity.
-    </p>
-
-    <span class="admin-badge">
-      🔐 Administrator Access
-    </span>
-
-  </div>
-
-  <div class="welcome-actions">
-
-    <a href="admin.html" class="btn btn-white">
-      ➕ Post Opportunity
-    </a>
-
-    <a href="index.html" class="btn btn-white">
-      🌐 View Marketplace
-    </a>
-
-  </div>
-
+  <h1>Admin Control Centre 🛡️</h1>
+  <p>Manage jobs, employers and platform activity across Kenya.</p>
+  <a href="/admin.html" class="btn">➕ Post Opportunity</a>
+  <a href="/index.html" class="btn">🌐 View Marketplace</a>
 </section>
-
 
 <section class="stats">
-
-  <div class="stat">
-
-    <div class="stat-top">
-      <div class="stat-label">Total Jobs</div>
-      <div class="stat-icon">💼</div>
-    </div>
-
-    <div class="stat-number" id="totalJobs">0</div>
-
-  </div>
-
-
-  <div class="stat">
-
-    <div class="stat-top">
-      <div class="stat-label">Active Jobs</div>
-      <div class="stat-icon">🟢</div>
-    </div>
-
-    <div class="stat-number" id="activeJobs">0</div>
-
-  </div>
-
-
-  <div class="stat">
-
-    <div class="stat-top">
-      <div class="stat-label">Pending Review</div>
-      <div class="stat-icon">🟠</div>
-    </div>
-
-    <div class="stat-number" id="pendingJobs">0</div>
-
-  </div>
-
-
-  <div class="stat">
-
-    <div class="stat-top">
-      <div class="stat-label">Employers</div>
-      <div class="stat-icon">🏢</div>
-    </div>
-
-    <div class="stat-number" id="employerCount">0</div>
-
-  </div>
-
-
-  <div class="stat">
-
-    <div class="stat-top">
-      <div class="stat-label">Jobseekers</div>
-      <div class="stat-icon">🧑‍💼</div>
-    </div>
-
-    <div class="stat-number" id="jobseekerCount">0</div>
-
-  </div>
-
-
-  <div class="stat">
-
-    <div class="stat-top">
-      <div class="stat-label">Applications</div>
-      <div class="stat-icon">👥</div>
-    </div>
-
-    <div class="stat-number" id="applicationCount">0</div>
-
-  </div>
-
+  <div class="stat"><small>Total Jobs</small><div class="number" id="totalJobs">—</div></div>
+  <div class="stat"><small>Active Jobs</small><div class="number" id="activeJobs">—</div></div>
+  <div class="stat"><small>Pending Review</small><div class="number" id="pendingJobs">—</div></div>
+  <div class="stat"><small>Employers</small><div class="number" id="employerCount">—</div></div>
+  <div class="stat"><small>Jobseekers</small><div class="number" id="jobseekerCount">—</div></div>
+  <div class="stat"><small>Applications</small><div class="number" id="applicationCount">—</div></div>
 </section>
 
-
 <div class="grid">
-
-
 <div>
-
 <section class="card" id="moderation">
-
-  <div class="card-head">
-
-    <div>
-      <h2>🛡️ Job Moderation</h2>
-      <p>Review and manage submitted opportunities.</p>
-    </div>
-
-    <a href="admin.html" class="btn btn-green">
-      + Post Job
-    </a>
-
-  </div>
-
-
-  <div class="moderation-tools">
-
-    <input
-      id="jobSearch"
-      type="search"
-      placeholder="Search jobs, companies or locations..."
-      oninput="filterJobs()">
-
-    <select
-      id="jobStatusFilter"
-      onchange="filterJobs()">
-
+  <h2>🛡️ Job Moderation</h2>
+  <p class="muted">Search, review and manage submitted opportunities.</p>
+  <div class="tools">
+    <input id="jobSearch" type="search" placeholder="Search jobs, companies or locations" oninput="filterJobs()">
+    <select id="jobStatusFilter" onchange="filterJobs()">
       <option value="all">All statuses</option>
-      <option value="pending">Pending review</option>
+      <option value="pending">Pending</option>
       <option value="active">Active</option>
       <option value="closed">Closed</option>
       <option value="rejected">Rejected</option>
-
     </select>
-
   </div>
-
-
   <div class="table-wrap">
-
-    <table>
-
-      <thead>
-
-        <tr>
-          <th>Opportunity</th>
-          <th>Company</th>
-          <th>Location</th>
-          <th>Status</th>
-          <th>Created</th>
-          <th>Action</th>
-        </tr>
-
-      </thead>
-
-      <tbody id="jobRows">
-
-        <tr>
-          <td colspan="6" class="empty">
-            Loading jobs...
-          </td>
-        </tr>
-
-      </tbody>
-
-    </table>
-
+  <table>
+    <thead><tr><th>Opportunity</th><th>Company</th><th>Location</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+    <tbody id="jobRows"><tr><td colspan="6" class="empty">Loading jobs…</td></tr></tbody>
+  </table>
   </div>
-
 </section>
-
 
 <section class="card" id="employers">
-
-  <div class="card-head">
-
-    <div>
-      <h2>🏢 Employer Verification</h2>
-      <p>Monitor employer accounts and verification.</p>
-    </div>
-
-  </div>
-
-
+  <h2>🏢 Employers</h2>
+  <p class="muted">Review employer account information and verification status.</p>
   <div class="table-wrap">
-
-    <table>
-
-      <thead>
-
-        <tr>
-          <th>Organisation</th>
-          <th>Industry</th>
-          <th>Location</th>
-          <th>Verification</th>
-        </tr>
-
-      </thead>
-
-      <tbody id="employerRows">
-
-        <tr>
-          <td colspan="4" class="empty">
-            Loading employers...
-          </td>
-        </tr>
-
-      </tbody>
-
-    </table>
-
+  <table>
+    <thead><tr><th>Organisation</th><th>Industry</th><th>Location</th><th>Verification</th></tr></thead>
+    <tbody id="employerRows"><tr><td colspan="4" class="empty">Loading employers…</td></tr></tbody>
+  </table>
   </div>
-
 </section>
-
 
 <section class="card" id="applications">
-
-  <div class="card-head">
-
-    <div>
-      <h2>👥 Recent Applications</h2>
-      <p>Latest activity from jobseekers.</p>
-    </div>
-
-  </div>
-
-  <div id="applicationRows">
-
-    <div class="empty">
-      Loading applications...
-    </div>
-
-  </div>
-
+  <h2>👥 Recent Applications</h2>
+  <p class="muted">Latest job application activity.</p>
+  <div id="applicationRows" class="empty">Loading applications…</div>
 </section>
-
 </div>
-
 
 <div>
-
-
 <section class="card">
-
-  <div class="card-head">
-
-    <div>
-      <h2>⚡ Quick Actions</h2>
-      <p>Common administration tasks.</p>
-    </div>
-
-  </div>
-
-
-  <div class="quick-grid">
-
-    <a class="quick" href="admin.html">
-      ➕ Post Opportunity
-    </a>
-
-    <a class="quick" href="#moderation">
-      🛡️ Review Jobs
-    </a>
-
-    <a class="quick" href="#employers">
-      🏢 Employers
-    </a>
-
-    <a class="quick" href="#applications">
-      👥 Applications
-    </a>
-
-    <a class="quick" href="admin-dashboard-analytics.html">
-      📈 Analytics
-    </a>
-
-    <a class="quick" href="trust-safety.html">
-      🔐 Trust & Safety
-    </a>
-
-  </div>
-
+  <h2>⚡ Quick Actions</h2>
+  <a class="quick" href="/admin.html">➕ Post Opportunity</a>
+  <a class="quick" href="#moderation">🛡️ Review Jobs</a>
+  <a class="quick" href="#employers">🏢 Employers</a>
+  <a class="quick" href="#applications">👥 Applications</a>
+  <a class="quick" href="/admin-dashboard-analytics.html">📈 Analytics</a>
+  <a class="quick" href="/trust-safety.html">🔐 Trust & Safety</a>
 </section>
-
-
 <section class="card">
-
-  <div class="card-head">
-
-    <div>
-      <h2>📌 Platform Tools</h2>
-      <p>KaziNexus management centre.</p>
-    </div>
-
-  </div>
-
-
-  <div class="admin-tools">
-
-    <div class="tool">
-      <strong>Jobs</strong>
-      <span>Review and manage opportunities.</span>
-    </div>
-
-    <div class="tool">
-      <strong>Employers</strong>
-      <span>Monitor verification status.</span>
-    </div>
-
-    <div class="tool">
-      <strong>Jobseekers</strong>
-      <span>Support the candidate community.</span>
-    </div>
-
-    <div class="tool">
-      <strong>Applications</strong>
-      <span>Monitor application activity.</span>
-    </div>
-
-  </div>
-
+  <h2>🇰🇪 KaziNexus Mission</h2>
+  <p class="muted">Connect opportunities with the right talent across all 47 counties. Keep job information accurate and the marketplace useful for Kenyan jobseekers and employers.</p>
 </section>
-
-
-<section class="card">
-
-  <div class="card-head">
-
-    <div>
-      <h2>🇰🇪 KaziNexus Mission</h2>
-    </div>
-
-  </div>
-
-  <p style="color:#667085;line-height:1.7;margin:0">
-    Connect opportunities with the right talent across all 47 counties.
-    Keep job information accurate, employers trustworthy and the
-    marketplace useful for everyone.
-  </p>
-
-</section>
-
 </div>
-
 </div>
-
 </main>
-
 </div>
-
 
 <script>
-
-const SUPABASE_URL =
-'https://vljehlfeglstpgphzebj.supabase.co';
-
-const SUPABASE_KEY =
-'sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3';
-
-const db =
-window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
+const SUPABASE_URL = 'https://vljehlfeglstpgphzebj.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let session = null;
 let allJobs = [];
 
-
-const esc = value =>
-String(value ?? '')
-.replace(/[&<>"']/g,c=>({
-  '&':'&amp;',
-  '<':'&lt;',
-  '>':'&gt;',
-  '"':'&quot;',
-  "'":'&#39;'
+const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({
+  '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
 }[c]));
 
-
-function showMessage(text,type){
-
-  const el =
-  document.getElementById('message');
-
-  el.textContent = text;
-
-  el.className =
-  'message ' + type;
-
+function showMessage(message, type) {
+  const el = document.getElementById('message');
+  el.textContent = message;
+  el.className = 'message ' + type;
 }
 
+async function init() {
+  try {
+    const { data, error } = await db.auth.getSession();
+    if (error) throw error;
 
-function toggleSidebar(){
+    session = data.session;
 
-  document
-  .getElementById('sidebar')
-  .classList.toggle('open');
+    if (!session) {
+      location.replace('/admin.html');
+      return;
+    }
 
-}
+    const results = await Promise.allSettled([
+      loadStats(), loadJobs(), loadEmployers(), loadApplications()
+    ]);
 
-
-async function init(){
-
-  const result =
-  await db.auth.getSession();
-
-  session =
-  result.data.session;
-
-  if(!session){
-
-    location.href =
-    'auth.html';
-
-    return;
-
+    results.forEach(result => {
+      if (result.status === 'rejected') {
+        showMessage(result.reason?.message || 'Some dashboard information could not be loaded.', 'error');
+      }
+    });
+  } catch (error) {
+    showMessage(error.message || 'Unable to load the dashboard.', 'error');
   }
+}
 
-  await Promise.all([
-    loadStats(),
-    loadJobs(),
-    loadEmployers(),
-    loadApplications()
+async function loadStats() {
+  const queries = await Promise.all([
+    db.from('jobs').select('id,status'),
+    db.from('employers').select('id', {count:'exact',head:true}),
+    db.from('job_seekers').select('id', {count:'exact',head:true}),
+    db.from('applications').select('id', {count:'exact',head:true})
   ]);
 
+  const [jobsResult, employersResult, seekersResult, applicationsResult] = queries;
+
+  if (jobsResult.error) throw jobsResult.error;
+
+  const jobs = jobsResult.data || [];
+  document.getElementById('totalJobs').textContent = jobs.length;
+  document.getElementById('activeJobs').textContent = jobs.filter(j => j.status === 'active').length;
+  document.getElementById('pendingJobs').textContent = jobs.filter(j => j.status === 'pending').length;
+  document.getElementById('employerCount').textContent = employersResult.error ? '—' : employersResult.count ?? 0;
+  document.getElementById('jobseekerCount').textContent = seekersResult.error ? '—' : seekersResult.count ?? 0;
+  document.getElementById('applicationCount').textContent = applicationsResult.error ? '—' : applicationsResult.count ?? 0;
 }
 
+async function loadJobs() {
+  const {data, error} = await db.from('jobs')
+    .select('id,title,company,location,status,created_at')
+    .order('created_at', {ascending:false})
+    .limit(100);
 
-async function loadStats(){
-
-  const jobs =
-  await db
-  .from('jobs')
-  .select('id,status');
-
-  const pending =
-  await db
-  .from('jobs')
-  .select('id',{
-    count:'exact',
-    head:true
-  })
-  .eq('status','pending');
-
-  const employers =
-  await db
-  .from('employers')
-  .select('id',{
-    count:'exact',
-    head:true
-  });
-
-  const applications =
-  await db
-  .from('applications')
-  .select('id',{
-    count:'exact',
-    head:true
-  });
-
-  const jobseekers =
-  await db
-  .from('job_seekers')
-  .select('id',{
-    count:'exact',
-    head:true
-  });
-
-
-  if(jobs.error){
-
-    showMessage(
-      jobs.error.message,
-      'error'
-    );
-
-    return;
-
-  }
-
-
-  const jobData =
-  jobs.data || [];
-
-
-  document
-  .getElementById('totalJobs')
-  .textContent =
-  jobData.length;
-
-
-  document
-  .getElementById('activeJobs')
-  .textContent =
-  jobData.filter(
-    j => j.status === 'active'
-  ).length;
-
-
-  document
-  .getElementById('pendingJobs')
-  .textContent =
-  pending.count ?? 0;
-
-
-  document
-  .getElementById('employerCount')
-  .textContent =
-  employers.count ?? 0;
-
-
-  document
-  .getElementById('jobseekerCount')
-  .textContent =
-  jobseekers.count ?? 0;
-
-
-  document
-  .getElementById('applicationCount')
-  .textContent =
-  applications.count ?? 0;
-
-}
-
-
-async function loadJobs(){
-
-  const result =
-  await db
-  .from('jobs')
-  .select(`
-    id,
-    title,
-    company,
-    location,
-    status,
-    created_at
-  `)
-  .order('created_at',{
-    ascending:false
-  })
-  .limit(100);
-
-
-  if(result.error){
-
-    showMessage(
-      result.error.message,
-      'error'
-    );
-
-    return;
-
-  }
-
-
-  allJobs =
-  result.data || [];
-
-
+  if (error) throw error;
+  allJobs = data || [];
   filterJobs();
-
 }
 
+function filterJobs() {
+  const search = (document.getElementById('jobSearch')?.value || '').trim().toLowerCase();
+  const status = document.getElementById('jobStatusFilter')?.value || 'all';
 
-function filterJobs(){
-
-  const search =
-  (
-    document
-    .getElementById('jobSearch')
-    ?.value || ''
-  )
-  .trim()
-  .toLowerCase();
-
-
-  const status =
-  document
-  .getElementById('jobStatusFilter')
-  ?.value || 'all';
-
-
-  const jobs =
-  allJobs.filter(j=>{
-
-    const matchesSearch =
-      !search ||
-      String(j.title || '')
-      .toLowerCase()
-      .includes(search) ||
-
-      String(j.company || '')
-      .toLowerCase()
-      .includes(search) ||
-
-      String(j.location || '')
-      .toLowerCase()
-      .includes(search);
-
-
-    const matchesStatus =
-      status === 'all' ||
-      String(j.status || '')
-      .toLowerCase() === status;
-
-
-    return (
-      matchesSearch &&
-      matchesStatus
-    );
-
+  const jobs = allJobs.filter(job => {
+    const text = [job.title, job.company, job.location].join(' ').toLowerCase();
+    return (!search || text.includes(search)) &&
+      (status === 'all' || String(job.status || '').toLowerCase() === status);
   });
 
-
-  if(!jobs.length){
-
-    document
-    .getElementById('jobRows')
-    .innerHTML = `
-      <tr>
-        <td colspan="6" class="empty">
-          No jobs match your search.
-        </td>
-      </tr>
-    `;
-
+  const rows = document.getElementById('jobRows');
+  if (!jobs.length) {
+    rows.innerHTML = '<tr><td colspan="6" class="empty">No jobs match your search.</td></tr>';
     return;
-
   }
 
-
-  document
-  .getElementById('jobRows')
-  .innerHTML =
-  jobs.map(j=>`
-
-    <tr>
-
-      <td>
-
-        <div class="title">
-          ${esc(j.title)}
-        </div>
-
-      </td>
-
-
-      <td>
-
-        <div class="company">
-          ${esc(
-            j.company ||
-            'Not specified'
-          )}
-        </div>
-
-      </td>
-
-
-      <td class="location-cell">
-
-        <span
-          class="location-text"
-          title="${esc(
-            j.location ||
-            'Kenya'
-          )}">
-
-          ${esc(
-            j.location ||
-            'Kenya'
-          )}
-
-        </span>
-
-      </td>
-
-
-      <td>
-
-        <span class="status ${
-          j.status === 'active'
-          ? 'active'
-          : j.status === 'pending'
-          ? 'pending'
-          : j.status === 'closed'
-          ? 'closed'
-          : j.status === 'rejected'
-          ? 'rejected'
-          : ''
-        }">
-
-          ${esc(
-            j.status ||
-            'unknown'
-          )}
-
-        </span>
-
-      </td>
-
-
-      <td>
-
-        ${
-          j.created_at
-          ? new Date(
-              j.created_at
-            ).toLocaleDateString()
-          : '-'
-        }
-
-      </td>
-
-
-      <td>
-
-        <button
-          class="action view"
-          onclick="viewJob('${j.id}')">
-
-          View
-
-        </button>
-
-
-        ${
-          j.status === 'pending'
-          ? `
-
-            <button
-              class="action approve"
-              onclick="updateJob(
-                '${j.id}',
-                'active'
-              )">
-
-              Approve
-
-            </button>
-
-
-            <button
-              class="action reject"
-              onclick="updateJob(
-                '${j.id}',
-                'rejected'
-              )">
-
-              Reject
-
-            </button>
-
-          `
-          : ''
-        }
-
-      </td>
-
-    </tr>
-
-  `).join('');
-
-}
-
-
-async function updateJob(
-  id,
-  status
-){
-
-  const result =
-  await db
-  .from('jobs')
-  .update({
-    status:status,
-    reviewed_at:
-      new Date().toISOString(),
-    reviewed_by:
-      session.user.id
-  })
-  .eq('id',id);
-
-
-  if(result.error){
-
-    showMessage(
-      result.error.message,
-      'error'
-    );
-
-    return;
-
-  }
-
-
-  showMessage(
-    status === 'active'
-      ? 'Job approved successfully.'
-      : 'Job rejected successfully.',
-    'success'
-  );
-
-
-  await loadStats();
-  await loadJobs();
-
-}
-
-
-function viewJob(id){
-
-  location.href =
-  `jobs/detail.html?id=${
-    encodeURIComponent(id)
-  }`;
-
-}
-
-
-async function loadEmployers(){
-
-  const result =
-  await db
-  .from('employers')
-  .select(`
-    id,
-    organization_name,
-    industry,
-    location,
-    verified,
-    verification_status
-  `)
-  .order('created_at',{
-    ascending:false
-  })
-  .limit(20);
-
-
-  if(result.error){
-
-    document
-    .getElementById('employerRows')
-    .innerHTML = `
-      <tr>
-        <td colspan="4" class="empty">
-          Unable to load employers.
-        </td>
-      </tr>
-    `;
-
-    return;
-
-  }
-
-
-  const employers =
-  result.data || [];
-
-
-  if(!employers.length){
-
-    document
-    .getElementById('employerRows')
-    .innerHTML = `
-      <tr>
-        <td colspan="4" class="empty">
-          No employers found.
-        </td>
-      </tr>
-    `;
-
-    return;
-
-  }
-
-
-  document
-  .getElementById('employerRows')
-  .innerHTML =
-  employers.map(e=>{
-
-    const verified =
-      e.verified === true ||
-      String(
-        e.verification_status || ''
-      )
-      .toLowerCase() ===
-      'verified';
-
-
-    return `
-
-      <tr>
-
-        <td>
-          <div class="title">
-            ${esc(
-              e.organization_name ||
-              'Unnamed organisation'
-            )}
-          </div>
-        </td>
-
-        <td>
-          ${esc(
-            e.industry ||
-            'Not specified'
-          )}
-        </td>
-
-        <td>
-          ${esc(
-            e.location ||
-            'Kenya'
-          )}
-        </td>
-
-        <td>
-
-          <span class="status ${
-            verified
-            ? 'verified'
-            : 'pending'
-          }">
-
-            ${
-              verified
-              ? 'Verified'
-              : 'Not Verified'
-            }
-
-          </span>
-
-        </td>
-
-      </tr>
-
-    `;
-
+  rows.innerHTML = jobs.map(job => {
+    const status = String(job.status || 'unknown').toLowerCase();
+    const statusClass = ['active','pending','closed','rejected'].includes(status) ? status : '';
+    const created = job.created_at ? new Date(job.created_at).toLocaleDateString() : '—';
+    const actions = status === 'pending'
+      ? `<button class="action approve" onclick="updateJob('${esc(job.id)}','active')">Approve</button>
+         <button class="action reject" onclick="updateJob('${esc(job.id)}','rejected')">Reject</button>`
+      : '';
+    return `<tr>
+      <td><strong>${esc(job.title || 'Untitled opportunity')}</strong></td>
+      <td>${esc(job.company || 'Not specified')}</td>
+      <td>${esc(job.location || 'Kenya')}</td>
+      <td><span class="status ${statusClass}">${esc(status)}</span></td>
+      <td>${esc(created)}</td>
+      <td><button class="action view" onclick="viewJob('${esc(job.id)}')">View</button>${actions}</td>
+    </tr>`;
   }).join('');
-
 }
 
-
-async function loadApplications(){
-
-  const result =
-  await db
-  .from('applications')
-  .select(`
-    applicant_name,
-    applicant_email,
-    status,
-    created_at,
-    job_id
-  `)
-  .order('created_at',{
-    ascending:false
-  })
-  .limit(10);
-
-
-  if(result.error){
-
-    document
-    .getElementById('applicationRows')
-    .innerHTML = `
-      <div class="empty">
-        Unable to load applications.
-      </div>
-    `;
-
+async function updateJob(id, status) {
+  if (!session) {
+    location.replace('/admin.html');
     return;
-
   }
 
+  const action = status === 'active' ? 'approve' : 'reject';
+  if (!confirm(`Are you sure you want to ${action} this opportunity?`)) return;
 
-  const apps =
-  result.data || [];
+  try {
+    const {error} = await db.from('jobs').update({status}).eq('id', id);
+    if (error) throw error;
+    showMessage(status === 'active' ? 'Job approved.' : 'Job rejected.', 'success');
+    await Promise.all([loadStats(), loadJobs()]);
+  } catch (error) {
+    showMessage(error.message || 'Unable to update this job. Check your administrator permissions and database policies.', 'error');
+  }
+}
 
+function viewJob(id) {
+  location.href = '/jobs/detail.html?id=' + encodeURIComponent(id);
+}
 
-  if(!apps.length){
+async function loadEmployers() {
+  const {data, error} = await db.from('employers')
+    .select('id,organization_name,industry,location,verified,verification_status')
+    .order('created_at', {ascending:false})
+    .limit(20);
 
-    document
-    .getElementById('applicationRows')
-    .innerHTML = `
-      <div class="empty">
-        📬<br><br>
-        No applications yet.
-      </div>
-    `;
-
+  const rows = document.getElementById('employerRows');
+  if (error) {
+    rows.innerHTML = '<tr><td colspan="4" class="empty">Unable to load employers. Check database permissions.</td></tr>';
     return;
-
   }
 
+  const employers = data || [];
+  if (!employers.length) {
+    rows.innerHTML = '<tr><td colspan="4" class="empty">No employers found.</td></tr>';
+    return;
+  }
 
-  document
-  .getElementById('applicationRows')
-  .innerHTML =
-  apps.map(a=>`
-
-    <div class="activity">
-
-      <strong>
-        ${esc(
-          a.applicant_name ||
-          'Jobseeker'
-        )}
-      </strong>
-
-      <small>
-
-        ${esc(
-          a.applicant_email ||
-          ''
-        )}
-
-        ·
-
-        ${esc(
-          a.status ||
-          'Submitted'
-        )}
-
-        ·
-
-        ${
-          a.created_at
-          ? new Date(
-              a.created_at
-            ).toLocaleDateString()
-          : ''
-        }
-
-      </small>
-
-    </div>
-
-  `).join('');
-
+  rows.innerHTML = employers.map(employer => {
+    const verified = employer.verified === true ||
+      String(employer.verification_status || '').toLowerCase() === 'verified';
+    return `<tr>
+      <td>${esc(employer.organization_name || 'Unnamed organisation')}</td>
+      <td>${esc(employer.industry || 'Not specified')}</td>
+      <td>${esc(employer.location || 'Kenya')}</td>
+      <td><span class="status ${verified ? 'verified' : 'pending'}">${verified ? 'Verified' : 'Not verified'}</span></td>
+    </tr>`;
+  }).join('');
 }
 
+async function loadApplications() {
+  const {data, error} = await db.from('applications')
+    .select('applicant_name,applicant_email,status,created_at,job_id')
+    .order('created_at', {ascending:false})
+    .limit(10);
 
-async function logout(){
+  const box = document.getElementById('applicationRows');
+  if (error) {
+    box.className = 'empty';
+    box.textContent = 'Unable to load applications. Check database permissions.';
+    return;
+  }
 
-  await db.auth.signOut();
+  const apps = data || [];
+  if (!apps.length) {
+    box.className = 'empty';
+    box.textContent = 'No applications yet.';
+    return;
+  }
 
-  location.href =
-  'auth.html';
-
+  box.className = '';
+  box.innerHTML = apps.map(app => `<div class="activity">
+    <strong>${esc(app.applicant_name || 'Jobseeker')}</strong>
+    <small>${esc(app.applicant_email || '')} · ${esc(app.status || 'Submitted')} · ${esc(app.created_at ? new Date(app.created_at).toLocaleDateString() : '')}</small>
+  </div>`).join('');
 }
 
+async function logout() {
+  try {
+    await db.auth.signOut();
+  } finally {
+    location.replace('/admin.html');
+  }
+}
 
 init();
-
 </script>
-
 </body>
 </html>
