@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sign in or create your free KaziNexus jobseeker account.">
+  <title>Jobseeker Login | KaziNexus</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: Arial, sans-serif;
+      background: #f3f6fb; color: #172033;
+      min-height: 100vh; display: grid; place-items: center;
+      padding: 20px;
+    }
+    .card {
+      width: 100%; max-width: 440px; background: white;
+      padding: 30px; border-radius: 18px;
+      box-shadow: 0 12px 35px rgba(8,37,103,.10);
+    }
+    .brand { text-align: center; margin-bottom: 25px; }
+    .brand a { text-decoration: none; font-size: 27px; font-weight: 800; color: #082567; }
+    .brand span { color: #079447; }
+    h1 { font-size: 25px; margin: 0 0 8px; }
+    .muted { color: #667085; line-height: 1.5; font-size: 14px; }
+    .tabs { display: flex; gap: 8px; margin: 22px 0; }
+    .tabs button {
+      flex: 1; padding: 11px 8px; border: 1px solid #dce3ed;
+      background: #f7f9fc; border-radius: 9px; cursor: pointer;
+      font-weight: 700;
+    }
+    .tabs button.active { background: #082567; color: white; border-color: #082567; }
+    label { display: block; margin: 15px 0 7px; font-size: 14px; font-weight: 700; }
+    input {
+      width: 100%; padding: 12px; border: 1px solid #cfd7e3;
+      border-radius: 8px; font-size: 16px;
+    }
+    input:focus { outline: 2px solid #a9c6ff; border-color: #082567; }
+    .primary {
+      width: 100%; border: 0; background: #079447; color: white;
+      padding: 13px; margin-top: 20px; border-radius: 9px;
+      font-weight: 700; font-size: 16px; cursor: pointer;
+    }
+    .primary:disabled { opacity: .65; cursor: wait; }
+    .message { margin-top: 15px; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+    .error { color: #b42318; }
+    .success { color: #067647; }
+    .links { text-align: center; margin-top: 20px; font-size: 14px; line-height: 2; }
+    .links a, .forgot { color: #082567; font-weight: 700; }
+    .forgot { display: block; text-align: right; margin-top: 12px; font-size: 13px; cursor: pointer; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="brand">
+      <a href="/">Kazi<span>Nexus</span></a>
+      <p class="muted">Connect Opportunities With the Right Talent</p>
+    </div>
+
+    <h1 id="heading">Jobseeker Login</h1>
+    <p class="muted" id="intro">Sign in to manage your profile, CV and job applications.</p>
+
+    <div class="tabs">
+      <button type="button" id="loginTab" class="active">Login</button>
+      <button type="button" id="signupTab">Create Account</button>
+    </div>
+
+    <form id="authForm">
+      <div id="nameField" class="hidden">
+        <label for="fullName">Full name *</label>
+        <input id="fullName" type="text" autocomplete="name" placeholder="Enter your full name">
+      </div>
+
+      <label for="email">Email address *</label>
+      <input id="email" type="email" required autocomplete="email" placeholder="you@example.com">
+
+      <label for="password">Password *</label>
+      <input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="At least 6 characters">
+
+      <span id="forgot" class="forgot">Forgot password?</span>
+      <button id="submitBtn" class="primary" type="submit">Login</button>
+      <div id="message" class="message" role="status" aria-live="polite"></div>
+    </form>
+
+    <div class="links">
+      <a href="/">← Back to KaziNexus</a><br>
+      <a href="/public-jobs.html">Browse jobs without logging in</a><br>
+      <span class="muted">Are you an employer? <a href="/auth.html">Employer Login</a></span>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const SUPABASE_URL = "https://vljehlfeglstpgphzebj.supabase.co";
+      const SUPABASE_KEY = "sb_publishable_QtYMFyv1din55Ch8bbznug_YCoF1XB3";
+      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+      const $ = id => document.getElementById(id);
+      let mode = "login";
+      let busy = false;
+
+      function showMessage(text, type) {
+        $("message").textContent = text;
+        $("message").className = "message " + type;
+      }
+
+      function setMode(nextMode) {
+        mode = nextMode;
+        const signup = mode === "signup";
+        $("heading").textContent = signup ? "Create Jobseeker Account" : "Jobseeker Login";
+        $("intro").textContent = signup
+          ? "Create your free account to manage your profile and applications."
+          : "Sign in to manage your profile, CV and job applications.";
+        $("nameField").classList.toggle("hidden", !signup);
+        $("fullName").required = signup;
+        $("password").autocomplete = signup ? "new-password" : "current-password";
+        $("loginTab").classList.toggle("active", !signup);
+        $("signupTab").classList.toggle("active", signup);
+        $("forgot").classList.toggle("hidden", signup);
+        $("submitBtn").textContent = signup ? "Create Account" : "Login";
+        $("message").textContent = "";
+        $("message").className = "message";
+      }
+
+      $("loginTab").addEventListener("click", () => setMode("login"));
+      $("signupTab").addEventListener("click", () => setMode("signup"));
+
+      $("authForm").addEventListener("submit", async event => {
+        event.preventDefault();
+        if (busy) return;
+
+        busy = true;
+        $("submitBtn").disabled = true;
+        $("submitBtn").textContent = "Please wait...";
+        $("message").textContent = "";
+
+        try {
+          const email = $("email").value.trim();
+          const password = $("password").value;
+
+          if (mode === "signup") {
+            const fullName = $("fullName").value.trim();
+            if (!fullName) throw new Error("Please enter your full name.");
+
+            const { data, error } = await db.auth.signUp({
+              email,
+              password,
+              options: {
+                data: {
+                  full_name: fullName,
+                  role: "job_seeker"
+                }
+              }
+            });
+
+            if (error) throw error;
+
+            if (data.session) {
+              showMessage("Account created. Opening your dashboard...", "success");
+              window.location.assign("/kazinexus_job_seeker_dashboard.html");
+              return;
+            }
+
+            showMessage(
+              "Registration submitted. Check your email for a confirmation link if required, then return here and log in.",
+              "success"
+            );
+            setMode("login");
+            $("email").value = email;
+            $("password").value = "";
+          } else {
+            const { data, error } = await db.auth.signInWithPassword({
+              email,
+              password
+            });
+
+            if (error) throw error;
+            if (!data.session) throw new Error("Login did not create a session. Please try again.");
+
+            showMessage("Login successful. Opening your dashboard...", "success");
+            window.location.assign("/kazinexus_job_seeker_dashboard.html");
+          }
+        } catch (error) {
+          showMessage(error.message || "Something went wrong. Please try again.", "error");
+        } finally {
+          busy = false;
+          $("submitBtn").disabled = false;
+          $("submitBtn").textContent = mode === "signup" ? "Create Account" : "Login";
+        }
+      });
+
+      $("forgot").addEventListener("click", async () => {
+        const email = $("email").value.trim();
+        if (!email) {
+          showMessage("Enter your email address first, then select Forgot password.", "error");
+          $("email").focus();
+          return;
+        }
+
+        $("forgot").style.pointerEvents = "none";
+        try {
+          const { error } = await db.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + "/jobseekers/auth.html"
+          });
+          if (error) throw error;
+          showMessage("If an account exists for that email, password reset instructions will be sent.", "success");
+        } catch (error) {
+          showMessage(error.message || "Unable to request a password reset.", "error");
+        } finally {
+          $("forgot").style.pointerEvents = "auto";
+        }
+      });
+
+      (async () => {
+        try {
+          const { data, error } = await db.auth.getSession();
+          if (!error && data.session) {
+            window.location.replace("/kazinexus_job_seeker_dashboard.html");
+          }
+        } catch (error) {
+          console.error("Could not check session:", error);
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>
