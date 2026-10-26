@@ -60,10 +60,7 @@
       font: inherit;
     }
 
-    /* =========================
-       TOP BAR
-    ========================== */
-
+    /* TOP BAR */
     .topbar {
       background: var(--navy-dark);
       color: #fff;
@@ -94,10 +91,7 @@
       color: #9df0bf;
     }
 
-    /* =========================
-       NAVIGATION
-    ========================== */
-
+    /* NAVIGATION */
     header {
       background: #fff;
       border-bottom: 1px solid var(--border);
@@ -232,10 +226,7 @@
       cursor: pointer;
     }
 
-    /* =========================
-       HERO
-    ========================== */
-
+    /* HERO */
     .hero {
       background:
         radial-gradient(circle at 90% 10%, rgba(7,148,71,.16), transparent 30%),
@@ -372,10 +363,7 @@
       font-size: 12px;
     }
 
-    /* =========================
-       STATS
-    ========================== */
-
+    /* STATS */
     .stats {
       max-width: 1120px;
       margin: -30px auto 0;
@@ -416,10 +404,7 @@
       font-size: 13px;
     }
 
-    /* =========================
-       GENERAL SECTIONS
-    ========================== */
-
+    /* GENERAL SECTIONS */
     section {
       padding: 70px 5%;
     }
@@ -447,10 +432,7 @@
       margin: auto;
     }
 
-    /* =========================
-       QUICK ACTIONS
-    ========================== */
-
+    /* QUICK ACTIONS */
     .quick-section {
       background: #fff;
     }
@@ -503,10 +485,7 @@
       font-size: 13px;
     }
 
-    /* =========================
-       CAREER BUILDER
-    ========================== */
-
+    /* CAREER BUILDER */
     .builder-section {
       background: linear-gradient(180deg,#f7fbff,#eef7f2);
     }
@@ -608,10 +587,7 @@
       width: 75%;
     }
 
-    /* =========================
-       JOBS
-    ========================== */
-
+    /* JOBS */
     .jobs-section {
       background: #fff;
     }
@@ -685,8 +661,7 @@
       color: var(--muted);
       font-size: 12px;
     }
-
-    .job-meta span {
+        .job-meta span {
       background: #f5f7fa;
       padding: 5px 8px;
       border-radius: 7px;
@@ -704,10 +679,7 @@
       color: var(--muted);
     }
 
-    /* =========================
-       AUDIENCE
-    ========================== */
-
+    /* AUDIENCE */
     .audience {
       background: #f6f8fc;
     }
@@ -746,10 +718,7 @@
       max-width: 500px;
     }
 
-    /* =========================
-       CAREER CENTRE
-    ========================== */
-
+    /* CAREER CENTRE */
     .career-centre {
       background: #fff;
     }
@@ -782,10 +751,7 @@
       font-size: 13px;
     }
 
-    /* =========================
-       TRUST
-    ========================== */
-
+    /* TRUST */
     .trust {
       background: var(--navy-dark);
       color: #fff;
@@ -817,10 +783,7 @@
       font-size: 12px;
     }
 
-    /* =========================
-       CTA
-    ========================== */
-
+    /* CTA */
     .cta {
       padding: 55px 5%;
       background: #eaf7ef;
@@ -848,10 +811,7 @@
       color: #d8f8e5;
     }
 
-    /* =========================
-       FOOTER
-    ========================== */
-
+    /* FOOTER */
     footer {
       background: #03132f;
       color: #fff;
@@ -901,10 +861,7 @@
       font-size: 12px;
     }
 
-    /* =========================
-       WHATSAPP
-    ========================== */
-
+    /* WHATSAPP */
     .whatsapp {
       position: fixed;
       right: 20px;
@@ -925,12 +882,8 @@
       transform: scale(1.05);
     }
 
-    /* =========================
-       MOBILE
-    ========================== */
-
+    /* MOBILE */
     @media(max-width:1000px) {
-
       .nav-links,
       .nav-actions {
         display: none;
@@ -994,7 +947,6 @@
     }
 
     @media(max-width:650px) {
-
       .topbar {
         display: none;
       }
@@ -1126,12 +1078,6 @@
     <nav class="nav" id="mainNav">
 
       <a href="/" class="brand">
-        <!--
-          IMPORTANT:
-          Upload your latest KaziNexus logo to the GitHub repository
-          using this filename:
-          KaziNexus Kenya Opportunity Logo.png
-        -->
         <img
           class="brand-logo"
           src="/KaziNexus%20Kenya%20Opportunity%20Logo.png"
@@ -1179,7 +1125,6 @@
     <div class="hero-inner">
 
       <div>
-
         <div class="hero-badge">
           🇰🇪 Built for Kenya • All 47 Counties
         </div>
@@ -1197,19 +1142,9 @@
         </p>
 
         <div class="hero-buttons">
-
-          <a class="btn btn-primary" href="/jobs/">
-            🔎 Find Jobs
-          </a>
-
-          <a class="btn btn-gold" href="/cv-builder.html">
-            🚀 Build Your CV
-          </a>
-
-          <a class="btn btn-outline" href="/post-opportunity.html">
-            📢 Post Opportunity
-          </a>
-
+          <a class="btn btn-primary" href="/jobs/">🔎 Find Jobs</a>
+          <a class="btn btn-gold" href="/cv-builder.html">🚀 Build Your CV</a>
+          <a class="btn btn-outline" href="/post-opportunity.html">📢 Post Opportunity</a>
         </div>
 
         <form class="hero-search" onsubmit="searchJobs(event)">
@@ -1219,19 +1154,12 @@
             placeholder="Search jobs, skills, companies or locations..."
             aria-label="Search jobs"
           >
-
-          <button type="submit">
-            Search Jobs
-          </button>
+          <button type="submit">Search Jobs</button>
         </form>
-
       </div>
 
       <div class="hero-card">
-
-        <div class="hero-card-title">
-          🚀 Your Career Toolkit
-        </div>
+        <div class="hero-card-title">🚀 Your Career Toolkit</div>
 
         <div class="career-option">
           <div class="career-icon">📄</div>
@@ -1264,7 +1192,6 @@
             <small>Keep your job search organized.</small>
           </div>
         </div>
-
       </div>
 
     </div>
@@ -1273,7 +1200,6 @@
   <!-- STATS -->
   <div class="stats">
     <div class="stats-grid">
-
       <div class="stat">
         <strong>47</strong>
         <span>Counties Covered</span>
@@ -1293,15 +1219,12 @@
         <strong>Free</strong>
         <span>Employer Posting</span>
       </div>
-
     </div>
   </div>
 
   <!-- QUICK ACTIONS -->
   <section class="quick-section">
-
     <div class="container">
-
       <div class="section-heading">
         <h2>Everything You Need to Move Forward</h2>
         <p>
@@ -1311,58 +1234,42 @@
       </div>
 
       <div class="quick-grid">
-
         <div class="quick-card">
           <div class="quick-icon">🔎</div>
           <h3>Find Jobs</h3>
-          <p>
-            Search opportunities by county, category, employer and job type.
-          </p>
+          <p>Search opportunities by county, category, employer and job type.</p>
           <a href="/jobs/">Explore Jobs →</a>
         </div>
 
         <div class="quick-card">
           <div class="quick-icon">📄</div>
           <h3>Career Application Builder</h3>
-          <p>
-            Build your CV, tailor it to jobs and prepare professional applications.
-          </p>
+          <p>Build your CV, tailor it to jobs and prepare professional applications.</p>
           <a href="/cv-builder.html">Open CV Builder →</a>
         </div>
 
         <div class="quick-card">
           <div class="quick-icon">📢</div>
           <h3>Post an Opportunity</h3>
-          <p>
-            Employers and organizations can submit legitimate opportunities.
-          </p>
+          <p>Employers and organizations can submit legitimate opportunities.</p>
           <a href="/post-opportunity.html">Post Opportunity →</a>
         </div>
 
         <div class="quick-card">
           <div class="quick-icon">🤝</div>
           <h3>Partner With Us</h3>
-          <p>
-            NGOs, universities, recruiters and organizations can reach talent.
-          </p>
+          <p>NGOs, universities, recruiters and organizations can reach talent.</p>
           <a href="/partners.html">Become a Partner →</a>
         </div>
-
       </div>
-
     </div>
-
   </section>
 
   <!-- CAREER APPLICATION BUILDER -->
   <section class="builder-section">
-
     <div class="container">
-
       <div class="builder">
-
         <div class="builder-content">
-
           <div class="hero-badge" style="background:#e5f7ed;color:#05743a;border:none;">
             🚀 KaziNexus Career Application Builder
           </div>
@@ -1378,8 +1285,7 @@
             profile to a job description and create a stronger application
             package from one place.
           </p>
-
-          <ul class="feature-list">
+                    <ul class="feature-list">
 
             <li>
               <span class="check">✓</span>
@@ -1415,7 +1321,6 @@
         </div>
 
         <div class="builder-preview">
-
           <div class="cv-window">
 
             <div class="cv-header">
@@ -1424,7 +1329,6 @@
             </div>
 
             <div class="cv-lines">
-
               <div class="line medium"></div>
               <div class="line short"></div>
 
@@ -1449,26 +1353,20 @@
               <strong style="color:#082567;">SKILLS</strong>
 
               <div class="line medium"></div>
-
             </div>
 
           </div>
-
         </div>
 
       </div>
-
     </div>
-
   </section>
 
   <!-- LATEST JOBS -->
   <section class="jobs-section">
-
     <div class="container">
 
       <div class="job-toolbar">
-
         <div>
           <h3>🔥 Latest Opportunities</h3>
           <p style="font-size:13px;color:#667085;">
@@ -1479,24 +1377,19 @@
         <a class="btn btn-outline" href="/jobs/">
           View All Jobs →
         </a>
-
       </div>
 
       <div class="jobs-grid" id="jobsGrid">
-
         <div class="loading">
           Loading latest opportunities...
         </div>
-
       </div>
 
     </div>
-
   </section>
 
   <!-- JOB SEEKERS / EMPLOYERS -->
   <section class="audience">
-
     <div class="container">
 
       <div class="section-heading">
@@ -1510,10 +1403,8 @@
       <div class="audience-grid">
 
         <div class="audience-card jobseeker">
-
           <div>
             <h3>👤 For Jobseekers</h3>
-
             <p>
               Create your profile, build your CV, discover opportunities,
               apply for jobs and track your applications.
@@ -1525,14 +1416,11 @@
               Create Jobseeker Account →
             </a>
           </div>
-
         </div>
 
         <div class="audience-card employer">
-
           <div>
             <h3>🏢 For Employers</h3>
-
             <p>
               Reach qualified talent across Kenya and manage your
               opportunities and applicants from your employer dashboard.
@@ -1544,18 +1432,14 @@
               Employer Portal →
             </a>
           </div>
-
         </div>
 
       </div>
-
     </div>
-
   </section>
 
   <!-- CAREER CENTRE -->
   <section class="career-centre">
-
     <div class="container">
 
       <div class="section-heading">
@@ -1570,60 +1454,45 @@
         <a href="/cv-builder.html" class="career-card">
           <div class="icon">📄</div>
           <h3>CV Builder</h3>
-          <p>
-            Build, update and tailor your professional CV.
-          </p>
+          <p>Build, update and tailor your professional CV.</p>
         </a>
 
         <a href="/jobs/" class="career-card">
           <div class="icon">🎯</div>
           <h3>Job Matching</h3>
-          <p>
-            Find opportunities based on your skills and experience.
-          </p>
+          <p>Find opportunities based on your skills and experience.</p>
         </a>
 
         <a href="/alerts.html" class="career-card">
           <div class="icon">🔔</div>
           <h3>Job Alerts</h3>
-          <p>
-            Stay informed when new opportunities become available.
-          </p>
+          <p>Stay informed when new opportunities become available.</p>
         </a>
 
         <a href="/about.html" class="career-card">
           <div class="icon">🇰🇪</div>
           <h3>Kenya Opportunities</h3>
-          <p>
-            Discover opportunities from counties across Kenya.
-          </p>
+          <p>Discover opportunities from counties across Kenya.</p>
         </a>
 
         <a href="/trust-safety.html" class="career-card">
           <div class="icon">🛡️</div>
           <h3>Trust & Safety</h3>
-          <p>
-            Learn how KaziNexus works to keep opportunities safer.
-          </p>
+          <p>Learn how KaziNexus works to keep opportunities safer.</p>
         </a>
 
         <a href="/contact.html" class="career-card">
           <div class="icon">💬</div>
           <h3>Need Help?</h3>
-          <p>
-            Contact the KaziNexus team for assistance.
-          </p>
+          <p>Contact the KaziNexus team for assistance.</p>
         </a>
 
       </div>
-
     </div>
-
   </section>
 
   <!-- TRUST -->
   <section class="trust">
-
     <div class="container">
 
       <div class="section-heading" style="margin-bottom:30px;">
@@ -1639,76 +1508,55 @@
         <div class="trust-item">
           <div class="icon">🛡️</div>
           <h3>Verification</h3>
-          <p>
-            Verified employers and organizations can receive verification badges.
-          </p>
+          <p>Verified employers and organizations can receive verification badges.</p>
         </div>
 
         <div class="trust-item">
           <div class="icon">🇰🇪</div>
           <h3>Kenya Focused</h3>
-          <p>
-            Built specifically for opportunities across all 47 counties.
-          </p>
+          <p>Built specifically for opportunities across all 47 counties.</p>
         </div>
 
         <div class="trust-item">
           <div class="icon">🆓</div>
           <h3>Free Access</h3>
-          <p>
-            Jobseekers can access the marketplace without paying to search.
-          </p>
+          <p>Jobseekers can access the marketplace without paying to search.</p>
         </div>
 
         <div class="trust-item">
           <div class="icon">🚨</div>
           <h3>Report Suspicious Posts</h3>
-          <p>
-            Users can report opportunities that appear suspicious or misleading.
-          </p>
+          <p>Users can report opportunities that appear suspicious or misleading.</p>
         </div>
 
       </div>
-
     </div>
-
   </section>
 
   <!-- CTA -->
   <section class="cta">
-
     <div class="cta-box">
 
       <div>
         <h2>Ready for your next opportunity?</h2>
-        <p>
-          Start with a job search or build a stronger application today.
-        </p>
+        <p>Start with a job search or build a stronger application today.</p>
       </div>
 
       <div style="display:flex;gap:10px;flex-wrap:wrap;">
-
-        <a class="btn btn-gold" href="/jobs/">
-          Find Jobs
-        </a>
-
+        <a class="btn btn-gold" href="/jobs/">Find Jobs</a>
         <a class="btn" style="background:#fff;color:#05743a;" href="/cv-builder.html">
           Build My CV
         </a>
-
       </div>
 
     </div>
-
   </section>
 
   <!-- FOOTER -->
   <footer>
-
     <div class="footer-grid">
 
       <div class="footer-brand">
-
         <div class="brand-name">
           <span style="color:#fff;">Kazi</span>
           <span style="color:#55d58a;">Nexus</span>
@@ -1723,7 +1571,6 @@
           📞 0706174379<br>
           💬 WhatsApp available
         </p>
-
       </div>
 
       <div>
@@ -1753,7 +1600,6 @@
     </div>
 
     <div class="footer-bottom">
-
       <span>
         © <span id="year"></span> KaziNexus. All rights reserved.
       </span>
@@ -1761,9 +1607,7 @@
       <span>
         Connect Opportunities With the Right Talent.
       </span>
-
     </div>
-
   </footer>
 
   <!-- WHATSAPP -->
@@ -1781,11 +1625,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-
-    /* =========================
-       CONFIGURATION
-    ========================== */
-
+    /* CONFIGURATION */
     const SUPABASE_URL =
       "https://vljehlfeglstpgphzebj.supabase.co";
 
@@ -1798,72 +1638,44 @@
         SUPABASE_KEY
       );
 
-    /* =========================
-       YEAR
-    ========================== */
-
+    /* YEAR */
     document.getElementById("year").textContent =
       new Date().getFullYear();
 
-    /* =========================
-       MOBILE MENU
-    ========================== */
-
+    /* MOBILE MENU */
     function toggleMenu() {
-
       const nav = document.getElementById("mainNav");
-
       nav.classList.toggle("mobile-open");
-
     }
 
-    /* =========================
-       SEARCH
-    ========================== */
-
+    /* SEARCH */
     function searchJobs(event) {
-
       event.preventDefault();
 
       const value =
         document.getElementById("heroSearch").value.trim();
 
       if (!value) {
-
         window.location.href = "/jobs/";
-
         return;
       }
 
       window.location.href =
-        "/jobs/?search=" +
-        encodeURIComponent(value);
-
+        "/jobs/?search=" + encodeURIComponent(value);
     }
 
-    /* =========================
-       LOAD JOBS
-    ========================== */
-
+    /* LOAD JOBS */
     async function loadLatestJobs() {
-
-      const grid =
-        document.getElementById("jobsGrid");
+      const grid = document.getElementById("jobsGrid");
 
       try {
+        const { data, error } = await supabaseClient
+          .from("public_active_jobs")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(6);
 
-        const { data, error } =
-          await supabaseClient
-            .from("public_active_jobs")
-            .select("*")
-            .order("created_at", {
-              ascending: false
-            })
-            .limit(6);
-
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
 
         const jobs = data || [];
 
@@ -1871,7 +1683,6 @@
           jobs.length > 0 ? jobs.length + "+" : "0";
 
         if (!jobs.length) {
-
           grid.innerHTML = `
             <div class="loading">
               <div style="font-size:30px;margin-bottom:10px;">📭</div>
@@ -1885,79 +1696,42 @@
               </a>
             </div>
           `;
-
           return;
         }
 
         grid.innerHTML = jobs.map(job => {
+          const title = escapeHTML(job.title || "Opportunity");
 
-          const title =
-            escapeHTML(job.title || "Opportunity");
+          const company = escapeHTML(
+            job.company || job.organization_name || "Employer"
+          );
 
-          const company =
-            escapeHTML(
-              job.company ||
-              job.organization_name ||
-              "Employer"
-            );
+          const location = escapeHTML(job.location || "Kenya");
+          const type = escapeHTML(job.job_type || "Opportunity");
 
-          const location =
-            escapeHTML(
-              job.location || "Kenya"
-            );
+          const salary = job.salary
+            ? escapeHTML(String(job.salary))
+            : "";
 
-          const type =
-            escapeHTML(
-              job.job_type || "Opportunity"
-            );
-
-          const salary =
-            job.salary
-              ? escapeHTML(String(job.salary))
-              : "";
-
-          const deadline =
-            job.deadline
-              ? formatDate(job.deadline)
-              : "";
+          const deadline = job.deadline
+            ? formatDate(job.deadline)
+            : "";
 
           return `
             <article class="job-card">
-
               <div class="job-top">
-
-                <div style="font-size:22px;">
-                  💼
-                </div>
-
-                <span class="job-type">
-                  ${type}
-                </span>
-
+                <div style="font-size:22px;">💼</div>
+                <span class="job-type">${type}</span>
               </div>
 
               <h3>${title}</h3>
 
-              <div class="company">
-                ${company}
-              </div>
+              <div class="company">${company}</div>
 
               <div class="job-meta">
-
                 <span>📍 ${location}</span>
-
-                ${
-                  salary
-                    ? `<span>💰 ${salary}</span>`
-                    : ""
-                }
-
-                ${
-                  deadline
-                    ? `<span>⏳ ${deadline}</span>`
-                    : ""
-                }
-
+                ${salary ? `<span>💰 ${salary}</span>` : ""}
+                ${deadline ? `<span>⏳ ${deadline}</span>` : ""}
               </div>
 
               <a
@@ -1966,97 +1740,52 @@
               >
                 View Opportunity
               </a>
-
             </article>
           `;
-
         }).join("");
 
       } catch (error) {
-
-        console.error(
-          "KaziNexus job loading error:",
-          error
-        );
+        console.error("KaziNexus job loading error:", error);
 
         grid.innerHTML = `
           <div class="loading">
-
-            <div style="font-size:30px;margin-bottom:10px;">
-              ⚠️
-            </div>
-
-            <strong>
-              Opportunities are temporarily unavailable.
-            </strong>
-
-            <p style="margin-top:5px;">
-              Please try again shortly.
-            </p>
-
+            <div style="font-size:30px;margin-bottom:10px;">⚠️</div>
+            <strong>Opportunities are temporarily unavailable.</strong>
+            <p style="margin-top:5px;">Please try again shortly.</p>
             <br>
-
             <a class="btn btn-outline" href="/jobs/">
               Open Jobs Page
             </a>
-
           </div>
         `;
-
       }
-
     }
 
-    /* =========================
-       DATE FORMAT
-    ========================== */
-
+    /* DATE FORMAT */
     function formatDate(value) {
-
       try {
-
-        return new Date(value)
-          .toLocaleDateString(
-            "en-KE",
-            {
-              day: "numeric",
-              month: "short",
-              year: "numeric"
-            }
-          );
-
+        return new Date(value).toLocaleDateString("en-KE", {
+          day: "numeric",
+          month: "short",
+          year: "numeric"
+        });
       } catch {
-
         return value;
-
       }
-
     }
 
-    /* =========================
-       HTML SAFETY
-    ========================== */
-
+    /* HTML SAFETY */
     function escapeHTML(value) {
-
       return String(value)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-
     }
 
-    /* =========================
-       START
-    ========================== */
-
-    document.addEventListener(
-      "DOMContentLoaded",
-      loadLatestJobs
-    );
-
+    /* START */
+    document.addEventListener("DOMContentLoaded", loadLatestJobs);
   </script>
 
 </body>
